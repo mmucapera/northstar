@@ -1,6 +1,6 @@
 {
   "name": "PL_SILVER_CONFIG",
-  "objectId": "b212ec12-dd9c-5b4d-a9fd-3fdc385af41d",
+  "objectId": "2c89b41f-e3b7-53eb-9ff3-711597cf08c0",
   "properties": {
     "activities": [
       {
@@ -15,7 +15,23 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "06882935-64a6-5f03-aa58-ebc810b3887a",
+          "notebookId": "0db0362e-25f5-59c5-934c-cce824378c8c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "name": "SLV_COMPLETION",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "fc2fc8ba-863d-553a-8c78-3b81fd4d7f91",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -31,7 +47,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "1aefbed7-df0d-50b8-8ea6-2136ec586201",
+          "notebookId": "5aea94d9-3b94-5f83-9d50-18eac09ff820",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -47,7 +63,39 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "2c6c2a9f-95e9-5b3c-9a01-9a023d59756c",
+          "notebookId": "052d953d-4648-56e1-877a-460a5c572d14",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "name": "SLV_DRILLING_TELEMETRY",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "f691c2bc-9fba-50af-b7a8-97aa69770c4c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "name": "SLV_FACILITY",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "6f2025f6-46df-558b-8f0a-789e75696792",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -63,7 +111,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "29968268-3cd6-5615-9c8a-0d1d0df2da01",
+          "notebookId": "1c9a3e4c-f807-5636-8a1a-942f6d3fe8da",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -79,7 +127,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "e50be62c-ebf5-552a-b989-aea6623ec798",
+          "notebookId": "772b0502-3852-590c-b0df-ad1a1ce04804",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -95,7 +143,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "c419eb73-7496-5d0e-8e17-2ab6e034da3a",
+          "notebookId": "810e0be5-8c6b-517a-87bb-45736ac4c9ad",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -111,7 +159,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "44e7d1cf-ab25-50b4-b903-7847d9fc0621",
+          "notebookId": "ae0f2d89-c1c4-5990-8f3e-77d34c70b5ad",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -127,7 +175,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "243180f5-d394-5087-967c-6a917b550fa2",
+          "notebookId": "898cc8a6-b6eb-5c11-89d1-269d07a16e5d",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -143,7 +191,23 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "06ea4416-b460-5485-8bef-4427c33fd9c8",
+          "notebookId": "7a9e26b8-c6b0-5b87-85b1-358a33ccdb5c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "name": "SLV_PRODUCTION_VOLUME",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "097e9342-7784-5adf-a6a5-d9768290b095",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       },
@@ -159,7 +223,55 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "702e19cb-eac4-501a-b437-7b5896c23e09",
+          "notebookId": "722ace57-5fdb-5b29-8004-7dff758356d7",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "name": "SLV_WELL",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "4c52b3b5-bfae-5b82-8c65-36e8d3e5bf85",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "name": "SLV_WELL_TEST",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "78a86ac9-4cbd-57f1-9de3-e0df32363459",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "name": "SLV_WELLBORE",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "a97e3128-62a2-514c-8aad-7c29ec99b42e",
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         }
       }

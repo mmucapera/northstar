@@ -1,67 +1,67 @@
 table fact_production
-	lineageTag: 5951e020-6759-47a5-b2ee-6d22f8d59687
+	lineageTag: a91d6bcb-972b-479a-80f1-748510f47174
 
 	column PeriodId_key
 		dataType: int64
 		sourceColumn: PeriodId_key
-		lineageTag: 632a0c14-3681-4f95-8fd9-b25148e586e6
+		lineageTag: e577945b-7281-4ed0-bf2a-3d35b151edcf
 
 	column FieldId_key
 		dataType: int64
 		sourceColumn: FieldId_key
-		lineageTag: c8cf0a9a-ce04-4bfc-aac0-116767e3123e
+		lineageTag: a77c797a-ee40-4b97-94e1-88c7c01a0e64
 
 	column ActualBopd
 		dataType: decimal
 		sourceColumn: ActualBopd
-		lineageTag: 7a7f7d19-4b02-4832-948c-22c5b2bcefeb
+		lineageTag: b2d54c54-9b2b-4752-9871-732f423682b4
 
 	column ForecastBopd
 		dataType: decimal
 		sourceColumn: ForecastBopd
-		lineageTag: 71aa63c7-4ce2-4ba3-ad16-9743232cd8fe
+		lineageTag: 8194435f-87a6-4a02-8ec7-294edf9e46cd
 
 	column ForecastVariancePct
 		dataType: decimal
 		sourceColumn: ForecastVariancePct
-		lineageTag: e6bfbeaf-30b1-4563-9def-31b1350267af
+		lineageTag: ec170d3e-dc30-419e-92b8-9d62cea98f5e
 
 	column WellsOnline
 		dataType: int64
 		sourceColumn: WellsOnline
-		lineageTag: c02f06fe-5a3b-4eb6-8c3e-9e838c7c691a
+		lineageTag: c7cd7aed-5970-4141-a935-86dfe500e765
 
 	column UptimePct
 		dataType: decimal
 		sourceColumn: UptimePct
-		lineageTag: fe056acd-424d-4ad8-80ba-797f54b4dad9
+		lineageTag: 05a05834-ddbf-490f-b46c-95b5da4bfe0b
 
 	column OpsStatus
 		dataType: string
 		sourceColumn: OpsStatus
-		lineageTag: 9ff58604-e5ec-40bd-a79c-98c58f8fde94
+		lineageTag: 3386d111-016f-41f1-a2de-0bfa17b08ec6
 
 	column Manifest_package
 		dataType: string
 		sourceColumn: Manifest_package
-		lineageTag: 6cc1357c-14c7-4b6b-aa1a-478262ebddd5
+		lineageTag: 79ee4e84-b9f7-4a51-bb40-ffae6d6e5e76
 
 	column Manifest_file
 		dataType: string
 		sourceColumn: Manifest_file
-		lineageTag: cd73df54-13ca-4e01-af22-42271b374b8c
+		lineageTag: b66b37c7-237f-4189-adc1-7604ea4abb73
 
 	measure 'Total Actual Bopd' = SUM('fact_production'[ActualBopd])
 		formatString: #,0
-		lineageTag: feaeb7bb-9a59-4061-a12c-c26893405e1a
+		lineageTag: 0764dbe5-9575-414c-a376-b10ddc58012d
 
 	measure 'Total Forecast Bopd' = SUM('fact_production'[ForecastBopd])
 		formatString: #,0
-		lineageTag: 57efb4d1-bd44-419f-9de0-a0bdbca181e6
+		lineageTag: 3efe29b6-b9db-47fa-b1cb-74a1068ddaea
 
 	measure 'Avg Uptime Pct' = AVERAGE('fact_production'[UptimePct])
 		formatString: #,0.0
-		lineageTag: 152d4eff-0c0d-4c33-8bf0-b21ec5877a6e
+		lineageTag: 91e34852-6db5-4099-ba6a-976ee2cfcf38
 
 	partition fact_production = entity
 		mode: directLake

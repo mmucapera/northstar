@@ -2072,7 +2072,7 @@ def log_layer(
     --------
     # At the start of your silver DAG notebook:
     %run EXEC/nb_utils_logging
-    logger = get_fabric_logger(project_name="lkh_001")
+    logger = get_fabric_logger(project_name="lkh_customer0_schema_enabled")
     
     log_layer(layer="SILVER", status="START")
     

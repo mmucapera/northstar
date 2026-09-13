@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "slv_wellbore",
+    "description": "Generated notebook for silver.wellbore"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a97e3128-62a2-514c-8aad-7c29ec99b42e"
+  }
+}

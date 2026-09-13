@@ -118,6 +118,43 @@
 # CELL ********************
 
 # MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE bronze.completion
+# MAGIC (
+# MAGIC     CompletionId STRING,
+# MAGIC     WellboreId STRING,
+# MAGIC     WellId STRING,
+# MAGIC     CompletionType STRING,
+# MAGIC     ReservoirUnit STRING,
+# MAGIC     PerforationTopM DECIMAL(18,2),
+# MAGIC     PerforationBaseM DECIMAL(18,2),
+# MAGIC     ArtificialLift STRING,
+# MAGIC     CompletionDate DATE,
+# MAGIC     IsActive BOOLEAN,
+# MAGIC     Sourcefile STRING,
+# MAGIC     Manifest_package STRING,
+# MAGIC     Manifest_file STRING,
+# MAGIC     Load_date DATE,
+# MAGIC     Load_timestamp TIMESTAMP,
+# MAGIC     Partitionkey STRING,
+# MAGIC     ins_batchid INT,
+# MAGIC     upd_batchid INT,
+# MAGIC     Exportdate TIMESTAMP,
+# MAGIC     valid_from TIMESTAMP,
+# MAGIC     valid_to TIMESTAMP,
+# MAGIC     is_current BOOLEAN
+# MAGIC )
+# MAGIC USING delta;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
 # MAGIC CREATE OR REPLACE TABLE bronze.downtime
 # MAGIC (
 # MAGIC     PeriodId STRING,
@@ -149,6 +186,74 @@
 # MAGIC (
 # MAGIC     CauseId STRING,
 # MAGIC     CauseName STRING,
+# MAGIC     Sourcefile STRING,
+# MAGIC     Manifest_package STRING,
+# MAGIC     Manifest_file STRING,
+# MAGIC     Load_date DATE,
+# MAGIC     Load_timestamp TIMESTAMP,
+# MAGIC     Partitionkey STRING,
+# MAGIC     ins_batchid INT,
+# MAGIC     upd_batchid INT,
+# MAGIC     Exportdate TIMESTAMP,
+# MAGIC     valid_from TIMESTAMP,
+# MAGIC     valid_to TIMESTAMP,
+# MAGIC     is_current BOOLEAN
+# MAGIC )
+# MAGIC USING delta;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE bronze.drilling_telemetry
+# MAGIC (
+# MAGIC     ReportId STRING,
+# MAGIC     WellId STRING,
+# MAGIC     WellboreId STRING,
+# MAGIC     ReportDate DATE,
+# MAGIC     DepthM DECIMAL(18,2),
+# MAGIC     RopMPerHr DECIMAL(9,2),
+# MAGIC     WobKlbs DECIMAL(9,2),
+# MAGIC     Rpm DECIMAL(9,2),
+# MAGIC     MudWeightPpg DECIMAL(9,2),
+# MAGIC     FlowRateGpm DECIMAL(9,2),
+# MAGIC     Npt BOOLEAN,
+# MAGIC     Sourcefile STRING,
+# MAGIC     Manifest_package STRING,
+# MAGIC     Manifest_file STRING,
+# MAGIC     Load_date DATE,
+# MAGIC     Load_timestamp TIMESTAMP,
+# MAGIC     Partitionkey STRING,
+# MAGIC     ins_batchid INT,
+# MAGIC     upd_batchid INT,
+# MAGIC     Exportdate TIMESTAMP
+# MAGIC )
+# MAGIC USING delta;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE bronze.facility
+# MAGIC (
+# MAGIC     FacilityId STRING,
+# MAGIC     FacilityName STRING,
+# MAGIC     FacilityType STRING,
+# MAGIC     FieldId STRING,
+# MAGIC     ExportPoint STRING,
+# MAGIC     CapacityBopd DECIMAL(18,2),
 # MAGIC     Sourcefile STRING,
 # MAGIC     Manifest_package STRING,
 # MAGIC     Manifest_file STRING,
@@ -358,6 +463,39 @@
 # CELL ********************
 
 # MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE bronze.production_volume
+# MAGIC (
+# MAGIC     PeriodId STRING,
+# MAGIC     WellId STRING,
+# MAGIC     FieldId STRING,
+# MAGIC     FacilityId STRING,
+# MAGIC     OilBbl DECIMAL(18,2),
+# MAGIC     GasMscf DECIMAL(18,2),
+# MAGIC     WaterBbl DECIMAL(18,2),
+# MAGIC     OnstreamHours DECIMAL(9,2),
+# MAGIC     WaterCutPct DECIMAL(9,2),
+# MAGIC     Sourcefile STRING,
+# MAGIC     Manifest_package STRING,
+# MAGIC     Manifest_file STRING,
+# MAGIC     Load_date DATE,
+# MAGIC     Load_timestamp TIMESTAMP,
+# MAGIC     Partitionkey STRING,
+# MAGIC     ins_batchid INT,
+# MAGIC     upd_batchid INT,
+# MAGIC     Exportdate TIMESTAMP
+# MAGIC )
+# MAGIC USING delta;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
 # MAGIC CREATE OR REPLACE TABLE bronze.reconciliation
 # MAGIC (
 # MAGIC     PeriodId STRING,
@@ -389,6 +527,113 @@
 # CELL ********************
 
 # MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE bronze.well
+# MAGIC (
+# MAGIC     WellId STRING,
+# MAGIC     WellName STRING,
+# MAGIC     FieldId STRING,
+# MAGIC     FacilityId STRING,
+# MAGIC     PartnerId STRING,
+# MAGIC     WellType STRING,
+# MAGIC     Status STRING,
+# MAGIC     SpudDate DATE,
+# MAGIC     TotalDepthM DECIMAL(18,2),
+# MAGIC     Sourcefile STRING,
+# MAGIC     Manifest_package STRING,
+# MAGIC     Manifest_file STRING,
+# MAGIC     Load_date DATE,
+# MAGIC     Load_timestamp TIMESTAMP,
+# MAGIC     Partitionkey STRING,
+# MAGIC     ins_batchid INT,
+# MAGIC     upd_batchid INT,
+# MAGIC     Exportdate TIMESTAMP,
+# MAGIC     valid_from TIMESTAMP,
+# MAGIC     valid_to TIMESTAMP,
+# MAGIC     is_current BOOLEAN
+# MAGIC )
+# MAGIC USING delta;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE bronze.well_test
+# MAGIC (
+# MAGIC     TestId STRING,
+# MAGIC     TestDate DATE,
+# MAGIC     PeriodId STRING,
+# MAGIC     WellId STRING,
+# MAGIC     CompletionId STRING,
+# MAGIC     DurationHours DECIMAL(9,2),
+# MAGIC     OilRateBopd DECIMAL(18,2),
+# MAGIC     GasRateMscfd DECIMAL(18,2),
+# MAGIC     WaterCutPct DECIMAL(9,2),
+# MAGIC     GorScf DECIMAL(18,2),
+# MAGIC     ChokeSize64ths INT,
+# MAGIC     ThpPsi DECIMAL(18,2),
+# MAGIC     Validity STRING,
+# MAGIC     Sourcefile STRING,
+# MAGIC     Manifest_package STRING,
+# MAGIC     Manifest_file STRING,
+# MAGIC     Load_date DATE,
+# MAGIC     Load_timestamp TIMESTAMP,
+# MAGIC     Partitionkey STRING,
+# MAGIC     ins_batchid INT,
+# MAGIC     upd_batchid INT,
+# MAGIC     Exportdate TIMESTAMP
+# MAGIC )
+# MAGIC USING delta;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE bronze.wellbore
+# MAGIC (
+# MAGIC     WellboreId STRING,
+# MAGIC     WellId STRING,
+# MAGIC     WellboreName STRING,
+# MAGIC     Trajectory STRING,
+# MAGIC     IsSidetrack BOOLEAN,
+# MAGIC     MeasuredDepthM DECIMAL(18,2),
+# MAGIC     TrueVerticalDepthM DECIMAL(18,2),
+# MAGIC     Sourcefile STRING,
+# MAGIC     Manifest_package STRING,
+# MAGIC     Manifest_file STRING,
+# MAGIC     Load_date DATE,
+# MAGIC     Load_timestamp TIMESTAMP,
+# MAGIC     Partitionkey STRING,
+# MAGIC     ins_batchid INT,
+# MAGIC     upd_batchid INT,
+# MAGIC     Exportdate TIMESTAMP,
+# MAGIC     valid_from TIMESTAMP,
+# MAGIC     valid_to TIMESTAMP,
+# MAGIC     is_current BOOLEAN
+# MAGIC )
+# MAGIC USING delta;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
 # MAGIC CREATE OR REPLACE TABLE silver.cash_call_event AS
 # MAGIC SELECT DISTINCT
 # MAGIC T.PeriodId,
@@ -407,6 +652,42 @@
 # MAGIC T.upd_batchid,
 # MAGIC T.Exportdate
 # MAGIC FROM bronze.cash_call_event T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE silver.completion AS
+# MAGIC SELECT DISTINCT
+# MAGIC T.CompletionId,
+# MAGIC T.WellboreId,
+# MAGIC T.WellId,
+# MAGIC T.CompletionType,
+# MAGIC T.ReservoirUnit,
+# MAGIC T.PerforationTopM,
+# MAGIC T.PerforationBaseM,
+# MAGIC T.ArtificialLift,
+# MAGIC T.CompletionDate,
+# MAGIC T.IsActive,
+# MAGIC T.Sourcefile,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file,
+# MAGIC T.Load_date,
+# MAGIC T.Load_timestamp,
+# MAGIC T.Partitionkey,
+# MAGIC T.ins_batchid,
+# MAGIC T.upd_batchid,
+# MAGIC T.Exportdate,
+# MAGIC T.valid_from,
+# MAGIC T.valid_to,
+# MAGIC T.is_current
+# MAGIC FROM bronze.completion T;
 
 # METADATA ********************
 
@@ -461,6 +742,72 @@
 # MAGIC T.valid_to,
 # MAGIC T.is_current
 # MAGIC FROM bronze.downtime_cause T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE silver.drilling_telemetry AS
+# MAGIC SELECT DISTINCT
+# MAGIC T.ReportId,
+# MAGIC T.WellId,
+# MAGIC T.WellboreId,
+# MAGIC T.ReportDate,
+# MAGIC T.DepthM,
+# MAGIC T.RopMPerHr,
+# MAGIC T.WobKlbs,
+# MAGIC T.Rpm,
+# MAGIC T.MudWeightPpg,
+# MAGIC T.FlowRateGpm,
+# MAGIC T.Npt,
+# MAGIC T.Sourcefile,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file,
+# MAGIC T.Load_date,
+# MAGIC T.Load_timestamp,
+# MAGIC T.Partitionkey,
+# MAGIC T.ins_batchid,
+# MAGIC T.upd_batchid,
+# MAGIC T.Exportdate
+# MAGIC FROM bronze.drilling_telemetry T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE silver.facility AS
+# MAGIC SELECT DISTINCT
+# MAGIC T.FacilityId,
+# MAGIC T.FacilityName,
+# MAGIC T.FacilityType,
+# MAGIC T.FieldId,
+# MAGIC T.ExportPoint,
+# MAGIC T.CapacityBopd,
+# MAGIC T.Sourcefile,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file,
+# MAGIC T.Load_date,
+# MAGIC T.Load_timestamp,
+# MAGIC T.Partitionkey,
+# MAGIC T.ins_batchid,
+# MAGIC T.upd_batchid,
+# MAGIC T.Exportdate,
+# MAGIC T.valid_from,
+# MAGIC T.valid_to,
+# MAGIC T.is_current
+# MAGIC FROM bronze.facility T;
 
 # METADATA ********************
 
@@ -650,6 +997,38 @@
 # CELL ********************
 
 # MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE silver.production_volume AS
+# MAGIC SELECT DISTINCT
+# MAGIC T.PeriodId,
+# MAGIC T.WellId,
+# MAGIC T.FieldId,
+# MAGIC T.FacilityId,
+# MAGIC T.OilBbl,
+# MAGIC T.GasMscf,
+# MAGIC T.WaterBbl,
+# MAGIC T.OnstreamHours,
+# MAGIC T.WaterCutPct,
+# MAGIC T.Sourcefile,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file,
+# MAGIC T.Load_date,
+# MAGIC T.Load_timestamp,
+# MAGIC T.Partitionkey,
+# MAGIC T.ins_batchid,
+# MAGIC T.upd_batchid,
+# MAGIC T.Exportdate
+# MAGIC FROM bronze.production_volume T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
 # MAGIC CREATE OR REPLACE TABLE silver.reconciliation AS
 # MAGIC SELECT DISTINCT
 # MAGIC T.PeriodId,
@@ -680,12 +1059,164 @@
 # CELL ********************
 
 # MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE silver.well AS
+# MAGIC SELECT DISTINCT
+# MAGIC T.WellId,
+# MAGIC T.WellName,
+# MAGIC T.FieldId,
+# MAGIC T.FacilityId,
+# MAGIC T.PartnerId,
+# MAGIC T.WellType,
+# MAGIC T.Status,
+# MAGIC T.SpudDate,
+# MAGIC T.TotalDepthM,
+# MAGIC T.Sourcefile,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file,
+# MAGIC T.Load_date,
+# MAGIC T.Load_timestamp,
+# MAGIC T.Partitionkey,
+# MAGIC T.ins_batchid,
+# MAGIC T.upd_batchid,
+# MAGIC T.Exportdate,
+# MAGIC T.valid_from,
+# MAGIC T.valid_to,
+# MAGIC T.is_current
+# MAGIC FROM bronze.well T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE silver.well_test AS
+# MAGIC SELECT DISTINCT
+# MAGIC T.TestId,
+# MAGIC T.TestDate,
+# MAGIC T.PeriodId,
+# MAGIC T.WellId,
+# MAGIC T.CompletionId,
+# MAGIC T.DurationHours,
+# MAGIC T.OilRateBopd,
+# MAGIC T.GasRateMscfd,
+# MAGIC T.WaterCutPct,
+# MAGIC T.GorScf,
+# MAGIC T.ChokeSize64ths,
+# MAGIC T.ThpPsi,
+# MAGIC T.Validity,
+# MAGIC T.Sourcefile,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file,
+# MAGIC T.Load_date,
+# MAGIC T.Load_timestamp,
+# MAGIC T.Partitionkey,
+# MAGIC T.ins_batchid,
+# MAGIC T.upd_batchid,
+# MAGIC T.Exportdate
+# MAGIC FROM bronze.well_test T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE silver.wellbore AS
+# MAGIC SELECT DISTINCT
+# MAGIC T.WellboreId,
+# MAGIC T.WellId,
+# MAGIC T.WellboreName,
+# MAGIC T.Trajectory,
+# MAGIC T.IsSidetrack,
+# MAGIC T.MeasuredDepthM,
+# MAGIC T.TrueVerticalDepthM,
+# MAGIC T.Sourcefile,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file,
+# MAGIC T.Load_date,
+# MAGIC T.Load_timestamp,
+# MAGIC T.Partitionkey,
+# MAGIC T.ins_batchid,
+# MAGIC T.upd_batchid,
+# MAGIC T.Exportdate,
+# MAGIC T.valid_from,
+# MAGIC T.valid_to,
+# MAGIC T.is_current
+# MAGIC FROM bronze.wellbore T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE gold.dim_completion AS
+# MAGIC SELECT DISTINCT
+# MAGIC CAST(xxhash64(CompletionId) AS BIGINT) AS CompletionId_key,
+# MAGIC T.CompletionId,
+# MAGIC CAST(xxhash64(WellboreId) AS BIGINT) AS WellboreId_key,
+# MAGIC CAST(xxhash64(WellId) AS BIGINT) AS WellId_key,
+# MAGIC T.CompletionType,
+# MAGIC T.ReservoirUnit,
+# MAGIC T.PerforationTopM,
+# MAGIC T.PerforationBaseM,
+# MAGIC T.ArtificialLift,
+# MAGIC T.CompletionDate,
+# MAGIC T.IsActive
+# MAGIC FROM silver.completion T
+# MAGIC WHERE (T.Is_current = 1);
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
 # MAGIC CREATE OR REPLACE TABLE gold.dim_downtime_cause AS
 # MAGIC SELECT DISTINCT
 # MAGIC CAST(xxhash64(CauseId) AS BIGINT) AS CauseId_key,
 # MAGIC T.CauseId,
 # MAGIC T.CauseName
 # MAGIC FROM silver.downtime_cause T
+# MAGIC WHERE (T.Is_current = 1);
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE gold.dim_facility AS
+# MAGIC SELECT DISTINCT
+# MAGIC CAST(xxhash64(FacilityId) AS BIGINT) AS FacilityId_key,
+# MAGIC T.FacilityId,
+# MAGIC T.FacilityName,
+# MAGIC T.FacilityType,
+# MAGIC CAST(xxhash64(FieldId) AS BIGINT) AS FieldId_key,
+# MAGIC T.ExportPoint,
+# MAGIC T.CapacityBopd
+# MAGIC FROM silver.facility T
 # MAGIC WHERE (T.Is_current = 1);
 
 # METADATA ********************
@@ -761,6 +1292,54 @@
 # CELL ********************
 
 # MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE gold.dim_well AS
+# MAGIC SELECT DISTINCT
+# MAGIC CAST(xxhash64(WellId) AS BIGINT) AS WellId_key,
+# MAGIC T.WellId,
+# MAGIC T.WellName,
+# MAGIC CAST(xxhash64(FieldId) AS BIGINT) AS FieldId_key,
+# MAGIC CAST(xxhash64(FacilityId) AS BIGINT) AS FacilityId_key,
+# MAGIC CAST(xxhash64(PartnerId) AS BIGINT) AS PartnerId_key,
+# MAGIC T.WellType,
+# MAGIC T.Status,
+# MAGIC T.SpudDate,
+# MAGIC T.TotalDepthM
+# MAGIC FROM silver.well T
+# MAGIC WHERE (T.Is_current = 1);
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE gold.dim_wellbore AS
+# MAGIC SELECT DISTINCT
+# MAGIC CAST(xxhash64(WellboreId) AS BIGINT) AS WellboreId_key,
+# MAGIC T.WellboreId,
+# MAGIC CAST(xxhash64(WellId) AS BIGINT) AS WellId_key,
+# MAGIC T.WellboreName,
+# MAGIC T.Trajectory,
+# MAGIC T.IsSidetrack,
+# MAGIC T.MeasuredDepthM,
+# MAGIC T.TrueVerticalDepthM
+# MAGIC FROM silver.wellbore T
+# MAGIC WHERE (T.Is_current = 1);
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
 # MAGIC CREATE OR REPLACE TABLE gold.fact_cash_call_event AS
 # MAGIC SELECT DISTINCT
 # MAGIC CAST(xxhash64(PeriodId) AS BIGINT) AS PeriodId_key,
@@ -791,6 +1370,32 @@
 # MAGIC T.Manifest_package,
 # MAGIC T.Manifest_file
 # MAGIC FROM silver.downtime T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE gold.fact_drilling_telemetry AS
+# MAGIC SELECT DISTINCT
+# MAGIC CAST(xxhash64(WellId) AS BIGINT) AS WellId_key,
+# MAGIC CAST(xxhash64(WellboreId) AS BIGINT) AS WellboreId_key,
+# MAGIC T.ReportDate,
+# MAGIC T.DepthM,
+# MAGIC T.RopMPerHr,
+# MAGIC T.WobKlbs,
+# MAGIC T.Rpm,
+# MAGIC T.MudWeightPpg,
+# MAGIC T.FlowRateGpm,
+# MAGIC T.Npt,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file
+# MAGIC FROM silver.drilling_telemetry T;
 
 # METADATA ********************
 
@@ -867,6 +1472,31 @@
 # CELL ********************
 
 # MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE gold.fact_production_volume AS
+# MAGIC SELECT DISTINCT
+# MAGIC CAST(xxhash64(PeriodId) AS BIGINT) AS PeriodId_key,
+# MAGIC CAST(xxhash64(WellId) AS BIGINT) AS WellId_key,
+# MAGIC CAST(xxhash64(FieldId) AS BIGINT) AS FieldId_key,
+# MAGIC CAST(xxhash64(FacilityId) AS BIGINT) AS FacilityId_key,
+# MAGIC T.OilBbl,
+# MAGIC T.GasMscf,
+# MAGIC T.WaterBbl,
+# MAGIC T.OnstreamHours,
+# MAGIC T.WaterCutPct,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file
+# MAGIC FROM silver.production_volume T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
 # MAGIC CREATE OR REPLACE TABLE gold.fact_reconciliation AS
 # MAGIC SELECT DISTINCT
 # MAGIC CAST(xxhash64(PeriodId) AS BIGINT) AS PeriodId_key,
@@ -882,6 +1512,34 @@
 # MAGIC T.Manifest_package,
 # MAGIC T.Manifest_file
 # MAGIC FROM silver.reconciliation T;
+
+# METADATA ********************
+
+# META {
+# META   "language": "sparksql",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# MAGIC %%sql
+# MAGIC CREATE OR REPLACE TABLE gold.fact_well_test AS
+# MAGIC SELECT DISTINCT
+# MAGIC CAST(xxhash64(PeriodId) AS BIGINT) AS PeriodId_key,
+# MAGIC CAST(xxhash64(WellId) AS BIGINT) AS WellId_key,
+# MAGIC CAST(xxhash64(CompletionId) AS BIGINT) AS CompletionId_key,
+# MAGIC T.TestDate,
+# MAGIC T.DurationHours,
+# MAGIC T.OilRateBopd,
+# MAGIC T.GasRateMscfd,
+# MAGIC T.WaterCutPct,
+# MAGIC T.GorScf,
+# MAGIC T.ChokeSize64ths,
+# MAGIC T.ThpPsi,
+# MAGIC T.Validity,
+# MAGIC T.Manifest_package,
+# MAGIC T.Manifest_file
+# MAGIC FROM silver.well_test T;
 
 # METADATA ********************
 

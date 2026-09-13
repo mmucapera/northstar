@@ -27,7 +27,7 @@ core:
   # and rejects placeholder GUIDs outright ("must be a valid GUID format").
   # Add test/uat/prod back here once those workspaces actually exist.
   workspace_id:
-    dev: "2349db9d-a206-41d6-bb9b-c134bee74ee0"
+    dev: "2d59dc5b-4761-4fde-867d-061a9bbf5a48"
 
   # Repository directory containing Fabric items (REQ-013)
   # Can be relative (to this config file) or absolute paths

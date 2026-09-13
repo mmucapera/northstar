@@ -1,40 +1,40 @@
 table dim_facility
-	lineageTag: 76ac1e43-6a07-45be-afcc-6e547943b3ff
+	lineageTag: d958bd89-507f-4d14-8708-65ca0c74b3d9
 
 	column FacilityId_key
 		dataType: int64
 		sourceColumn: FacilityId_key
-		lineageTag: 066b3eb8-6715-4be7-aafe-3e5b2800d44d
+		lineageTag: d62e5c46-d7f7-4e03-8c17-c457610b8518
 
 	column FacilityId
 		dataType: string
 		sourceColumn: FacilityId
-		lineageTag: 1c959136-1a60-4bc6-8410-b0a55a4a0b50
+		lineageTag: 737d3777-a65d-45a9-8a54-6e1bf6354cb3
 
 	column FacilityName
 		dataType: string
 		sourceColumn: FacilityName
-		lineageTag: 24905f35-cba0-4349-a5fd-fb63694b96b6
+		lineageTag: 9a5ccde5-488a-476e-974e-88bf11232b20
 
 	column FacilityType
 		dataType: string
 		sourceColumn: FacilityType
-		lineageTag: 72bd053c-7f16-4d60-96aa-9836dac6c2f6
+		lineageTag: febee8e6-600b-4630-9ecc-e321e4473e1e
 
 	column FieldId_key
 		dataType: int64
 		sourceColumn: FieldId_key
-		lineageTag: 645d5abd-f3e6-4c0a-a696-93ce290c08ab
+		lineageTag: 76a3c9b7-e091-42c7-9b91-76ad906065dc
 
 	column ExportPoint
 		dataType: string
 		sourceColumn: ExportPoint
-		lineageTag: 72a38721-69bf-423f-bc2a-5632eba247e6
+		lineageTag: cdd30c5a-260c-45b6-80a2-1ac786504e38
 
 	column CapacityBopd
 		dataType: decimal
 		sourceColumn: CapacityBopd
-		lineageTag: a2f81996-96b8-47b4-a85f-3797ef081753
+		lineageTag: 2b8ad910-31ba-4dbb-aa88-cf7189c614aa
 
 	partition dim_facility = entity
 		mode: directLake

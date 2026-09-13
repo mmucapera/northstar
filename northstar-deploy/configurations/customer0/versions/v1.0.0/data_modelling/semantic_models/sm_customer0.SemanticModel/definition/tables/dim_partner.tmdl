@@ -1,30 +1,30 @@
 table dim_partner
-	lineageTag: 8ddee17c-4269-412a-b24b-4f2252925328
+	lineageTag: 476cab0b-751a-4a6e-a471-214199038396
 
 	column PartnerId_key
 		dataType: int64
 		sourceColumn: PartnerId_key
-		lineageTag: 7930f59d-db4e-4955-b595-05a5fc409bb0
+		lineageTag: e771fe9b-b7d2-44af-8da8-a97e1494ceff
 
 	column PartnerId
 		dataType: string
 		sourceColumn: PartnerId
-		lineageTag: 011a0273-cf44-420b-b45e-8e02fe7b463a
+		lineageTag: 103b7a13-4641-4078-abd5-16902c199b6c
 
 	column PartnerName
 		dataType: string
 		sourceColumn: PartnerName
-		lineageTag: 8699024c-020f-4bd9-9ee6-1b197c548938
+		lineageTag: 555658fe-bb83-4738-9462-22e1e015ab70
 
 	column PartnerRole
 		dataType: string
 		sourceColumn: PartnerRole
-		lineageTag: 00c30a73-7e47-4cc1-bf7d-7ce041999483
+		lineageTag: 2d4d8be6-ab49-480c-a087-a8637b3352cb
 
 	column EquityPct
 		dataType: decimal
 		sourceColumn: EquityPct
-		lineageTag: 110866c5-faef-4e73-91f8-d2447fb7006b
+		lineageTag: 8faa401d-91a6-4346-8b80-996f17fd7748
 
 	partition dim_partner = entity
 		mode: directLake

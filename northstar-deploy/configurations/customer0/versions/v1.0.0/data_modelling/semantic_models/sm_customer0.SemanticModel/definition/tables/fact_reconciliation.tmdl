@@ -1,81 +1,81 @@
 table fact_reconciliation
-	lineageTag: ae3d153f-efb5-45ea-b340-66728b0c6456
+	lineageTag: 09dbf1d9-238b-4fde-8723-ed3b68eb0702
 
 	column PeriodId_key
 		dataType: int64
 		sourceColumn: PeriodId_key
-		lineageTag: ae9d4d2d-ed0d-42a5-ad8b-db1d7d6d12f4
+		lineageTag: db4ce3f6-4387-4b42-845a-855e9fe67f3c
 
 	column FieldId_key
 		dataType: int64
 		sourceColumn: FieldId_key
-		lineageTag: d8d94311-1d1e-43af-9d74-78eebc95867e
+		lineageTag: 750a0715-e242-40af-8767-78557f04b100
 
 	column PartnerId_key
 		dataType: int64
 		sourceColumn: PartnerId_key
-		lineageTag: 77671e29-fdef-4fb8-bdff-a97b6cb37fe2
+		lineageTag: e3daf14d-fead-4471-b864-6690addd255e
 
 	column AllocatedBbl
 		dataType: decimal
 		sourceColumn: AllocatedBbl
-		lineageTag: ffddfeb1-24e1-4cf8-b49c-ef7b6eb7100a
+		lineageTag: a2319e36-4e51-49a1-abbd-273b2b675a52
 
 	column LiftedBbl
 		dataType: decimal
 		sourceColumn: LiftedBbl
-		lineageTag: a88e1ea8-069a-4a3f-a80b-7d3b3d1aea89
+		lineageTag: 138ebc1a-9380-4989-8495-b0a9c2aa9275
 
 	column VarianceBbl
 		dataType: decimal
 		sourceColumn: VarianceBbl
-		lineageTag: 43b45887-790c-41e0-812f-204644592b64
+		lineageTag: 290ae54f-85fd-4e18-914e-b7f7dc05e110
 
 	column VariancePct
 		dataType: decimal
 		sourceColumn: VariancePct
-		lineageTag: e5604fac-2dc1-4df4-81df-629fb399b463
+		lineageTag: e5c69609-cb41-48c2-9fa4-cee14d6be3f7
 
 	column Flag
 		dataType: string
 		sourceColumn: Flag
-		lineageTag: 3077bbcb-fb49-4ddb-87ed-e953597aa779
+		lineageTag: 083b59fa-304b-49cc-9073-f5143f8c08e0
 
 	column CashCallStatus
 		dataType: string
 		sourceColumn: CashCallStatus
-		lineageTag: 4bee3756-8e0e-4302-bcdd-50a0a97ff212
+		lineageTag: 75331851-b7b5-4a20-8a42-df471034c605
 
 	column CashCallUsd
 		dataType: decimal
 		sourceColumn: CashCallUsd
-		lineageTag: e8d86314-d6bf-4ba9-ad6d-59375ca61865
+		lineageTag: 97abb19d-be10-4379-ba56-1591a41a4c0c
 
 	column Manifest_package
 		dataType: string
 		sourceColumn: Manifest_package
-		lineageTag: 61b062d7-100d-439b-95bf-e3fdecc1617f
+		lineageTag: cdd9dd53-9d9b-42ec-847c-5f2850966ec8
 
 	column Manifest_file
 		dataType: string
 		sourceColumn: Manifest_file
-		lineageTag: cef8868a-9010-4196-8d57-3d5be733ca15
+		lineageTag: 07ffd699-df26-46de-86be-abcbe3f8c4b7
 
 	measure 'Total Allocated Bbl' = SUM('fact_reconciliation'[AllocatedBbl])
 		formatString: #,0
-		lineageTag: eb7f1211-bd4f-4b83-bc61-2877a0aa5c98
+		lineageTag: a2e97365-8276-4ebe-8ecc-456410028b00
 
 	measure 'Total Lifted Bbl' = SUM('fact_reconciliation'[LiftedBbl])
 		formatString: #,0
-		lineageTag: 54cbca3c-aabc-4313-9707-ba9e642be96e
+		lineageTag: dafcc9f1-0229-42a9-b7c5-41115d1700a5
 
 	measure 'Avg Variance Pct' = AVERAGE('fact_reconciliation'[VariancePct])
 		formatString: #,0.00
-		lineageTag: a256c615-1a89-4b3f-a59c-c7806aa7d8c9
+		lineageTag: 21e123c5-d78a-4923-af49-c48944538cd3
 
 	measure 'Total Cash Call USD' = SUM('fact_reconciliation'[CashCallUsd])
 		formatString: $#,0
-		lineageTag: 0375f067-cd36-434b-93ca-51f76c351387
+		lineageTag: bccaddcd-80c9-452e-ab6d-c1826cbb421b
 
 	partition fact_reconciliation = entity
 		mode: directLake

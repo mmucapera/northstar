@@ -9,7 +9,7 @@
 # META   "dependencies": {
 # META     "lakehouse": {
 # META       "default_lakehouse": "",
-# META       "default_lakehouse_name": "lkh_001",
+# META       "default_lakehouse_name": "lkh_customer0_schema_enabled",
 # META       "default_lakehouse_workspace_id": ""
 # META     }
 # META   }
@@ -44,7 +44,7 @@ import os
 source_schemas = ["gold_demo"]
 base_path = "Files/gold_export"
 
-# customer = "customer0"
+# customer = "CUSTOMER0"
 export_dir = "Files/gold_export"
 date_str = datetime.now().strftime("%Y%m%d")
 zip_path = f"Files/gold_export/{customer}_gold_export_{date_str}.zip"

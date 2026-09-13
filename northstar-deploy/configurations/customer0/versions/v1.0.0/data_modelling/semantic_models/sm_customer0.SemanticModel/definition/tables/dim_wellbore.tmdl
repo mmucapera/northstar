@@ -1,45 +1,45 @@
 table dim_wellbore
-	lineageTag: fa18e1db-ba85-4ab1-a887-baa66ba22fc2
+	lineageTag: 7d304556-0d7d-481a-b89a-347fc1b3f61d
 
 	column WellboreId_key
 		dataType: int64
 		sourceColumn: WellboreId_key
-		lineageTag: 7e1efcea-aa9e-4f9c-9271-070ec90097fa
+		lineageTag: ecdec33a-528f-4a93-9d80-05507adb85a4
 
 	column WellboreId
 		dataType: string
 		sourceColumn: WellboreId
-		lineageTag: 4b5feecb-d09a-4f48-bc87-c4506f8f8bc6
+		lineageTag: ab846f50-fd39-447e-aa63-db5b31ab2c2a
 
 	column WellId_key
 		dataType: int64
 		sourceColumn: WellId_key
-		lineageTag: abf3c0a7-bef7-4156-801f-c21f7fb81f65
+		lineageTag: 38739043-9869-4104-b4b0-419e583f3f76
 
 	column WellboreName
 		dataType: string
 		sourceColumn: WellboreName
-		lineageTag: 355fd71e-bc03-4ed0-ae17-ac4e99099a9f
+		lineageTag: 1dfbe564-f3a7-4283-9ceb-8123773f5b04
 
 	column Trajectory
 		dataType: string
 		sourceColumn: Trajectory
-		lineageTag: b096e856-ae47-4174-8079-9e702c77a9bb
+		lineageTag: 3ecf06fb-1534-4a99-aa5d-f5e2f6a4e347
 
 	column IsSidetrack
 		dataType: boolean
 		sourceColumn: IsSidetrack
-		lineageTag: fae52394-f8b2-4f34-becc-43ffd1154d1d
+		lineageTag: 2db7a135-3892-49a8-ab10-7831f2bebc64
 
 	column MeasuredDepthM
 		dataType: decimal
 		sourceColumn: MeasuredDepthM
-		lineageTag: b1acbb98-8e83-4aed-8cfc-ba6c63913f02
+		lineageTag: e83ceb7f-ac5b-409c-8b52-01152fc7e172
 
 	column TrueVerticalDepthM
 		dataType: decimal
 		sourceColumn: TrueVerticalDepthM
-		lineageTag: 4dfb4c49-1837-4a1c-b979-e6c4b41fbf20
+		lineageTag: a24b8e45-d60d-40ba-af37-58819a8b4608
 
 	partition dim_wellbore = entity
 		mode: directLake

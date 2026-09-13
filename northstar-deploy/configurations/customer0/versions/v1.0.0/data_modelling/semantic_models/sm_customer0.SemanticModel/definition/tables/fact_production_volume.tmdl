@@ -1,60 +1,60 @@
 table fact_production_volume
-	lineageTag: 56ea96b2-63c5-4b04-a944-432ddba4fb48
+	lineageTag: 68850b4c-ceea-4fdc-b555-1be4a550a720
 
 	column PeriodId_key
 		dataType: int64
 		sourceColumn: PeriodId_key
-		lineageTag: 4809b611-7515-490b-a37e-118cb16a6868
+		lineageTag: de9a29d2-d431-4f91-b44c-31d8ce76f6db
 
 	column WellId_key
 		dataType: int64
 		sourceColumn: WellId_key
-		lineageTag: 2f93360f-d56c-40f3-8127-4929807a2dfb
+		lineageTag: 42623858-c504-4a2f-8f17-cc712ba32510
 
 	column FieldId_key
 		dataType: int64
 		sourceColumn: FieldId_key
-		lineageTag: 3aa069ab-f346-474e-8cbc-ac0512c57282
+		lineageTag: 69ebf79b-8702-4f59-8ce1-d9d6bd7ce588
 
 	column FacilityId_key
 		dataType: int64
 		sourceColumn: FacilityId_key
-		lineageTag: 7d852603-53a3-462f-8ba6-80ea8664e6e2
+		lineageTag: 56406320-d51c-40fa-8b94-b84ea342596c
 
 	column OilBbl
 		dataType: decimal
 		sourceColumn: OilBbl
-		lineageTag: 22b2ba11-ca18-4beb-bd70-cd52cf52a847
+		lineageTag: b18a074c-c35b-47de-877a-b301f483230e
 
 	column GasMscf
 		dataType: decimal
 		sourceColumn: GasMscf
-		lineageTag: 07565e6d-ea72-4b64-947d-f1d1315d1b44
+		lineageTag: c23ca19e-363d-4def-96bc-370b0fcd5f75
 
 	column WaterBbl
 		dataType: decimal
 		sourceColumn: WaterBbl
-		lineageTag: 9fbcdc87-6b11-4492-b61d-3c2844d193a2
+		lineageTag: 4a247690-d3b6-4204-b5b8-c49c9ca22b34
 
 	column OnstreamHours
 		dataType: decimal
 		sourceColumn: OnstreamHours
-		lineageTag: 91b64e6d-12f0-476f-bfa3-c2ae66388f70
+		lineageTag: c0591f5a-8f46-4dd6-b15b-f68e29d5813b
 
 	column WaterCutPct
 		dataType: decimal
 		sourceColumn: WaterCutPct
-		lineageTag: 9431923b-4c10-48a2-ace3-4cff8b3a0cd4
+		lineageTag: 05a3b0e5-de5f-4244-b9f1-ee380e2b0e05
 
 	column Manifest_package
 		dataType: string
 		sourceColumn: Manifest_package
-		lineageTag: 0afd515b-064a-4ee0-8038-10c2835f998c
+		lineageTag: 152ec78e-b37e-4b23-8f1a-d5e225043b00
 
 	column Manifest_file
 		dataType: string
 		sourceColumn: Manifest_file
-		lineageTag: a768d39d-033f-46c4-a7ab-0828c8d8d2ff
+		lineageTag: 3f3151e0-9817-4c2e-a50c-de0bf3d5b735
 
 	partition fact_production_volume = entity
 		mode: directLake

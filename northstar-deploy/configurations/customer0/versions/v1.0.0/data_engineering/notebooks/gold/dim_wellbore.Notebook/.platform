@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "dim_wellbore",
+    "description": "Generated notebook for gold.dim_wellbore"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "886d7dfa-724f-5b53-8d3a-391bb1cb4c37"
+  }
+}

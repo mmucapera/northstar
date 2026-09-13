@@ -1,61 +1,61 @@
 table dim_completion
-	lineageTag: 4fb79659-f1e8-4594-9708-8166192bbd58
+	lineageTag: 623743a4-018b-4548-8841-345cebb634cd
 
 	column CompletionId_key
 		dataType: int64
 		sourceColumn: CompletionId_key
-		lineageTag: 2deaca33-8e41-4759-8090-04c099407133
+		lineageTag: 51ea4887-f3cf-4d0b-bdec-ee2070cb8cb8
 
 	column CompletionId
 		dataType: string
 		sourceColumn: CompletionId
-		lineageTag: 3df5ef84-3103-464e-9811-3f507ffd1fdd
+		lineageTag: f40dcf75-355e-4031-9dd6-7b65f67bc126
 
 	column WellboreId_key
 		dataType: int64
 		sourceColumn: WellboreId_key
-		lineageTag: d51dc837-af21-4316-a2f8-acfc43c4f54e
+		lineageTag: 719b1858-dab3-4fc1-ac46-9600e9c94c99
 
 	column WellId_key
 		dataType: int64
 		sourceColumn: WellId_key
-		lineageTag: e2684bc9-2343-4668-ba96-6e939693e32f
+		lineageTag: 7691e7b8-9604-46bf-98b3-cdd1042c4a09
 
 	column CompletionType
 		dataType: string
 		sourceColumn: CompletionType
-		lineageTag: 2d18edb6-e274-4ae2-9dff-8a50e8744a85
+		lineageTag: c1f4cc8b-fff3-4d16-85cf-4d9982086f9d
 
 	column ReservoirUnit
 		dataType: string
 		sourceColumn: ReservoirUnit
-		lineageTag: 8fe5d21d-ebab-4e29-81a8-c462fbd8b3c3
+		lineageTag: 16432854-44b6-4204-8342-e09fba59799c
 
 	column PerforationTopM
 		dataType: decimal
 		sourceColumn: PerforationTopM
-		lineageTag: 5c9bd3ab-b77e-45e8-be7a-2cd234dbf032
+		lineageTag: 33dc0c92-2125-4f78-96ff-d4d620d20a36
 
 	column PerforationBaseM
 		dataType: decimal
 		sourceColumn: PerforationBaseM
-		lineageTag: 31ac9b7f-997d-40fb-8b8c-cbac8d0c04c3
+		lineageTag: 9a438794-728c-4ef5-9813-b333fbdd364f
 
 	column ArtificialLift
 		dataType: string
 		sourceColumn: ArtificialLift
-		lineageTag: cb5622b6-c710-4c13-9851-097dac39d783
+		lineageTag: 02d3bac1-cb61-4310-ae94-114d07fd5e50
 
 	column CompletionDate
 		dataType: dateTime
 		formatString: dd mmm yyyy
 		sourceColumn: CompletionDate
-		lineageTag: ee87d156-2946-4239-95af-330a4893fff3
+		lineageTag: 4bc78cea-8788-4e6a-a7f9-680a4d977df5
 
 	column IsActive
 		dataType: boolean
 		sourceColumn: IsActive
-		lineageTag: a8aaa2d0-41b9-4d20-b579-4be3364a4127
+		lineageTag: 735e1c25-0b18-45bd-ae01-c547f24959e9
 
 	partition dim_completion = entity
 		mode: directLake

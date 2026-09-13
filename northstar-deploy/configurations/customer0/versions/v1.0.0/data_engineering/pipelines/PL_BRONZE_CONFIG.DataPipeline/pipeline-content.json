@@ -1,6 +1,6 @@
 {
   "name": "PL_BRONZE_CONFIG",
-  "objectId": "f6209b73-53d2-555a-9634-b64a36a01d3b",
+  "objectId": "7e9bc2da-d7a1-5f56-97d3-245ddc6ff2a1",
   "properties": {
     "activities": [
       {
@@ -15,7 +15,57 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "88a6ada5-69b0-5d8b-85af-add06dad62f4",
+          "notebookId": "c9d34311-0eb4-5f7a-b5f3-4a9bd36262f7",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "domain": {
+              "value": {
+                "value": "@pipeline().parameters.domain",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_date": {
+              "value": {
+                "value": "@pipeline().parameters.processing_date",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batchid": {
+              "value": {
+                "value": "@pipeline().parameters.batchid",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": {
+            "value": "@replace(concat(pipeline().PipelineName,pipeline().DataFactory),'-','_')",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "BRZ_COMPLETION",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "6c66c19b-c45d-5338-b5a8-926e55728efc",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -65,7 +115,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "4a677473-a99b-5339-9e63-9d36a8aec140",
+          "notebookId": "4789d360-7f41-596d-94bd-74f8ce4040fe",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -115,7 +165,107 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "0831c105-8953-541f-920f-19d1c21efd55",
+          "notebookId": "6fba709e-3109-5f70-bd13-3fdf7a437011",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "domain": {
+              "value": {
+                "value": "@pipeline().parameters.domain",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_date": {
+              "value": {
+                "value": "@pipeline().parameters.processing_date",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batchid": {
+              "value": {
+                "value": "@pipeline().parameters.batchid",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": {
+            "value": "@replace(concat(pipeline().PipelineName,pipeline().DataFactory),'-','_')",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "BRZ_DRILLING_TELEMETRY",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "6d297b3f-ca95-5f7b-9f06-d6fbf00ba304",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "domain": {
+              "value": {
+                "value": "@pipeline().parameters.domain",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_date": {
+              "value": {
+                "value": "@pipeline().parameters.processing_date",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batchid": {
+              "value": {
+                "value": "@pipeline().parameters.batchid",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": {
+            "value": "@replace(concat(pipeline().PipelineName,pipeline().DataFactory),'-','_')",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "BRZ_FACILITY",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "ee065f91-b58c-59db-830d-3aa6e7982678",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -165,7 +315,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "230a6745-1a2d-5f5f-b5b4-cd88855c7d55",
+          "notebookId": "5f3427b9-29a7-5bf3-8f4f-94aab900bede",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -215,7 +365,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "4503cc37-c067-5f24-9fad-054aae346fa9",
+          "notebookId": "792ae5e5-e7c9-5b13-81f0-d075ccddaf33",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -265,7 +415,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "2554c3eb-dd2a-5e98-b53c-91e95c7b13db",
+          "notebookId": "869cd742-9eb3-5917-b0c2-e53e6b4084b7",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -315,7 +465,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "5e706018-cceb-52a4-a217-69897e0ada4b",
+          "notebookId": "5f082d40-130c-5d68-8e33-14928ff5cb6d",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -365,7 +515,7 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "4ef0430d-a862-5b5a-a5b0-537e7d2fd8e5",
+          "notebookId": "41617924-285d-5c0e-b2d9-2bb03c88d706",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -415,7 +565,57 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "23a5b200-8f7d-5595-966e-44782874d453",
+          "notebookId": "5ca660b9-4be4-5b99-ba53-501cbb33f663",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "domain": {
+              "value": {
+                "value": "@pipeline().parameters.domain",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_date": {
+              "value": {
+                "value": "@pipeline().parameters.processing_date",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batchid": {
+              "value": {
+                "value": "@pipeline().parameters.batchid",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": {
+            "value": "@replace(concat(pipeline().PipelineName,pipeline().DataFactory),'-','_')",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "BRZ_PRODUCTION_VOLUME",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "13c64434-1f76-5d3a-8000-99193ad9c60d",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {
@@ -465,7 +665,157 @@
           "secureInput": false
         },
         "typeProperties": {
-          "notebookId": "b14359f0-2f8c-5aeb-8d51-c159b1357720",
+          "notebookId": "003256a1-2613-5c02-87fe-22168b5f3209",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "domain": {
+              "value": {
+                "value": "@pipeline().parameters.domain",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_date": {
+              "value": {
+                "value": "@pipeline().parameters.processing_date",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batchid": {
+              "value": {
+                "value": "@pipeline().parameters.batchid",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": {
+            "value": "@replace(concat(pipeline().PipelineName,pipeline().DataFactory),'-','_')",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "BRZ_WELL",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "e8df17a4-d5ff-5b00-8016-38058517fa26",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "domain": {
+              "value": {
+                "value": "@pipeline().parameters.domain",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_date": {
+              "value": {
+                "value": "@pipeline().parameters.processing_date",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batchid": {
+              "value": {
+                "value": "@pipeline().parameters.batchid",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": {
+            "value": "@replace(concat(pipeline().PipelineName,pipeline().DataFactory),'-','_')",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "BRZ_WELL_TEST",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "69cdb23b-435b-57a9-afd7-42162f755edf",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "domain": {
+              "value": {
+                "value": "@pipeline().parameters.domain",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_date": {
+              "value": {
+                "value": "@pipeline().parameters.processing_date",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batchid": {
+              "value": {
+                "value": "@pipeline().parameters.batchid",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": {
+            "value": "@replace(concat(pipeline().PipelineName,pipeline().DataFactory),'-','_')",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "BRZ_WELLBORE",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "035d47a9-0eb6-5339-911e-5f01ea203822",
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "domain": {

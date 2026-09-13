@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "fact_well_test",
+    "description": "Generated notebook for gold.fact_well_test"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9bdf19bf-7d49-5a08-8252-a72df1b30a2f"
+  }
+}

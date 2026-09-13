@@ -4,5 +4,4 @@
 # output (harmless clutter - the generated *pipeline* JSON is already
 # correctly scoped to CUSTOMER0's own tables - but confusing to browse and slow
 # to regenerate). See docs/customer0-pilot-kickoff.md.
-excluded_models:
-  
+excluded_models: []

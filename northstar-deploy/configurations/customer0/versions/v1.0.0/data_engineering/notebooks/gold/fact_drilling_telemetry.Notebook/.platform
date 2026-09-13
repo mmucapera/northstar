@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "fact_drilling_telemetry",
+    "description": "Generated notebook for gold.fact_drilling_telemetry"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4b7f2e1f-a0e6-58f8-8e85-912e48246b4a"
+  }
+}

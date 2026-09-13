@@ -11,7 +11,11 @@ resource "azurerm_fabric_capacity" "this" {
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
 
-  administration_members = var.admin_object_ids
+  # The deploy SPN must also be a capacity admin, or the fabric provider
+  # (authenticating as that SPN) can't see this capacity at all when
+  # fabric_workspace.tf looks it up by display_name to get its GUID
+  # (GET /v1/capacities only returns capacities the caller administers).
+  administration_members = concat(var.admin_object_ids, [azuread_service_principal.this.object_id])
 
   sku {
     name = var.capacity_sku

@@ -1,66 +1,66 @@
 table fact_drilling_telemetry
-	lineageTag: 5e1a54c5-4757-4b36-942e-65661fcd9629
+	lineageTag: 7d7940fb-c20b-405e-abf9-9ef6e7bd9c96
 
 	column WellId_key
 		dataType: int64
 		sourceColumn: WellId_key
-		lineageTag: b1f0376a-31d0-4213-a7e3-3845acf852a1
+		lineageTag: 1846a0ea-d103-4cda-9cc3-dde434280163
 
 	column WellboreId_key
 		dataType: int64
 		sourceColumn: WellboreId_key
-		lineageTag: 4a2fb15e-2068-48e5-b513-d4715527068e
+		lineageTag: fea6b6be-2d4b-4ce0-b083-d98d3c2d5bf3
 
 	column ReportDate
 		dataType: dateTime
 		formatString: dd mmm yyyy
 		sourceColumn: ReportDate
-		lineageTag: c6d2099d-8484-48d5-be00-64c32791b4d2
+		lineageTag: 6229b7dc-f5a6-4f7c-9f6d-8ffa71e4b05e
 
 	column DepthM
 		dataType: decimal
 		sourceColumn: DepthM
-		lineageTag: 9ae99f68-e656-4d47-bbb4-04db98136d76
+		lineageTag: 82d67515-0110-48d6-bfc8-5d42d6fd4380
 
 	column RopMPerHr
 		dataType: decimal
 		sourceColumn: RopMPerHr
-		lineageTag: 5fd8dfe8-28b0-4913-8294-84ca25da766d
+		lineageTag: e41dd07b-ca23-4606-af6b-773e801cfa80
 
 	column WobKlbs
 		dataType: decimal
 		sourceColumn: WobKlbs
-		lineageTag: ad9bcf47-46f1-438f-8e92-39ac41d769bd
+		lineageTag: f7ba1ccc-e5e6-45ec-9d59-f472f7092ce6
 
 	column Rpm
 		dataType: decimal
 		sourceColumn: Rpm
-		lineageTag: a309fe78-9cc4-4f50-8a66-86115febc71a
+		lineageTag: b99440a6-ce21-4d6c-8f1b-efe50e7fd0a4
 
 	column MudWeightPpg
 		dataType: decimal
 		sourceColumn: MudWeightPpg
-		lineageTag: 44dc7e2e-9693-47b8-bd8d-3c251238ab79
+		lineageTag: a51313db-8ac2-43d5-8e35-abe53cf22d5d
 
 	column FlowRateGpm
 		dataType: decimal
 		sourceColumn: FlowRateGpm
-		lineageTag: 6ba1acfa-de3f-479e-adc2-b4b3a3001dcf
+		lineageTag: e4130890-9bd6-4264-a9a9-2b22564c897b
 
 	column Npt
 		dataType: boolean
 		sourceColumn: Npt
-		lineageTag: ccdfab5a-308e-4ae6-a899-d1cfebef1953
+		lineageTag: 661b7aed-a5bd-4be1-b6fe-51e70430237c
 
 	column Manifest_package
 		dataType: string
 		sourceColumn: Manifest_package
-		lineageTag: db809aa3-22f8-4a45-8e85-fa06a6f8d6da
+		lineageTag: ad07b237-88f2-4d63-86a9-d3dec13e5d60
 
 	column Manifest_file
 		dataType: string
 		sourceColumn: Manifest_file
-		lineageTag: d30b8981-583b-4828-a0d7-2e4562fac11f
+		lineageTag: 4c865c5e-0264-4fde-bd82-34492bf42903
 
 	partition fact_drilling_telemetry = entity
 		mode: directLake

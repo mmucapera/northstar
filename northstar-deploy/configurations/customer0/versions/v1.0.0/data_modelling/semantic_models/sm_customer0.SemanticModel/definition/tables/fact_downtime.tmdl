@@ -1,34 +1,34 @@
 table fact_downtime
-	lineageTag: 53ae8355-fe00-48a2-be88-9cdd0a273d2e
+	lineageTag: 9cfae4f5-aeb8-40fe-bc7d-a0bf591a0957
 
 	column PeriodId_key
 		dataType: int64
 		sourceColumn: PeriodId_key
-		lineageTag: e458e0dd-4922-44af-8d35-cdefbd5e822a
+		lineageTag: 6ddf09f1-fcff-4fba-9cd4-23a758bb2e07
 
 	column CauseId_key
 		dataType: int64
 		sourceColumn: CauseId_key
-		lineageTag: ada78932-cc78-4a18-8ebd-b90a952a38bf
+		lineageTag: 644249e1-339c-48b1-ad34-f370785f2cd8
 
 	column Hours
 		dataType: decimal
 		sourceColumn: Hours
-		lineageTag: b1605ced-64c6-4f0a-81ce-ab51062f463f
+		lineageTag: d6160ec0-eb26-42db-808d-cc1f486610b4
 
 	column Manifest_package
 		dataType: string
 		sourceColumn: Manifest_package
-		lineageTag: bb1714cf-105e-4185-b7eb-16200ff132ee
+		lineageTag: 269e72db-7ec8-49fd-9c97-35547425f22a
 
 	column Manifest_file
 		dataType: string
 		sourceColumn: Manifest_file
-		lineageTag: 1c006408-2fa4-481b-8ff5-7688a0aa14a8
+		lineageTag: 277b278d-3a82-48bb-9488-bd1fcf52cd1e
 
 	measure 'Total Downtime Hours' = SUM('fact_downtime'[Hours])
 		formatString: #,0
-		lineageTag: 8a9f414d-b97f-42aa-9a0a-833226513b3c
+		lineageTag: f4e4d86f-3e4f-49ef-8dfc-e6a370f04fb3
 
 	partition fact_downtime = entity
 		mode: directLake

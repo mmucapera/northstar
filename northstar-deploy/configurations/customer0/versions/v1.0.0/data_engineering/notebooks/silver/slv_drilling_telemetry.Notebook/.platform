@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "slv_drilling_telemetry",
+    "description": "Generated notebook for silver.drilling_telemetry"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f691c2bc-9fba-50af-b7a8-97aa69770c4c"
+  }
+}

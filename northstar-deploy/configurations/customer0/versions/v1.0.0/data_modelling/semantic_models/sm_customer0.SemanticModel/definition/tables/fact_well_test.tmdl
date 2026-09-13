@@ -1,76 +1,76 @@
 table fact_well_test
-	lineageTag: 9bf1caaa-efd5-4b91-bd76-709340050e74
+	lineageTag: a2b3cadf-4170-47ee-81fd-6247e3f5b45e
 
 	column PeriodId_key
 		dataType: int64
 		sourceColumn: PeriodId_key
-		lineageTag: 5fd3e8f4-49d8-4a72-bd9b-5b0455e31565
+		lineageTag: bbb8c487-a36f-4591-8030-7d7f5bbc3aeb
 
 	column WellId_key
 		dataType: int64
 		sourceColumn: WellId_key
-		lineageTag: bac62896-c328-46cf-a643-e6b29351cc58
+		lineageTag: e430858c-54d7-467d-b52a-90bf94df621f
 
 	column CompletionId_key
 		dataType: int64
 		sourceColumn: CompletionId_key
-		lineageTag: fa62fb60-2b2b-494b-855e-ada9cf748696
+		lineageTag: 338c8607-1510-4b36-9f67-ea3378bca088
 
 	column TestDate
 		dataType: dateTime
 		formatString: dd mmm yyyy
 		sourceColumn: TestDate
-		lineageTag: 9caa74d1-aec5-43ef-a2a7-1bd14f111197
+		lineageTag: 4fb7c24e-b74a-47e0-834a-17cd48f6c55b
 
 	column DurationHours
 		dataType: decimal
 		sourceColumn: DurationHours
-		lineageTag: 84262172-c2c3-47b3-89d9-0cf1f297cf41
+		lineageTag: 1ee74125-a677-4586-8d07-e03b2fc7b012
 
 	column OilRateBopd
 		dataType: decimal
 		sourceColumn: OilRateBopd
-		lineageTag: 02d528d1-2376-4e9c-8ec1-431ca2d45c73
+		lineageTag: b256f359-d756-44b1-8d3d-76623bc65a45
 
 	column GasRateMscfd
 		dataType: decimal
 		sourceColumn: GasRateMscfd
-		lineageTag: 195959b7-9eb9-4298-89c9-032b7d70c93b
+		lineageTag: 85908fe7-2f5e-47c2-b7b6-003086674307
 
 	column WaterCutPct
 		dataType: decimal
 		sourceColumn: WaterCutPct
-		lineageTag: 2f63378c-b2c7-4031-98dd-eab673562072
+		lineageTag: fd0c6788-00e6-4330-bc69-ba73dbeed2ab
 
 	column GorScf
 		dataType: decimal
 		sourceColumn: GorScf
-		lineageTag: d6109866-f381-482b-a0d6-f4e090242bb7
+		lineageTag: f398a6e0-f79b-4769-9401-d35c33d7fb65
 
 	column ChokeSize64ths
 		dataType: int64
 		sourceColumn: ChokeSize64ths
-		lineageTag: ab30bd53-1d89-4ab2-ba12-57d787216b67
+		lineageTag: 8367b703-3bf3-49a2-a121-029c8e1258a9
 
 	column ThpPsi
 		dataType: decimal
 		sourceColumn: ThpPsi
-		lineageTag: a27b2275-e7cd-4d98-8e9f-9989648b0f29
+		lineageTag: a9ecb3fe-4438-4845-aaa0-1f2e47e6360e
 
 	column Validity
 		dataType: string
 		sourceColumn: Validity
-		lineageTag: f29a0e5d-16ab-4448-8c07-759ac8f0cbeb
+		lineageTag: a81aec6b-f13b-49f4-9956-dc5b8b0d5291
 
 	column Manifest_package
 		dataType: string
 		sourceColumn: Manifest_package
-		lineageTag: 41aa57ad-9be9-45e4-9e52-7bee6f5e0ca6
+		lineageTag: 750ec00b-d956-455a-822d-c1d0cad3ff4b
 
 	column Manifest_file
 		dataType: string
 		sourceColumn: Manifest_file
-		lineageTag: 306c62c0-1ded-4c0d-9057-8e4c41bcf626
+		lineageTag: 131fc54b-ebca-42e7-87e1-0dad3b3442b3
 
 	partition fact_well_test = entity
 		mode: directLake

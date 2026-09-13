@@ -1,56 +1,56 @@
 table dim_well
-	lineageTag: bb7a3b14-7dfd-444a-bef7-a43e34fcab06
+	lineageTag: a0e2dc5f-8773-43a6-8e70-23952a8b67e7
 
 	column WellId_key
 		dataType: int64
 		sourceColumn: WellId_key
-		lineageTag: 51d6af06-4b8e-47e1-abe5-fc22f99d4fa4
+		lineageTag: 4f5a77c1-5ec6-4cd0-8570-985e0835f809
 
 	column WellId
 		dataType: string
 		sourceColumn: WellId
-		lineageTag: f1d973b5-4959-42d3-8465-a0fed6779505
+		lineageTag: 95ec21a3-fd33-4634-b11c-f3618a81637a
 
 	column WellName
 		dataType: string
 		sourceColumn: WellName
-		lineageTag: de8efa5a-13dd-4b26-a88e-ba4c0c35535e
+		lineageTag: c650baf3-70a4-46a2-879a-d687de0a54bd
 
 	column FieldId_key
 		dataType: int64
 		sourceColumn: FieldId_key
-		lineageTag: 8e9e7db4-9d1d-48b7-a683-52e04f42acdb
+		lineageTag: 9f9f5559-9cca-459c-8e7d-ea33f41e048c
 
 	column FacilityId_key
 		dataType: int64
 		sourceColumn: FacilityId_key
-		lineageTag: 76075393-99ee-47cb-89cb-4870924fb0ec
+		lineageTag: b14561d9-bc98-4acc-a6a0-aa2d7990be07
 
 	column PartnerId_key
 		dataType: int64
 		sourceColumn: PartnerId_key
-		lineageTag: 0d6bc2bc-ebab-4089-9332-9e187e08b846
+		lineageTag: 76955c10-5d4e-420d-9427-f2fedd0f930c
 
 	column WellType
 		dataType: string
 		sourceColumn: WellType
-		lineageTag: 4093e91a-c24e-44fe-9795-6271018b4b02
+		lineageTag: 0f0fdcfd-8177-4d1e-a2f6-38c92dae8d83
 
 	column Status
 		dataType: string
 		sourceColumn: Status
-		lineageTag: e3a24045-40bd-4e5c-94f8-73f51dc35692
+		lineageTag: fd3c9d50-d634-4f2c-a77f-f3ffe2b82ba8
 
 	column SpudDate
 		dataType: dateTime
 		formatString: dd mmm yyyy
 		sourceColumn: SpudDate
-		lineageTag: 70f42b5b-50da-4d0c-b82e-6d3547636d8d
+		lineageTag: f88f779f-4d3a-46cd-91e6-397929796dc5
 
 	column TotalDepthM
 		dataType: decimal
 		sourceColumn: TotalDepthM
-		lineageTag: bf2ef5f2-d994-4fe4-b6cf-bfbcad9a076d
+		lineageTag: 79f27bbc-7cf7-4f6f-a829-e9a6aa758f22
 
 	partition dim_well = entity
 		mode: directLake

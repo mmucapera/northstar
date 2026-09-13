@@ -35,13 +35,13 @@ data "fabric_capacity" "existing" {
   }
 }
 
-locals {
-  # azurerm_fabric_capacity.this.id is a full ARM resource ID
-  # (.../Microsoft.Fabric/capacities/xxx); the fabric provider wants just the
-  # capacity's own GUID, which is the last path segment.
-  fabric_managed_capacity_id = element(split("/", azurerm_fabric_capacity.this.id), length(split("/", azurerm_fabric_capacity.this.id)) - 1)
+data "fabric_capacity" "managed" {
+  count        = var.capacity_display_name == null ? 1 : 0
+  display_name = azurerm_fabric_capacity.this.name
+}
 
-  workspace_capacity_id = var.capacity_display_name != null ? data.fabric_capacity.existing[0].id : local.fabric_managed_capacity_id
+locals {
+  workspace_capacity_id = var.capacity_display_name != null ? data.fabric_capacity.existing[0].id : data.fabric_capacity.managed[0].id
 }
 
 resource "fabric_workspace" "this" {

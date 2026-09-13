@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "dim_completion",
+    "description": "Generated notebook for gold.dim_completion"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "60190a2a-6a89-55e0-9a8b-fc27489563cb"
+  }
+}

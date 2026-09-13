@@ -1,20 +1,20 @@
 table dim_downtime_cause
-	lineageTag: ead29fca-c0a5-46b3-bb01-19cb8b0193af
+	lineageTag: 7b5e8630-31b5-4396-b1e2-9eeead8c0cef
 
 	column CauseId_key
 		dataType: int64
 		sourceColumn: CauseId_key
-		lineageTag: 02ad91ab-2919-4244-9599-4ba61d0ba4b3
+		lineageTag: 4c9b2eda-4452-41b4-a31a-aa386aae9b82
 
 	column CauseId
 		dataType: string
 		sourceColumn: CauseId
-		lineageTag: ab8e029b-ab4d-4a72-8df6-6c06e71c04aa
+		lineageTag: eafa122d-e413-4ef9-ba79-5fd377aa4b48
 
 	column CauseName
 		dataType: string
 		sourceColumn: CauseName
-		lineageTag: 5ed67c78-16d1-4feb-86ba-8788f85eca81
+		lineageTag: 21f0237e-53b5-4d59-a864-d84f15372472
 
 	partition dim_downtime_cause = entity
 		mode: directLake

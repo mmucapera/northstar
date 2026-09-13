@@ -1,29 +1,29 @@
 table fact_hse_exposure
-	lineageTag: 2c97affc-efe3-4357-9c8d-c760d725d3d5
+	lineageTag: e07d72ee-e33d-4618-9317-3837423c34e8
 
 	column PeriodId_key
 		dataType: int64
 		sourceColumn: PeriodId_key
-		lineageTag: 5fea8a75-6974-4b51-919a-545d9f27070a
+		lineageTag: feea8274-7ac3-4fba-a0e4-7630ee865103
 
 	column HoursWorked
 		dataType: decimal
 		sourceColumn: HoursWorked
-		lineageTag: 798847e0-bae2-4599-8a6d-a5e48e11aba1
+		lineageTag: 413ec93f-83df-4477-b01d-fa26b9a74e38
 
 	column Manifest_package
 		dataType: string
 		sourceColumn: Manifest_package
-		lineageTag: 488db5c0-2dc2-4f14-95e6-aa46f1a49d91
+		lineageTag: f74aad68-e09f-40f3-ae7a-df3abd4ae876
 
 	column Manifest_file
 		dataType: string
 		sourceColumn: Manifest_file
-		lineageTag: c8038a54-bbeb-4ddd-b25c-95c13fcfbd35
+		lineageTag: 6746dfd3-8802-4193-8eaf-99f293a875af
 
 	measure 'Total Exposure Hours' = SUM('fact_hse_exposure'[HoursWorked])
 		formatString: #,0
-		lineageTag: 7d27380e-1fc2-4553-af03-56691423a7ba
+		lineageTag: 6b835db5-5e3f-435d-82ca-6c35be6fd221
 
 	partition fact_hse_exposure = entity
 		mode: directLake

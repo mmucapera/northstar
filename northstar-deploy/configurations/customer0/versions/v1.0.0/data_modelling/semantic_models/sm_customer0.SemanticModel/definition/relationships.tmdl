@@ -1,87 +1,87 @@
-relationship f71e80b2-8729-44c9-8283-9fcbaf4838a1
+relationship b4f6470f-4c03-4c3b-ae60-b9ffa09ef5d0
 	fromColumn: fact_cash_call_event.FieldId_key
 	toColumn: dim_field.FieldId_key
 
-relationship ace0f214-64f8-46de-b403-671010414677
+relationship 38dac14b-3d02-456d-a0d3-be4e20b4f6bb
 	fromColumn: fact_cash_call_event.PartnerId_key
 	toColumn: dim_partner.PartnerId_key
 
-relationship 825d68f1-fd2a-497d-a052-c560a420099e
+relationship e2b54ffe-87b8-4385-b017-915ce5c73293
 	fromColumn: fact_cash_call_event.PeriodId_key
 	toColumn: dim_period.PeriodId_key
 
-relationship 840048ca-fa1e-45bb-9625-d401c0253d85
+relationship 21613888-4b10-4898-b36e-36d63e68e50c
 	fromColumn: fact_downtime.CauseId_key
 	toColumn: dim_downtime_cause.CauseId_key
 
-relationship e0e691b1-78b8-4935-b665-1df2b670a0e0
+relationship f352b363-e028-4e4c-b4e5-fb2362e740ca
 	fromColumn: fact_downtime.PeriodId_key
 	toColumn: dim_period.PeriodId_key
 
-relationship 015ca6f9-b0a2-4442-b8df-474e6f8cfd71
-	fromColumn: fact_hse_exposure.PeriodId_key
-	toColumn: dim_period.PeriodId_key
-
-relationship b7ea82dd-809a-4271-941d-1f0c552746c3
-	fromColumn: fact_hse_incidents.FieldId_key
-	toColumn: dim_field.FieldId_key
-
-relationship 22fcef58-9735-4432-8c18-82be28bd3122
-	fromColumn: fact_hse_incidents.PeriodId_key
-	toColumn: dim_period.PeriodId_key
-
-relationship f3f5f791-840c-4f7b-bbf2-550f0e489d35
-	fromColumn: fact_production.FieldId_key
-	toColumn: dim_field.FieldId_key
-
-relationship 836bdd72-751c-4a8d-ba66-57a218593c38
-	fromColumn: fact_production.PeriodId_key
-	toColumn: dim_period.PeriodId_key
-
-relationship a7957d27-0ee8-49f4-81e6-edf9be7cb8e5
-	fromColumn: fact_reconciliation.FieldId_key
-	toColumn: dim_field.FieldId_key
-
-relationship 971b9f58-742c-45c3-92bf-769342956012
-	fromColumn: fact_reconciliation.PartnerId_key
-	toColumn: dim_partner.PartnerId_key
-
-relationship 89a1a66b-8782-41e6-92c1-62504cb90ac5
-	fromColumn: fact_reconciliation.PeriodId_key
-	toColumn: dim_period.PeriodId_key
-
-relationship 56b2d83e-58dc-4388-8b08-f35da6d1b8cf
+relationship 19790ad7-7f63-4a7a-8210-64134e06c1f2
 	fromColumn: fact_drilling_telemetry.WellId_key
 	toColumn: dim_well.WellId_key
 
-relationship eb3e4d0b-ede6-44f1-8ca9-3e6d29ac5be6
+relationship de317e6c-5035-4854-a26b-efcc81d9917e
 	fromColumn: fact_drilling_telemetry.WellboreId_key
 	toColumn: dim_wellbore.WellboreId_key
 
-relationship d002fecf-e097-4552-a9eb-598927e6cab2
+relationship 876f30ca-754a-47a8-9b34-7a6edad80b24
+	fromColumn: fact_hse_exposure.PeriodId_key
+	toColumn: dim_period.PeriodId_key
+
+relationship 0248deea-8025-42d2-95c1-19432dfdc8d8
+	fromColumn: fact_hse_incidents.FieldId_key
+	toColumn: dim_field.FieldId_key
+
+relationship ed27b1f2-43cd-4190-a67d-e515ef809346
+	fromColumn: fact_hse_incidents.PeriodId_key
+	toColumn: dim_period.PeriodId_key
+
+relationship 7e501e3d-dc4d-4b62-a1ec-b6750e86026e
+	fromColumn: fact_production.FieldId_key
+	toColumn: dim_field.FieldId_key
+
+relationship c4557427-0dbf-4010-979c-2d987ef6c220
+	fromColumn: fact_production.PeriodId_key
+	toColumn: dim_period.PeriodId_key
+
+relationship 551add01-4a41-4f67-8f19-036a6cec3a85
 	fromColumn: fact_production_volume.FacilityId_key
 	toColumn: dim_facility.FacilityId_key
 
-relationship 7e150c9c-1e7e-4bba-9b1b-2b824f7f86d1
+relationship 40b2372d-7771-40b4-b059-1ddb3273f7ce
 	fromColumn: fact_production_volume.FieldId_key
 	toColumn: dim_field.FieldId_key
 
-relationship 4130abb8-c2a5-4270-9c0d-f6d4f8cec2ee
+relationship 0fd2ca58-9ea6-49cb-b560-9870076292be
 	fromColumn: fact_production_volume.PeriodId_key
 	toColumn: dim_period.PeriodId_key
 
-relationship 8fbc4a00-7801-4859-b393-1484bf68a2a8
+relationship d58aa298-8658-4997-8753-79db27c176f5
 	fromColumn: fact_production_volume.WellId_key
 	toColumn: dim_well.WellId_key
 
-relationship cac38c7a-c6bd-4a07-aed6-4341c7a54c15
+relationship 66456bbd-de4f-4644-9523-ff9dabb8fbd0
+	fromColumn: fact_reconciliation.FieldId_key
+	toColumn: dim_field.FieldId_key
+
+relationship 104170b3-632d-4d35-a767-ab0b8796a130
+	fromColumn: fact_reconciliation.PartnerId_key
+	toColumn: dim_partner.PartnerId_key
+
+relationship e45cb330-5c36-471a-9009-cf51ace7e0cf
+	fromColumn: fact_reconciliation.PeriodId_key
+	toColumn: dim_period.PeriodId_key
+
+relationship 47dce760-4927-4c0b-ad1a-afde358cb69f
 	fromColumn: fact_well_test.CompletionId_key
 	toColumn: dim_completion.CompletionId_key
 
-relationship 81b3fa53-9983-4148-90c2-84bd82433dd4
+relationship 7ed3ade9-87ef-4e4c-ab60-ec401494862f
 	fromColumn: fact_well_test.PeriodId_key
 	toColumn: dim_period.PeriodId_key
 
-relationship eac8c3b7-b74d-456e-9eea-1474d827b0e0
+relationship 63073ea4-b679-4bcf-8ef8-307cefb6a9e7
 	fromColumn: fact_well_test.WellId_key
 	toColumn: dim_well.WellId_key
