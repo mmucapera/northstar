@@ -1,0 +1,231 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-positive: var(--positive);
+  --color-positive-foreground: var(--positive-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-critical: var(--critical);
+  --color-critical-foreground: var(--critical-foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-grid: var(--grid);
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+}
+
+:root {
+  /* Delta Basin control-room theme. Dark by default; there is no light mode. */
+  --radius: 0.35rem;
+  --background: oklch(0.19 0.017 250);
+  --foreground: oklch(0.93 0.008 250);
+  --surface: oklch(0.235 0.018 250);
+  --surface-2: oklch(0.275 0.019 250);
+  --grid: oklch(0.34 0.018 250);
+  --card: oklch(0.235 0.018 250);
+  --card-foreground: oklch(0.93 0.008 250);
+  --popover: oklch(0.235 0.018 250);
+  --popover-foreground: oklch(0.93 0.008 250);
+  --primary: oklch(0.78 0.13 190);
+  --primary-foreground: oklch(0.19 0.02 220);
+  --secondary: oklch(0.3 0.02 250);
+  --secondary-foreground: oklch(0.93 0.008 250);
+  --muted: oklch(0.28 0.017 250);
+  --muted-foreground: oklch(0.68 0.014 250);
+  --accent: oklch(0.79 0.15 78);
+  --accent-foreground: oklch(0.2 0.03 60);
+  --destructive: oklch(0.63 0.19 22);
+  --destructive-foreground: oklch(0.97 0.01 20);
+  --positive: oklch(0.78 0.13 178);
+  --positive-foreground: oklch(0.19 0.02 220);
+  --warning: oklch(0.81 0.15 78);
+  --warning-foreground: oklch(0.2 0.03 60);
+  --critical: oklch(0.64 0.19 22);
+  --critical-foreground: oklch(0.97 0.01 20);
+  --border: oklch(0.32 0.018 250);
+  --input: oklch(0.32 0.018 250);
+  --ring: oklch(0.6 0.09 190);
+  --chart-1: oklch(0.78 0.13 190);
+  --chart-2: oklch(0.81 0.15 78);
+  --chart-3: oklch(0.64 0.19 22);
+  --chart-4: oklch(0.72 0.11 265);
+  --chart-5: oklch(0.75 0.1 140);
+  --sidebar: oklch(0.215 0.018 250);
+  --sidebar-foreground: oklch(0.9 0.008 250);
+  --sidebar-primary: oklch(0.78 0.13 190);
+  --sidebar-primary-foreground: oklch(0.19 0.02 220);
+  --sidebar-accent: oklch(0.28 0.02 250);
+  --sidebar-accent-foreground: oklch(0.93 0.008 250);
+  --sidebar-border: oklch(0.3 0.018 250);
+  --sidebar-ring: oklch(0.6 0.09 190);
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-grid) 35%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-grid) 35%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* iOS-style "jiggle" for widgets in dashboard-layout edit mode - each
+   widget gets a slightly different animation-delay (set inline) so they
+   don't all wobble in lockstep. Kept subtle (small angle, slow) - this is
+   just an "editable" affordance, not something that should be distracting
+   to look at while picking a widget to drag. */
+@keyframes widget-jiggle {
+  0%, 100% { transform: rotate(-0.25deg); }
+  50% { transform: rotate(0.25deg); }
+}
+
+@utility animate-widget-jiggle {
+  animation: widget-jiggle 0.9s ease-in-out infinite;
+}
+
+/* ---- Print: light-mode dashboards, no navigation chrome ---------------- */
+@media print {
+  html,
+  html.dark {
+    color-scheme: light;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.22 0.01 250);
+    --surface: oklch(1 0 0);
+    --surface-2: oklch(0.97 0.004 250);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.22 0.01 250);
+    --muted-foreground: oklch(0.45 0.01 250);
+    --border: oklch(0.82 0.01 250);
+    --grid: oklch(0.85 0.01 250);
+    --primary: oklch(0.45 0.11 205);
+    --positive: oklch(0.48 0.1 165);
+    --warning: oklch(0.55 0.13 70);
+    --critical: oklch(0.5 0.18 25);
+    --sidebar: oklch(1 0 0);
+  }
+
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .no-print,
+  nav,
+  aside,
+  header.no-print {
+    display: none !important;
+  }
+
+  .grid-bg {
+    background-image: none !important;
+    padding: 0 !important;
+  }
+
+  main {
+    min-height: 0 !important;
+  }
+
+  /* Let long tables flow onto following pages instead of scrolling. */
+  .max-h-\[520px\] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  section,
+  table,
+  figure {
+    break-inside: avoid;
+  }
+
+  a[href] {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+}

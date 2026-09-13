@@ -1,0 +1,54 @@
+model:
+  name: fact_production
+  description: CUSTOMER0 gold production fact
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.production
+  depends_on_tables:
+    - silver.production
+  merge_keys:
+    merge_keys:
+      - PeriodId_key
+      - FieldId_key
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: PeriodId_key
+      expression: CAST(xxhash64(PeriodId) AS BIGINT)
+      data_type: BIGINT
+    - name: FieldId_key
+      expression: CAST(xxhash64(FieldId) AS BIGINT)
+      data_type: BIGINT
+    - name: ActualBopd
+      expression: ActualBopd
+      data_type: DECIMAL(18,2)
+    - name: ForecastBopd
+      expression: ForecastBopd
+      data_type: DECIMAL(18,2)
+    - name: ForecastVariancePct
+      expression: CASE WHEN ForecastBopd = 0 THEN NULL ELSE (ActualBopd - ForecastBopd) / ForecastBopd * 100 END
+      data_type: DECIMAL(9,3)
+    - name: WellsOnline
+      expression: WellsOnline
+      data_type: INT
+    - name: UptimePct
+      expression: UptimePct
+      data_type: DECIMAL(9,2)
+    - name: OpsStatus
+      expression: OpsStatus
+      data_type: NVARCHAR(20)
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

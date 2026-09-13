@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_pop",
+    "description": "PoP + load_scd2 + build_PlanOverPlan + enrich_with_pop_fields"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "cd69ee55-8668-41d1-8efa-125ea3fe4a0e"
+  }
+}

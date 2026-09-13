@@ -1,0 +1,35 @@
+model:
+  name: fact_hse_exposure
+  description: CUSTOMER0 gold exposure hours fact, one row per period
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.hse_exposure
+  depends_on_tables:
+    - silver.hse_exposure
+  merge_keys:
+    merge_keys:
+      - PeriodId_key
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: PeriodId_key
+      expression: CAST(xxhash64(PeriodId) AS BIGINT)
+      data_type: BIGINT
+    - name: HoursWorked
+      expression: HoursWorked
+      data_type: DECIMAL(18,2)
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

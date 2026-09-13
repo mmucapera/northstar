@@ -1,0 +1,21 @@
+model:
+  name: period
+  description: CUSTOMER0 silver reporting-period calendar dimension
+  layer: silver
+  kind: TABLE
+  extends: bronze.period
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.period
+  depends_on_tables: [bronze.period]
+  merge_keys:
+    merge_keys:
+    - PeriodId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

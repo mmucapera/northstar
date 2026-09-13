@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "slv_reconciliation",
+    "description": "Generated notebook for silver.reconciliation"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "702e19cb-eac4-501a-b437-7b5896c23e09"
+  }
+}

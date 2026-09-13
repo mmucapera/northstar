@@ -1,0 +1,11 @@
+# UAT Environment Parameters
+
+environment: uat
+
+# Environment-specific parameters
+parameters:
+  data_source_connection: "uat-connection-string"
+  workspace_capacity: "UAT"
+
+# Placeholder for environment-specific overrides
+overrides: {}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "slv_production",
+    "description": "Generated notebook for silver.production"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "06ea4416-b460-5485-8bef-4427c33fd9c8"
+  }
+}

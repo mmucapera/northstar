@@ -1,0 +1,11 @@
+# Test Environment Parameters
+
+environment: test
+
+# Environment-specific parameters
+parameters:
+  data_source_connection: "test-connection-string"
+  workspace_capacity: "TEST"
+
+# Placeholder for environment-specific overrides
+overrides: {}

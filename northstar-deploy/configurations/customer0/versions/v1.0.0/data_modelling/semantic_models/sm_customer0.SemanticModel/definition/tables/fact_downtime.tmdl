@@ -1,0 +1,40 @@
+table fact_downtime
+	lineageTag: 53ae8355-fe00-48a2-be88-9cdd0a273d2e
+
+	column PeriodId_key
+		dataType: int64
+		sourceColumn: PeriodId_key
+		lineageTag: e458e0dd-4922-44af-8d35-cdefbd5e822a
+
+	column CauseId_key
+		dataType: int64
+		sourceColumn: CauseId_key
+		lineageTag: ada78932-cc78-4a18-8ebd-b90a952a38bf
+
+	column Hours
+		dataType: decimal
+		sourceColumn: Hours
+		lineageTag: b1605ced-64c6-4f0a-81ce-ab51062f463f
+
+	column Manifest_package
+		dataType: string
+		sourceColumn: Manifest_package
+		lineageTag: bb1714cf-105e-4185-b7eb-16200ff132ee
+
+	column Manifest_file
+		dataType: string
+		sourceColumn: Manifest_file
+		lineageTag: 1c006408-2fa4-481b-8ff5-7688a0aa14a8
+
+	measure 'Total Downtime Hours' = SUM('fact_downtime'[Hours])
+		formatString: #,0
+		lineageTag: 8a9f414d-b97f-42aa-9a0a-833226513b3c
+
+	partition fact_downtime = entity
+		mode: directLake
+		source
+			entityName: fact_downtime
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

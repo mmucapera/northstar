@@ -1,0 +1,62 @@
+table dim_well
+	lineageTag: bb7a3b14-7dfd-444a-bef7-a43e34fcab06
+
+	column WellId_key
+		dataType: int64
+		sourceColumn: WellId_key
+		lineageTag: 51d6af06-4b8e-47e1-abe5-fc22f99d4fa4
+
+	column WellId
+		dataType: string
+		sourceColumn: WellId
+		lineageTag: f1d973b5-4959-42d3-8465-a0fed6779505
+
+	column WellName
+		dataType: string
+		sourceColumn: WellName
+		lineageTag: de8efa5a-13dd-4b26-a88e-ba4c0c35535e
+
+	column FieldId_key
+		dataType: int64
+		sourceColumn: FieldId_key
+		lineageTag: 8e9e7db4-9d1d-48b7-a683-52e04f42acdb
+
+	column FacilityId_key
+		dataType: int64
+		sourceColumn: FacilityId_key
+		lineageTag: 76075393-99ee-47cb-89cb-4870924fb0ec
+
+	column PartnerId_key
+		dataType: int64
+		sourceColumn: PartnerId_key
+		lineageTag: 0d6bc2bc-ebab-4089-9332-9e187e08b846
+
+	column WellType
+		dataType: string
+		sourceColumn: WellType
+		lineageTag: 4093e91a-c24e-44fe-9795-6271018b4b02
+
+	column Status
+		dataType: string
+		sourceColumn: Status
+		lineageTag: e3a24045-40bd-4e5c-94f8-73f51dc35692
+
+	column SpudDate
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		sourceColumn: SpudDate
+		lineageTag: 70f42b5b-50da-4d0c-b82e-6d3547636d8d
+
+	column TotalDepthM
+		dataType: decimal
+		sourceColumn: TotalDepthM
+		lineageTag: bf2ef5f2-d994-4fe4-b6cf-bfbcad9a076d
+
+	partition dim_well = entity
+		mode: directLake
+		source
+			entityName: dim_well
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

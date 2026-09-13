@@ -1,0 +1,58 @@
+model:
+  name: dim_well
+  description: CUSTOMER0 gold well dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.well
+  depends_on_tables: [silver.well]
+  merge_keys:
+    merge_keys:
+    - WellId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: WellId_key
+    expression: CAST(xxhash64(WellId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of WellId. Join key for fact_* tables.
+  - name: WellId
+    expression: WellId
+    data_type: NVARCHAR(50)
+  - name: WellName
+    expression: WellName
+    data_type: NVARCHAR(200)
+  - name: FieldId_key
+    expression: CAST(xxhash64(FieldId) AS BIGINT)
+    data_type: BIGINT
+    description: FK to dim_field.FieldId_key
+  - name: FacilityId_key
+    expression: CAST(xxhash64(FacilityId) AS BIGINT)
+    data_type: BIGINT
+    description: FK to dim_facility.FacilityId_key
+  - name: PartnerId_key
+    expression: CAST(xxhash64(PartnerId) AS BIGINT)
+    data_type: BIGINT
+    description: FK to existing dim_partner.PartnerId_key (operator)
+  - name: WellType
+    expression: WellType
+    data_type: NVARCHAR(30)
+  - name: Status
+    expression: Status
+    data_type: NVARCHAR(20)
+  - name: SpudDate
+    expression: SpudDate
+    data_type: DATE
+  - name: TotalDepthM
+    expression: TotalDepthM
+    data_type: DECIMAL(18,2)
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "brz_downtime",
+    "description": "Generated notebook for bronze.downtime"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4a677473-a99b-5339-9e63-9d36a8aec140"
+  }
+}

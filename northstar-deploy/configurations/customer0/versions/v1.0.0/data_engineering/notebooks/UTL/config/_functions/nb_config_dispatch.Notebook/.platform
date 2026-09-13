@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_dispatch",
+    "description": "dispatch_merge_sql"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9296d2ee-e165-4644-8be9-13db7af3e7ad"
+  }
+}

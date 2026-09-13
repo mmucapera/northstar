@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_partition_keys",
+    "description": "add_partitionkey_regex, _validate_partition_keys"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "35fd52ce-c17b-4c02-bdbd-679b1115def8"
+  }
+}

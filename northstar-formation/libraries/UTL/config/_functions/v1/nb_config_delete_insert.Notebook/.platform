@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_delete_insert",
+    "description": "delete_insert"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "62c419c2-b303-4c3d-b3b3-4e590d4e20cb"
+  }
+}

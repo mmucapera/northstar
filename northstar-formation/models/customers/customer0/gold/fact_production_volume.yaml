@@ -1,0 +1,61 @@
+# CUSTOMER0 gold well-level production volume fact - complements the existing
+# field-level fact_production; different grain (well/month vs field/month),
+# not a duplicate.
+
+model:
+  name: fact_production_volume
+  description: CUSTOMER0 gold well-level monthly production volume fact
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.production_volume
+  depends_on_tables:
+    - silver.production_volume
+  merge_keys:
+    merge_keys:
+      - PeriodId_key
+      - WellId_key
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: PeriodId_key
+      expression: CAST(xxhash64(PeriodId) AS BIGINT)
+      data_type: BIGINT
+    - name: WellId_key
+      expression: CAST(xxhash64(WellId) AS BIGINT)
+      data_type: BIGINT
+    - name: FieldId_key
+      expression: CAST(xxhash64(FieldId) AS BIGINT)
+      data_type: BIGINT
+    - name: FacilityId_key
+      expression: CAST(xxhash64(FacilityId) AS BIGINT)
+      data_type: BIGINT
+    - name: OilBbl
+      expression: OilBbl
+      data_type: DECIMAL(18,2)
+    - name: GasMscf
+      expression: GasMscf
+      data_type: DECIMAL(18,2)
+    - name: WaterBbl
+      expression: WaterBbl
+      data_type: DECIMAL(18,2)
+    - name: OnstreamHours
+      expression: OnstreamHours
+      data_type: DECIMAL(9,2)
+    - name: WaterCutPct
+      expression: WaterCutPct
+      data_type: DECIMAL(9,2)
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

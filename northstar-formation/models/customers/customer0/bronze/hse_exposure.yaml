@@ -1,0 +1,48 @@
+# CUSTOMER0 bronze hse_exposure - exposure hours worked, one row per period.
+# Split from the old hse_incidents monthly-aggregate table (see
+# hse_incidents.yaml for why) - matches Project Spark's `HseMonth` type
+# (src/data/delta-basin.ts), minus recordableIncidents which now belongs to
+# hse_incidents (derive the count from there, don't duplicate it here).
+# Pre-discovery - see docs/customer0-pilot-kickoff.md.
+
+model:
+  name: hse_exposure
+  description: CUSTOMER0 bronze exposure hours worked, one row per period
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: PeriodId
+    data_type: VARCHAR(7)
+  - name: HoursWorked
+    data_type: DECIMAL(18,2)
+    description: Exposure hours worked in this period (not cumulative)
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP

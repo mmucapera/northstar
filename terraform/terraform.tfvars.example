@@ -1,0 +1,44 @@
+# Copy this file to terraform.tfvars and fill in real values.
+# terraform.tfvars is gitignored - never commit real values, even for a demo.
+
+customer_id  = "customer0"
+environment  = "dev"
+location     = "westeurope"
+capacity_sku = "F2"
+
+# Required - at least one Fabric administrator. Format matters:
+#   - Entra USER  -> UPN string, e.g. "user@yourtenant.onmicrosoft.com"
+#                    (an object ID for a user is rejected, even a valid one)
+#   - Service principal -> object ID (GUID)
+#
+# If this tenant was created by signing up for Azure with a PERSONAL Microsoft
+# account (e.g. an @outlook.com/@hotmail.com address), don't use that account
+# here even though it shows up in `az ad user list` - it appears with a
+# `#EXT#`-suffixed UPN (an external/guest-style representation) and Fabric
+# rejects it outright. Create a genuine native user first (Entra admin center
+# -> Users -> "Create new user", NOT "Invite external user"), then use that
+# user's UPN.
+#
+# If this tenant already has real work/school users, just use your own UPN
+# (find it with `az ad signed-in-user show --query userPrincipalName -o tsv`).
+admin_object_ids = [
+  "user@yourtenant.onmicrosoft.com",
+]
+
+# Optional - set this to use an existing Fabric trial capacity for the
+# workspace instead of the Terraform-managed paid F2 (e.g. while an Azure
+# quota request for F2 is still pending). Check the exact name in the Fabric
+# Admin Portal's capacity list - there's no reliable way to guess it.
+# Leave unset (null) to use the paid F2 capacity this module creates.
+# capacity_display_name = "My Trial Capacity"
+
+tags = {
+  project    = "northstar"
+  managed_by = "terraform"
+  purpose    = "pilot-demo"
+}
+
+# Required - the webapp's AI assistant. Get one free at console.groq.com
+# (API Keys in the left sidebar, no billing needed). A placeholder for
+# Anthropic until billing is set up there - see frontend/src/data/assistant.ts.
+groq_api_key = "gsk_..."

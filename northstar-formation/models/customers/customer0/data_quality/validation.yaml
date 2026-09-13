@@ -1,0 +1,688 @@
+# =============================================================================
+# Silver-layer data-quality validation
+# =============================================================================
+
+notebook:
+  name: nb_silver_validation_customer0
+  description: silver-layer data-quality checks (run before gold pipelines)
+  layer: silver
+
+fail_on_error: false
+
+# No fct/opr domain buckets in the flattened customer0 layout - everything is
+# bucketed under 'other' for the summary table.
+domain_prefixes: {}
+
+# -----------------------------------------------------------------------------
+# Tables + Keys
+# -----------------------------------------------------------------------------
+
+tables:
+  silver.reconciliation:
+    custom_keys:
+      - PeriodId
+      - FieldId
+      - PartnerId
+
+  silver.production:
+    custom_keys:
+      - PeriodId
+      - FieldId
+
+  silver.downtime:
+    custom_keys:
+      - PeriodId
+      - CauseId
+
+  silver.hse_incidents:
+    custom_keys:
+      - IncidentId
+
+  silver.hse_exposure:
+    custom_keys:
+      - PeriodId
+
+  silver.cash_call_event:
+    custom_keys:
+      - PeriodId
+      - PartnerId
+      - FieldId
+      - Stage
+
+  silver.dim_partner:
+    custom_keys:
+      - PartnerId
+
+  silver.dim_field:
+    custom_keys:
+      - FieldId
+
+  silver.dim_period:
+    custom_keys:
+      - PeriodId
+
+  silver.dim_downtime_cause:
+    custom_keys:
+      - CauseId
+
+# -----------------------------------------------------------------------------
+# Test modules
+# -----------------------------------------------------------------------------
+tests:
+
+  # ---- Uniqueness (duplicate keys) -------------------------------------------
+  - id: reconciliation_unique_period_field_partner
+    name: reconciliation — unique PeriodId + FieldId + PartnerId
+    short_label: dup_recon_key
+    description: (PeriodId, FieldId, PartnerId) must be unique across reconciliation.
+    kind: standalone
+    target_table: silver.reconciliation
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT PeriodId, FieldId, PartnerId, COUNT(*) AS cnt
+      FROM silver.reconciliation
+      GROUP BY PeriodId, FieldId, PartnerId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.reconciliation
+      WHERE (PeriodId, FieldId, PartnerId) IN (
+          SELECT PeriodId, FieldId, PartnerId FROM silver.reconciliation
+          GROUP BY PeriodId, FieldId, PartnerId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: production_unique_period_field
+    name: production — unique PeriodId + FieldId
+    short_label: dup_prod_key
+    description: (PeriodId, FieldId) must be unique across production.
+    kind: standalone
+    target_table: silver.production
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT PeriodId, FieldId, COUNT(*) AS cnt
+      FROM silver.production
+      GROUP BY PeriodId, FieldId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.production
+      WHERE (PeriodId, FieldId) IN (
+          SELECT PeriodId, FieldId FROM silver.production
+          GROUP BY PeriodId, FieldId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: downtime_unique_period_cause
+    name: downtime — unique PeriodId + CauseId
+    short_label: dup_downtime_key
+    description: (PeriodId, CauseId) must be unique across downtime.
+    kind: standalone
+    target_table: silver.downtime
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT PeriodId, CauseId, COUNT(*) AS cnt
+      FROM silver.downtime
+      GROUP BY PeriodId, CauseId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.downtime
+      WHERE (PeriodId, CauseId) IN (
+          SELECT PeriodId, CauseId FROM silver.downtime
+          GROUP BY PeriodId, CauseId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: hse_incidents_unique_id
+    name: hse_incidents — unique IncidentId
+    short_label: dup_incident_id
+    description: IncidentId must be unique across hse_incidents.
+    kind: standalone
+    target_table: silver.hse_incidents
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT IncidentId, COUNT(*) AS cnt
+      FROM silver.hse_incidents
+      GROUP BY IncidentId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.hse_incidents
+      WHERE IncidentId IN (
+          SELECT IncidentId FROM silver.hse_incidents
+          GROUP BY IncidentId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: hse_exposure_unique_period
+    name: hse_exposure — unique PeriodId
+    short_label: dup_exposure_period
+    description: PeriodId must be unique across hse_exposure.
+    kind: standalone
+    target_table: silver.hse_exposure
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT PeriodId, COUNT(*) AS cnt
+      FROM silver.hse_exposure
+      GROUP BY PeriodId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.hse_exposure
+      WHERE PeriodId IN (
+          SELECT PeriodId FROM silver.hse_exposure
+          GROUP BY PeriodId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: cash_call_event_unique_key
+    name: cash_call_event — unique PeriodId + PartnerId + FieldId + Stage
+    short_label: dup_cash_call_event
+    description: (PeriodId, PartnerId, FieldId, Stage) must be unique - a cash call visits each stage at most once.
+    kind: standalone
+    target_table: silver.cash_call_event
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT PeriodId, PartnerId, FieldId, Stage, COUNT(*) AS cnt
+      FROM silver.cash_call_event
+      GROUP BY PeriodId, PartnerId, FieldId, Stage
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.cash_call_event
+      WHERE (PeriodId, PartnerId, FieldId, Stage) IN (
+          SELECT PeriodId, PartnerId, FieldId, Stage FROM silver.cash_call_event
+          GROUP BY PeriodId, PartnerId, FieldId, Stage HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: dim_partner_unique_id
+    name: dim_partner — unique PartnerId
+    short_label: dup_partner
+    description: PartnerId must be unique across dim_partner.
+    kind: standalone
+    target_table: silver.dim_partner
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT PartnerId, COUNT(*) AS cnt
+      FROM silver.dim_partner
+      GROUP BY PartnerId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.dim_partner
+      WHERE PartnerId IN (
+          SELECT PartnerId FROM silver.dim_partner
+          GROUP BY PartnerId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: dim_field_unique_id
+    name: dim_field — unique FieldId
+    short_label: dup_field_dim
+    description: FieldId must be unique across dim_field.
+    kind: standalone
+    target_table: silver.dim_field
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT FieldId, COUNT(*) AS cnt
+      FROM silver.dim_field
+      GROUP BY FieldId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.dim_field
+      WHERE FieldId IN (
+          SELECT FieldId FROM silver.dim_field
+          GROUP BY FieldId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: dim_period_unique_id
+    name: dim_period — unique PeriodId
+    short_label: dup_period_dim
+    description: PeriodId must be unique across dim_period.
+    kind: standalone
+    target_table: silver.dim_period
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT PeriodId, COUNT(*) AS cnt
+      FROM silver.dim_period
+      GROUP BY PeriodId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.dim_period
+      WHERE PeriodId IN (
+          SELECT PeriodId FROM silver.dim_period
+          GROUP BY PeriodId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  - id: dim_downtime_cause_unique_id
+    name: dim_downtime_cause — unique CauseId
+    short_label: dup_cause_dim
+    description: CauseId must be unique across dim_downtime_cause.
+    kind: standalone
+    target_table: silver.dim_downtime_cause
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT CauseId, COUNT(*) AS cnt
+      FROM silver.dim_downtime_cause
+      GROUP BY CauseId
+      HAVING COUNT(*) > 1
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.dim_downtime_cause
+      WHERE CauseId IN (
+          SELECT CauseId FROM silver.dim_downtime_cause
+          GROUP BY CauseId HAVING COUNT(*) > 1
+      )
+      LIMIT 200
+
+  # ---- Referential integrity ---------------------------------------------------
+  - id: reconciliation_fk_valid
+    name: reconciliation — PartnerId/FieldId/PeriodId exist in their dims
+    short_label: recon_fk_valid
+    description: Every PartnerId/FieldId/PeriodId in reconciliation must exist in the matching dimension.
+    kind: standalone
+    target_table: silver.reconciliation
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT r.*
+      FROM silver.reconciliation r
+      LEFT JOIN silver.dim_partner p ON r.PartnerId = p.PartnerId
+      LEFT JOIN silver.dim_field f ON r.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON r.PeriodId = d.PeriodId
+      WHERE p.PartnerId IS NULL OR f.FieldId IS NULL OR d.PeriodId IS NULL
+    diagnostic_sql: |
+      SELECT r.*
+      FROM silver.reconciliation r
+      LEFT JOIN silver.dim_partner p ON r.PartnerId = p.PartnerId
+      LEFT JOIN silver.dim_field f ON r.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON r.PeriodId = d.PeriodId
+      WHERE p.PartnerId IS NULL OR f.FieldId IS NULL OR d.PeriodId IS NULL
+      LIMIT 200
+
+  - id: production_fk_valid
+    name: production — FieldId/PeriodId exist in their dims
+    short_label: prod_fk_valid
+    description: Every FieldId/PeriodId in production must exist in the matching dimension.
+    kind: standalone
+    target_table: silver.production
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT pr.*
+      FROM silver.production pr
+      LEFT JOIN silver.dim_field f ON pr.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON pr.PeriodId = d.PeriodId
+      WHERE f.FieldId IS NULL OR d.PeriodId IS NULL
+    diagnostic_sql: |
+      SELECT pr.*
+      FROM silver.production pr
+      LEFT JOIN silver.dim_field f ON pr.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON pr.PeriodId = d.PeriodId
+      WHERE f.FieldId IS NULL OR d.PeriodId IS NULL
+      LIMIT 200
+
+  - id: downtime_fk_valid
+    name: downtime — CauseId/PeriodId exist in their dims
+    short_label: downtime_fk_valid
+    description: Every CauseId/PeriodId in downtime must exist in the matching dimension.
+    kind: standalone
+    target_table: silver.downtime
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT dt.*
+      FROM silver.downtime dt
+      LEFT JOIN silver.dim_downtime_cause c ON dt.CauseId = c.CauseId
+      LEFT JOIN silver.dim_period d ON dt.PeriodId = d.PeriodId
+      WHERE c.CauseId IS NULL OR d.PeriodId IS NULL
+    diagnostic_sql: |
+      SELECT dt.*
+      FROM silver.downtime dt
+      LEFT JOIN silver.dim_downtime_cause c ON dt.CauseId = c.CauseId
+      LEFT JOIN silver.dim_period d ON dt.PeriodId = d.PeriodId
+      WHERE c.CauseId IS NULL OR d.PeriodId IS NULL
+      LIMIT 200
+
+  - id: hse_incidents_fk_valid
+    name: hse_incidents — FieldId/PeriodId exist in their dims
+    short_label: hse_fk_valid
+    description: Every FieldId/PeriodId in hse_incidents must exist in the matching dimension.
+    kind: standalone
+    target_table: silver.hse_incidents
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT h.*
+      FROM silver.hse_incidents h
+      LEFT JOIN silver.dim_field f ON h.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON h.PeriodId = d.PeriodId
+      WHERE f.FieldId IS NULL OR d.PeriodId IS NULL
+    diagnostic_sql: |
+      SELECT h.*
+      FROM silver.hse_incidents h
+      LEFT JOIN silver.dim_field f ON h.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON h.PeriodId = d.PeriodId
+      WHERE f.FieldId IS NULL OR d.PeriodId IS NULL
+      LIMIT 200
+
+  - id: cash_call_event_fk_valid
+    name: cash_call_event — PartnerId/FieldId/PeriodId exist in their dims
+    short_label: cash_call_fk_valid
+    description: Every PartnerId/FieldId/PeriodId in cash_call_event must exist in the matching dimension.
+    kind: standalone
+    target_table: silver.cash_call_event
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT e.*
+      FROM silver.cash_call_event e
+      LEFT JOIN silver.dim_partner p ON e.PartnerId = p.PartnerId
+      LEFT JOIN silver.dim_field f ON e.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON e.PeriodId = d.PeriodId
+      WHERE p.PartnerId IS NULL OR f.FieldId IS NULL OR d.PeriodId IS NULL
+    diagnostic_sql: |
+      SELECT e.*
+      FROM silver.cash_call_event e
+      LEFT JOIN silver.dim_partner p ON e.PartnerId = p.PartnerId
+      LEFT JOIN silver.dim_field f ON e.FieldId = f.FieldId
+      LEFT JOIN silver.dim_period d ON e.PeriodId = d.PeriodId
+      WHERE p.PartnerId IS NULL OR f.FieldId IS NULL OR d.PeriodId IS NULL
+      LIMIT 200
+
+  # ---- Not-null checks --------------------------------------------------------
+  - id: no_null_business_keys
+    name: No NULL values in business keys
+    short_label: no_null_keys
+    description: Every row must have non-NULL values in all business keys.
+    applies_to_tables:
+      ["*reconciliation", "*production", "*downtime", "*hse_incidents", "*hse_exposure",
+       "*cash_call_event", "*dim_partner", "*dim_field", "*dim_period", "*dim_downtime_cause"]
+    keys_source: merge_keys
+    check_sql: |
+      SELECT
+          {keys_csv},
+          COUNT(*) AS null_row_count
+      FROM {table}
+      WHERE {keys_csv} IS NULL
+      GROUP BY {keys_group}
+    diagnostic_sql: |
+      SELECT *
+      FROM {table}
+      WHERE {keys_csv} IS NULL
+      LIMIT 200
+
+  - id: reconciliation_required_not_null
+    name: reconciliation — required columns not null
+    short_label: recon_not_null
+    description: AllocatedBbl, LiftedBbl, CashCallStatus, CashCallUsd must not be null.
+    kind: standalone
+    target_table: silver.reconciliation
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.reconciliation
+      WHERE AllocatedBbl IS NULL OR LiftedBbl IS NULL OR CashCallStatus IS NULL OR CashCallUsd IS NULL
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.reconciliation
+      WHERE AllocatedBbl IS NULL OR LiftedBbl IS NULL OR CashCallStatus IS NULL OR CashCallUsd IS NULL
+      LIMIT 200
+
+  - id: production_required_not_null
+    name: production — required columns not null
+    short_label: prod_not_null
+    description: ActualBopd, ForecastBopd, WellsOnline, UptimePct, OpsStatus must not be null.
+    kind: standalone
+    target_table: silver.production
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.production
+      WHERE ActualBopd IS NULL OR ForecastBopd IS NULL OR WellsOnline IS NULL
+         OR UptimePct IS NULL OR OpsStatus IS NULL
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.production
+      WHERE ActualBopd IS NULL OR ForecastBopd IS NULL OR WellsOnline IS NULL
+         OR UptimePct IS NULL OR OpsStatus IS NULL
+      LIMIT 200
+
+  - id: hse_incidents_required_not_null
+    name: hse_incidents — required columns not null
+    short_label: hse_not_null
+    description: IncidentDate, Severity, Recordable must not be null.
+    kind: standalone
+    target_table: silver.hse_incidents
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.hse_incidents
+      WHERE IncidentDate IS NULL OR Severity IS NULL OR Recordable IS NULL
+    diagnostic_sql: |
+      SELECT *
+      FROM silver.hse_incidents
+      WHERE IncidentDate IS NULL OR Severity IS NULL OR Recordable IS NULL
+      LIMIT 200
+
+  # ---- Enum value checks -------------------------------------------------------
+  - id: dim_partner_valid_role
+    name: dim_partner — valid PartnerRole
+    short_label: partner_role_enum
+    description: PartnerRole must be one of Operator, Non-operating partner, State participant.
+    kind: standalone
+    target_table: silver.dim_partner
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.dim_partner
+      WHERE PartnerRole NOT IN ('Operator', 'Non-operating partner', 'State participant')
+    diagnostic_sql: |
+      SELECT * FROM silver.dim_partner
+      WHERE PartnerRole NOT IN ('Operator', 'Non-operating partner', 'State participant')
+      LIMIT 200
+
+  - id: reconciliation_valid_cash_call_status
+    name: reconciliation — valid CashCallStatus
+    short_label: cash_call_enum
+    description: CashCallStatus must be one of settled, pending, disputed.
+    kind: standalone
+    target_table: silver.reconciliation
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.reconciliation
+      WHERE CashCallStatus NOT IN ('settled', 'pending', 'disputed')
+    diagnostic_sql: |
+      SELECT * FROM silver.reconciliation
+      WHERE CashCallStatus NOT IN ('settled', 'pending', 'disputed')
+      LIMIT 200
+
+  - id: production_valid_ops_status
+    name: production — valid OpsStatus
+    short_label: ops_status_enum
+    description: OpsStatus must be one of normal, watch, down.
+    kind: standalone
+    target_table: silver.production
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.production
+      WHERE OpsStatus NOT IN ('normal', 'watch', 'down')
+    diagnostic_sql: |
+      SELECT * FROM silver.production
+      WHERE OpsStatus NOT IN ('normal', 'watch', 'down')
+      LIMIT 200
+
+  - id: hse_incidents_valid_severity
+    name: hse_incidents — valid Severity
+    short_label: severity_enum
+    description: Severity must be one of First aid, Medical treatment, Restricted work, Lost time.
+    kind: standalone
+    target_table: silver.hse_incidents
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.hse_incidents
+      WHERE Severity NOT IN ('First aid', 'Medical treatment', 'Restricted work', 'Lost time')
+    diagnostic_sql: |
+      SELECT * FROM silver.hse_incidents
+      WHERE Severity NOT IN ('First aid', 'Medical treatment', 'Restricted work', 'Lost time')
+      LIMIT 200
+
+  - id: hse_incidents_recordable_matches_severity
+    name: hse_incidents — Recordable is false only for First aid
+    short_label: recordable_matches_severity
+    description: Recordable must be false when Severity = 'First aid' and true otherwise.
+    kind: standalone
+    target_table: silver.hse_incidents
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.hse_incidents
+      WHERE (Severity = 'First aid' AND Recordable = TRUE)
+         OR (Severity != 'First aid' AND Recordable = FALSE)
+    diagnostic_sql: |
+      SELECT * FROM silver.hse_incidents
+      WHERE (Severity = 'First aid' AND Recordable = TRUE)
+         OR (Severity != 'First aid' AND Recordable = FALSE)
+      LIMIT 200
+
+  - id: cash_call_event_valid_stage
+    name: cash_call_event — valid Stage
+    short_label: stage_enum
+    description: Stage must be one of submitted, under-review, settled, disputed.
+    kind: standalone
+    target_table: silver.cash_call_event
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.cash_call_event
+      WHERE Stage NOT IN ('submitted', 'under-review', 'settled', 'disputed')
+    diagnostic_sql: |
+      SELECT * FROM silver.cash_call_event
+      WHERE Stage NOT IN ('submitted', 'under-review', 'settled', 'disputed')
+      LIMIT 200
+
+  # ---- Range checks -------------------------------------------------------------
+  - id: production_uptime_pct_range
+    name: production — UptimePct between 0 and 100
+    short_label: uptime_range
+    description: UptimePct must be between 0 and 100 inclusive.
+    kind: standalone
+    target_table: silver.production
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.production
+      WHERE UptimePct < 0 OR UptimePct > 100
+    diagnostic_sql: |
+      SELECT * FROM silver.production
+      WHERE UptimePct < 0 OR UptimePct > 100
+      LIMIT 200
+
+  - id: production_wells_online_le_dim_total
+    name: production — WellsOnline not greater than dim_field.WellsTotal
+    short_label: wells_online_le_total
+    description: WellsOnline must not exceed the field's WellsTotal (dim_field).
+    kind: standalone
+    target_table: silver.production
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT pr.*
+      FROM silver.production pr
+      JOIN silver.dim_field f ON pr.FieldId = f.FieldId
+      WHERE pr.WellsOnline > f.WellsTotal
+    diagnostic_sql: |
+      SELECT pr.*
+      FROM silver.production pr
+      JOIN silver.dim_field f ON pr.FieldId = f.FieldId
+      WHERE pr.WellsOnline > f.WellsTotal
+      LIMIT 200
+
+  - id: dim_partner_equity_pct_range
+    name: dim_partner — EquityPct between 0 and 100
+    short_label: equity_range
+    description: EquityPct must be between 0 and 100 inclusive.
+    kind: standalone
+    target_table: silver.dim_partner
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT *
+      FROM silver.dim_partner
+      WHERE EquityPct < 0 OR EquityPct > 100
+    diagnostic_sql: |
+      SELECT * FROM silver.dim_partner
+      WHERE EquityPct < 0 OR EquityPct > 100
+      LIMIT 200
+
+  - id: dim_partner_equity_sums_to_100
+    name: dim_partner — total EquityPct sums to 100
+    short_label: equity_sums_100
+    description: JV equity shares across all partners should sum to 100% (within rounding tolerance).
+    kind: standalone
+    target_table: silver.dim_partner
+    domain: other
+    frozen: false
+    editable: true
+    check_sql: |
+      SELECT SUM(EquityPct) AS total_equity_pct
+      FROM silver.dim_partner
+      HAVING ABS(SUM(EquityPct) - 100) > 0.1
+    diagnostic_sql: |
+      SELECT * FROM silver.dim_partner

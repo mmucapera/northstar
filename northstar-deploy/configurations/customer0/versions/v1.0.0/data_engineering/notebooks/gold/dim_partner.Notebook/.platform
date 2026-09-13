@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "dim_partner",
+    "description": "Generated notebook for gold.dim_partner"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a53047bf-2973-5968-a098-74abafe82eb2"
+  }
+}

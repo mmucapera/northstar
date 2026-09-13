@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/schedules/1.0.0/schema.json",
+  "schedules": [
+    {
+      "enabled": true,
+      "jobType": "Execute",
+      "configuration": {
+        "type": "Weekly",
+        "startDateTime": "2026-04-23T00:00:00",
+        "endDateTime": "2027-04-23T00:00:00",
+        "localTimeZoneId": "Romance Standard Time",
+        "times": [
+          "22:00"
+        ],
+        "weekdays": [
+          "Friday"
+        ]
+      }
+    }
+  ]
+}

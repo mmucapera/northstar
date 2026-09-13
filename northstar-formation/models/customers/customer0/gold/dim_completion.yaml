@@ -1,0 +1,60 @@
+model:
+  name: dim_completion
+  description: CUSTOMER0 gold completion dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.completion
+  depends_on_tables: [silver.completion]
+  merge_keys:
+    merge_keys:
+    - CompletionId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: CompletionId_key
+    expression: CAST(xxhash64(CompletionId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of CompletionId. Join key for fact_* tables.
+  - name: CompletionId
+    expression: CompletionId
+    data_type: NVARCHAR(70)
+  - name: WellboreId_key
+    expression: CAST(xxhash64(WellboreId) AS BIGINT)
+    data_type: BIGINT
+    description: FK to dim_wellbore.WellboreId_key
+  - name: WellId_key
+    expression: CAST(xxhash64(WellId) AS BIGINT)
+    data_type: BIGINT
+    description: FK to dim_well.WellId_key
+  - name: CompletionType
+    expression: CompletionType
+    data_type: NVARCHAR(30)
+  - name: ReservoirUnit
+    expression: ReservoirUnit
+    data_type: NVARCHAR(100)
+  - name: PerforationTopM
+    expression: PerforationTopM
+    data_type: DECIMAL(18,2)
+  - name: PerforationBaseM
+    expression: PerforationBaseM
+    data_type: DECIMAL(18,2)
+  - name: ArtificialLift
+    expression: ArtificialLift
+    data_type: NVARCHAR(100)
+  - name: CompletionDate
+    expression: CompletionDate
+    data_type: DATE
+  - name: IsActive
+    expression: IsActive
+    data_type: BOOLEAN
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

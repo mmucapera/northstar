@@ -1,0 +1,181 @@
+# Azure DevOps CI Pipeline for Northstar Formation
+# Uses uv for fast, reliable Python package management
+
+trigger:
+  branches:
+    include:
+      - feature/uix/*
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  name: iac_linux
+
+variables:
+  - group: ProGet-Credentials
+  - name: pythonVersion
+    value: '3.11'
+  - name: projectRoot
+    value: 'Unison Insight Services'
+
+stages:
+  # - stage: Lint
+  #   displayName: 'Code Quality'
+  #   jobs:
+  #     - job: LintAndTypeCheck
+  #       displayName: 'Lint and Type Check'
+  #       steps:
+  #         - task: UsePythonVersion@0
+  #           inputs:
+  #             versionSpec: '$(pythonVersion)'
+  #           displayName: 'Use Python $(pythonVersion)'
+
+  #         - script: |
+  #             curl -LsSf https://astral.sh/uv/install.sh | sh
+  #             echo "##vso[task.prependpath]$HOME/.local/bin"
+  #           displayName: 'Install uv'
+
+  #         - script: |
+  #             uv sync --all-extras
+  #           displayName: 'Install dependencies'
+  #           workingDirectory: '$(projectRoot)'
+
+  #         - script: |
+  #             uv run ruff check src/ tests/
+  #           displayName: 'Run Ruff linter'
+  #           workingDirectory: '$(projectRoot)'
+
+  #         - script: |
+  #             uv run ruff format --check src/ tests/
+  #           displayName: 'Check code formatting'
+  #           workingDirectory: '$(projectRoot)'
+
+  #         - script: |
+  #             uv run mypy src/
+  #           displayName: 'Run MyPy type checking'
+  #           workingDirectory: '$(projectRoot)'
+
+  # - stage: Test
+  #   displayName: 'Test'
+  #   dependsOn: Lint
+  #   jobs:
+  #     - job: Test
+  #       displayName: 'Run Tests'
+  #       strategy:
+  #         matrix:
+  #           Python39:
+  #             python.version: '3.9'
+  #           Python310:
+  #             python.version: '3.10'
+  #           Python311:
+  #             python.version: '3.11'
+  #           Python312:
+  #             python.version: '3.12'
+  #       steps:
+  #         - task: UsePythonVersion@0
+  #           inputs:
+  #             versionSpec: '$(python.version)'
+  #           displayName: 'Use Python $(python.version)'
+
+  #         - script: |
+  #             curl -LsSf https://astral.sh/uv/install.sh | sh
+  #             echo "##vso[task.prependpath]$HOME/.local/bin"
+  #           displayName: 'Install uv'
+
+  #         - script: |
+  #             uv sync --all-extras
+  #           displayName: 'Install dependencies'
+  #           workingDirectory: '$(projectRoot)'
+
+  #         - script: |
+  #             uv run pytest tests/ --junitxml=junit/test-results.xml --cov=northstar_formation --cov-report=xml --cov-report=term-missing
+  #           displayName: 'Run tests with coverage'
+  #           workingDirectory: '$(projectRoot)'
+
+  #         - task: PublishTestResults@2
+  #           condition: succeededOrFailed()
+  #           inputs:
+  #             testResultsFiles: '**/test-results.xml'
+  #             testRunTitle: 'Python $(python.version) Test Results'
+  #           displayName: 'Publish test results'
+
+  - stage: Build
+    displayName: 'Build Package'
+    # dependsOn: Test
+    condition: succeeded()
+    jobs:
+      - job: Build
+        displayName: 'Build and Publish Artifact'
+        steps:
+          - script: |
+              echo "=== System Python ==="
+              python3 --version
+            displayName: 'Check Python availability'
+
+          - script: |
+              curl -LsSf https://astral.sh/uv/install.sh | sh
+              echo "##vso[task.prependpath]$HOME/.local/bin"
+            displayName: 'Install uv'
+
+          - script: |
+              uv build
+            displayName: 'Build package'
+            workingDirectory: '$(projectRoot)'
+
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: '$(projectRoot)/dist'
+              artifact: 'python-package'
+            displayName: 'Publish package artifact'
+
+  - stage: Publish
+    displayName: 'Publish to ProGet'
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - job: PublishToProGet
+        displayName: 'Publish Package to ProGet'
+        steps:
+          - download: current
+            artifact: python-package
+            displayName: 'Download package artifact'
+
+          - script: |
+              echo "=== System Python ==="
+              python3 --version
+            displayName: 'Check Python availability'
+
+          - script: |
+              curl -LsSf https://astral.sh/uv/install.sh | sh
+              echo "##vso[task.prependpath]$HOME/.local/bin"
+            displayName: 'Install uv'
+
+          - script: |
+              echo "=== Debug: Variable Check ==="
+              echo "Feed URL: $(PROGET_FEED_URL)"
+              echo "API Key set: $(if [ -n "$PROGET_API_KEY" ]; then echo 'YES'; else echo 'NO'; fi)"
+              echo "API Key length: ${#PROGET_API_KEY}"
+              echo "API Key first 4 chars: ${PROGET_API_KEY:0:4}..."
+              echo ""
+              echo "=== Debug: Package files ==="
+              ls -la $(Pipeline.Workspace)/python-package/
+              echo ""
+              echo "=== Debug: Test API endpoint with Basic Auth ==="
+              curl -I --insecure -u "api:$PROGET_API_KEY" "$(PROGET_FEED_URL)/" || echo "Curl failed with exit code: $?"
+            displayName: 'Debug - Check variables and connectivity'
+            env:
+              PROGET_API_KEY: $(PROGET_API_KEY)
+
+          - script: |
+              # Try with token auth (ProGet API key as token)
+              uv publish --verbose \
+                --publish-url "$(PROGET_FEED_URL)/" \
+                --token "$PROGET_API_KEY" \
+                --allow-insecure-host omhqproget \
+                $(Pipeline.Workspace)/python-package/*
+            displayName: 'Publish to ProGet'
+            env:
+              PROGET_API_KEY: $(PROGET_API_KEY)

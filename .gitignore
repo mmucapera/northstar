@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+dist/
+build/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/*
+!.vscode/settings.json
+
+# Local Spark testing scratch (enableHiveSupport() writes these into the
+# current directory by default when not pointed at /tmp)
+derby.log
+metastore_db/
+Project Spark
+
+# Terraform local state - contains real secrets (SPN client_secret, etc.)
+# in plaintext. Never commit; regenerate via `terraform apply` per machine.
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/tfplan*
+*.tfvars
+!*.tfvars.example
+
+# Python virtualenvs / caches picked up across the monorepo's sub-projects
+.venv/
+__pycache__/
+*.pyc
+
+# Old repo's git history, kept locally as a plain folder (not a real .git)
+# for recovery purposes only - must never be committed into the new repo.
+.git_OLD_backup*/

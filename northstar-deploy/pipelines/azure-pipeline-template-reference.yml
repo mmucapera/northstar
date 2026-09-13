@@ -1,0 +1,264 @@
+# Azure DevOps Pipeline for Fabric Multi-Customer Deployment
+# Requirements: REQ-006, REQ-009, REQ-010
+
+name: Fabric-Deployment-$(Date:yyyyMMdd)$(Rev:.r)
+
+# Manual triggers only (REQ-010)
+trigger: none
+pr: none
+
+parameters:
+  - name: customerID
+    displayName: 'Customer ID'
+    type: string
+    default: 'customer-001'
+    values:
+      - customer-001
+      - customer-002
+      # Add more customers as needed
+
+  - name: deploymentMode
+    displayName: 'Deployment Mode (REQ-006)'
+    type: string
+    default: 'full'
+    values:
+      - full
+      - incremental
+      - selective
+
+  - name: targetEnvironments
+    displayName: 'Target Environments'
+    type: object
+    default:
+      - dev
+      - test
+
+  - name: selectiveItems
+    displayName: 'Items to Deploy (Selective Mode Only)'
+    type: string
+    default: ''
+
+  - name: skipValidation
+    displayName: 'Skip Pre-Deployment Validation'
+    type: boolean
+    default: false
+
+variables:
+  - group: fabric-deployment-vars  # Contains SPN credentials and tenant info
+  - name: pythonVersion
+    value: '3.11'
+  - name: buildId
+    value: $(Build.BuildId)
+  - name: deploymentUser
+    value: $(Build.RequestedFor)
+  - name: configPath
+    value: $(System.DefaultWorkingDirectory)/configurations/${{ parameters.customerID }}
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  # Validation Stage
+  - stage: Validation
+    displayName: 'Configuration Validation'
+    condition: and(succeeded(), eq('${{ parameters.skipValidation }}', 'false'))
+    jobs:
+      - job: ValidateConfig
+        displayName: 'Validate Configuration'
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: UsePythonVersion@0
+            displayName: 'Use Python $(pythonVersion)'
+            inputs:
+              versionSpec: '$(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install fabric-cicd pyyaml jsonschema requests colorlog
+            displayName: 'Install Dependencies'
+
+          - task: PythonScript@0
+            displayName: 'Validate Configuration Files'
+            inputs:
+              scriptSource: 'filePath'
+              scriptPath: '$(System.DefaultWorkingDirectory)/scripts/deployment/validation.py'
+              arguments: '--config-path $(configPath) --mode pre-deployment --customer ${{ parameters.customerID }}'
+            env:
+              TENANT_ID: $(TENANT_ID)
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+
+          - publish: $(System.DefaultWorkingDirectory)/validation-report.json
+            artifact: validation-report
+            displayName: 'Publish Validation Report'
+
+  # Development Deployment
+  - stage: DeployDev
+    displayName: 'Deploy to Development'
+    dependsOn:
+      - ${{ if eq(parameters.skipValidation, 'false') }}:
+        - Validation
+      - ${{ if eq(parameters.skipValidation, 'true') }}:
+        - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.targetEnvironments) }}', 'dev'))
+    variables:
+      environment: 'dev'
+    jobs:
+      - deployment: DeployToDev
+        displayName: 'Deploy to Dev Workspace'
+        environment: 'Fabric-Dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-stage.yml
+                  parameters:
+                    environment: $(environment)
+                    customerID: ${{ parameters.customerID }}
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    selectiveItems: ${{ parameters.selectiveItems }}
+
+  # Test Deployment
+  - stage: DeployTest
+    displayName: 'Deploy to Test'
+    dependsOn:
+      - ${{ if contains(join(',', parameters.targetEnvironments), 'dev') }}:
+        - DeployDev
+      - ${{ if not(contains(join(',', parameters.targetEnvironments), 'dev')) }}:
+        - ${{ if eq(parameters.skipValidation, 'false') }}:
+          - Validation
+        - ${{ if eq(parameters.skipValidation, 'true') }}:
+          - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.targetEnvironments) }}', 'test'))
+    variables:
+      environment: 'test'
+    jobs:
+      - deployment: DeployToTest
+        displayName: 'Deploy to Test Workspace'
+        environment: 'Fabric-Test'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-stage.yml
+                  parameters:
+                    environment: $(environment)
+                    customerID: ${{ parameters.customerID }}
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    selectiveItems: ${{ parameters.selectiveItems }}
+
+  # UAT Deployment
+  - stage: DeployUAT
+    displayName: 'Deploy to UAT'
+    dependsOn:
+      - ${{ if contains(join(',', parameters.targetEnvironments), 'test') }}:
+        - DeployTest
+      - ${{ if not(contains(join(',', parameters.targetEnvironments), 'test')) }}:
+        - ${{ if contains(join(',', parameters.targetEnvironments), 'dev') }}:
+          - DeployDev
+        - ${{ if not(contains(join(',', parameters.targetEnvironments), 'dev')) }}:
+          - ${{ if eq(parameters.skipValidation, 'false') }}:
+            - Validation
+          - ${{ if eq(parameters.skipValidation, 'true') }}:
+            - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.targetEnvironments) }}', 'uat'))
+    variables:
+      environment: 'uat'
+    jobs:
+      - deployment: DeployToUAT
+        displayName: 'Deploy to UAT Workspace'
+        environment: 'Fabric-UAT'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-stage.yml
+                  parameters:
+                    environment: $(environment)
+                    customerID: ${{ parameters.customerID }}
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    selectiveItems: ${{ parameters.selectiveItems }}
+
+  # Production Deployment with Approval (REQ-009)
+  - stage: DeployProd
+    displayName: 'Deploy to Production'
+    dependsOn:
+      - ${{ if contains(join(',', parameters.targetEnvironments), 'uat') }}:
+        - DeployUAT
+      - ${{ if not(contains(join(',', parameters.targetEnvironments), 'uat')) }}:
+        - ${{ if contains(join(',', parameters.targetEnvironments), 'test') }}:
+          - DeployTest
+        - ${{ if not(contains(join(',', parameters.targetEnvironments), 'test')) }}:
+          - ${{ if contains(join(',', parameters.targetEnvironments), 'dev') }}:
+            - DeployDev
+          - ${{ if not(contains(join(',', parameters.targetEnvironments), 'dev')) }}:
+            - ${{ if eq(parameters.skipValidation, 'false') }}:
+              - Validation
+            - ${{ if eq(parameters.skipValidation, 'true') }}:
+              - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.targetEnvironments) }}', 'prod'))
+    variables:
+      environment: 'prod'
+    jobs:
+      - deployment: DeployToProd
+        displayName: 'Deploy to Production Workspace'
+        environment: 'Fabric-Production'  # This environment should have approval gates configured
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-stage.yml
+                  parameters:
+                    environment: $(environment)
+                    customerID: ${{ parameters.customerID }}
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    selectiveItems: ${{ parameters.selectiveItems }}
+                    isProduction: true
+
+  # Post-Deployment Verification
+  - stage: Verification
+    displayName: 'Post-Deployment Verification'
+    dependsOn:
+      - ${{ each env in parameters.targetEnvironments }}:
+        - ${{ if eq(env, 'dev') }}:
+          - DeployDev
+        - ${{ if eq(env, 'test') }}:
+          - DeployTest
+        - ${{ if eq(env, 'uat') }}:
+          - DeployUAT
+        - ${{ if eq(env, 'prod') }}:
+          - DeployProd
+    condition: succeeded()
+    jobs:
+      - job: PostDeploymentTests
+        displayName: 'Run Post-Deployment Tests'
+        steps:
+          - checkout: self
+
+          - task: UsePythonVersion@0
+            displayName: 'Use Python $(pythonVersion)'
+            inputs:
+              versionSpec: '$(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install fabric-cicd pyyaml requests colorlog jsonschema
+            displayName: 'Install Dependencies'
+
+          - script: |
+              python $(System.DefaultWorkingDirectory)/scripts/deployment/validation.py \
+                --config-path $(configPath) \
+                --mode post-deployment \
+                --customer ${{ parameters.customerID }} \
+                --environments ${{ join(',', parameters.targetEnvironments) }}
+            displayName: 'Run Post-Deployment Validation'
+            env:
+              TENANT_ID: $(TENANT_ID)
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+
+          - publish: $(System.DefaultWorkingDirectory)/deployment-report.json
+            artifact: deployment-report
+            displayName: 'Publish Deployment Report'

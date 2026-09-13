@@ -1,0 +1,63 @@
+# CUSTOMER0 bronze field - field/block reference data. Shape matches Project
+# Spark's `Field` type exactly (src/data/delta-basin.ts).
+# Pre-discovery - see docs/customer0-pilot-kickoff.md.
+#
+# dim_/fact_ naming is reserved for gold - see bronze/partner.yaml.
+
+model:
+  name: field
+  description: CUSTOMER0 bronze field/block reference data
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: FieldId
+    data_type: VARCHAR(50)
+    description: Stable field slug (natural key) - e.g. "obago", "ekpo"
+  - name: FieldName
+    data_type: VARCHAR(200)
+    description: Display name - e.g. "Ekpo North"
+  - name: ExportPoint
+    data_type: VARCHAR(200)
+    description: Export terminal or FPSO serving this field
+  - name: WellsTotal
+    data_type: INT
+    description: Total wells on this field (static reference count)
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP
+  - name: valid_from
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: valid_to
+    expression: CAST(NULL AS TIMESTAMP)
+    data_type: TIMESTAMP
+  - name: is_current
+    expression: CAST(TRUE AS BOOLEAN)
+    data_type: BOOLEAN

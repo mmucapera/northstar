@@ -1,0 +1,48 @@
+# =============================================================================
+# INS Orchestrator — Pipeline Configuration
+# =============================================================================
+# This file defines how the ADLS poller identifies and parses incoming files.
+# Edit this file to adapt to filename format changes without modifying code.
+
+poller:
+  # ---------------------------------------------------------------------------
+  # Quick filters (applied before regex, for performance)
+  # ---------------------------------------------------------------------------
+  filename_extension: ".zip"           # Only process files with this extension
+  filename_must_contain: "FinishedZip" # Only process files containing this string
+
+  # ---------------------------------------------------------------------------
+  # Filename parsing pattern (regex with named capture groups)
+  # ---------------------------------------------------------------------------
+  # The poller uses this regex to extract metadata from the filename.
+  #
+  # Required named groups:
+  #   - domain_code    : Data domain (e.g., SP, DP) — must match domain_config table
+  #
+  # Optional named groups:
+  #   - instance_code  : Source system instance (e.g., UnisonInsightsONEPL)
+  #   - report_name    : Report identifier (e.g., Daily, Weekly, Monthly)
+  #   - date           : File date (informational, not stored separately)
+  #   - time           : File time (informational, not stored separately)
+  #
+  # If the regex does not match, the poller falls back to:
+  #   - domain_code = third underscore-delimited segment (index 2)
+  #   - instance_code = None
+  #   - report_name = None
+  #
+  # Current format:
+  #   {date}_{time}_{DOMAIN}_FinishedZip_{instance}_{report}.zip
+  #   Example: 20260130_033033_SP_FinishedZip_UnisonInsightsONEPL_Daily.zip
+  #
+  filename_pattern: >-
+    ^(?P<date>\d{8})_(?P<time>\d{6})_(?P<domain_code>[A-Za-z]+)_FinishedZip_(?P<instance_code>[^_]+)_(?P<report_name>[^.]+)\.zip$
+
+  # ---------------------------------------------------------------------------
+  # Default source_code recorded for poller-detected files
+  # ---------------------------------------------------------------------------
+  source_code: "ADLS_POLLER"
+
+  # ---------------------------------------------------------------------------
+  # Default source_file_format for detected files
+  # ---------------------------------------------------------------------------
+  source_file_format: "zip"

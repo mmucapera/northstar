@@ -1,0 +1,10 @@
+{%- import 'base.sql.j2' as base -%}
+CREATE OR REPLACE VIEW {{ model.name }} AS
+{{ base.render_ctes(cte_definitions) -}}
+SELECT
+{{ base.render_columns(columns, source_table) }}
+FROM {{ source_table }}{% if source_table and '.' not in source_table %} T{% endif %}
+{{ base.render_fk_joins(model.joins, model.base_alias) -}}
+{{ base.render_where(where_clause) -}}
+{{ base.render_group_by(group_by_clause, source_table) -}}
+{{ base.render_having(having_clause) -}};

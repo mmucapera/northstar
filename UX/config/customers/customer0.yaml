@@ -1,0 +1,54 @@
+# Customer config for "customer0" — dataset_oilandgas Ops branding/labels/theme.
+# Mirrors the models/customers/<customer>/... YAML pattern used in northstar-formation.
+
+brand:
+  name: "NorthStar DataOps"
+  # Short mark shown in the header logo badge.
+  logoInitials: "CUSTOMER0"
+  tagline: "Supply Chain Ops"
+  productLine: "Oil Supply Chain Ops"
+  description: "Live operations dashboard for crude production, refinery utilization, tanker logistics, and supply chain disruptions."
+  footer: "dataset_oilandgas Ops Console · build 4.2.1"
+
+theme:
+  # OKLCH color tokens — override the CSS custom properties in styles.css.
+  primary: "oklch(0.753 0.152 71.6)"
+  steel: "oklch(0.692 0.09 219)"
+  copper: "oklch(0.683 0.106 49.6)"
+  danger: "oklch(0.638 0.207 25.3)"
+  ok: "oklch(0.676 0.106 147.6)"
+
+nav:
+  overview: "Overview"
+  shipments: "Shipments"
+  inventory: "Inventory"
+  alerts: "Alerts"
+  insights: "Insights"
+
+kpis:
+  production:
+    label: "Production"
+    unit: "M bpd"
+  refineryUtil:
+    label: "Refinery Util"
+    unit: "%"
+  inventoryDays:
+    label: "Crude Inv"
+    unit: "days"
+  priceBenchmark:
+    label: "Brent / WTI"
+    unit: "B"
+
+table:
+  shipments:
+    vessel: "Vessel"
+    route: "Route"
+    corridor: "Corridor"
+    load: "Load"
+    eta: "ETA"
+    status: "Status"
+  inventory:
+    tanksTracked: "Tanks Tracked"
+    totalCapacity: "Total Capacity"
+    avgFill: "Avg Fill"
+    above90: "Above 90%"

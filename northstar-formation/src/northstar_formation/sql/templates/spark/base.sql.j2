@@ -1,0 +1,73 @@
+{%- macro render_columns(columns, source_table=None) -%}
+{%- if not columns or columns|length == 0 -%}
+    *
+{%- else -%}
+{#  We now treat source_table as an alias (e.g. 'T') when provided #}
+{%- set needs_alias = source_table is not none and source_table|length > 0 -%}
+{%- set table_prefix = (source_table ~ '.') if needs_alias else '' -%}
+{%- for col in columns %}
+    {%- if col.expression and col.expression != col.name -%}
+        {%- if col.expression.upper().startswith(('CURRENT_TIMESTAMP', 'CURRENT_DATE', 'CURRENT_TIME')) -%}
+    {{ col.expression }} AS {{ col.name }}
+        {%- elif '.' in col.expression -%}
+    {{ col.expression }} AS {{ col.name }}
+        {%- elif col.expression.startswith("'") and col.expression.endswith("'") -%}
+    {{ col.expression }} AS {{ col.name }}
+        {%- elif ('(' in col.expression or col.expression.upper().strip().startswith('CASE')) and table_prefix -%}
+    {{ col.expression | prefix_columns(table_prefix, columns) }} AS {{ col.name }}
+        {%- else -%}
+    {{ table_prefix }}{{ col.expression }} AS {{ col.name }}
+        {%- endif -%}
+    {%- else -%}
+    {{ table_prefix }}{{ col.name }}
+    {%- endif -%}
+    {%- if not loop.last %},
+{% endif -%}
+{%- endfor %}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro render_ctes(cte_definitions) -%}
+{%- if cte_definitions -%}
+WITH {% for alias, sql in cte_definitions.items() -%}
+{{ alias }} AS (
+{{ sql | indent(4) }}
+){%- if not loop.last %},
+{% endif -%}
+{%- endfor %}
+{% endif -%}
+{%- endmacro -%}
+
+{# NEW: render FK joins from relationships, not CTEs #}
+{%- macro render_fk_joins(joins, base_alias='T') -%}
+{%- if joins and joins|length > 0 -%}
+{{ '\n' -}}
+{% for j in joins %}
+{{ j.join_type.value }} JOIN {{ j.ref_table }} {{ j.ref_alias }} ON {{ j.on_clause }}
+{% endfor %}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro render_where(where_clause) -%}
+{%- if where_clause %}
+
+WHERE {{ where_clause }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro render_group_by(group_by_clause, source_table=None) -%}
+{%- if group_by_clause %}
+{# Again, treat source_table as alias when provided #}
+{%- set needs_alias = source_table is not none and source_table|length > 0 -%}
+{%- set table_prefix = (source_table ~ '.') if needs_alias else '' -%}
+
+GROUP BY {% for col in group_by_clause %}{{ table_prefix }}{{ col }}{% if not loop.last %}, {% endif %}{% endfor %}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro render_having(having_clause) -%}
+{%- if having_clause %}
+
+HAVING {{ having_clause | join(' AND ') }}
+{%- endif -%}
+{%- endmacro -%}

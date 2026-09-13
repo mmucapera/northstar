@@ -1,0 +1,143 @@
+# Production Environment Parameters
+# These values will be used for find/replace operations during deployment
+
+# ============================================================================
+# ENVIRONMENT METADATA - Custom section for tracking
+# ============================================================================
+environment:
+  name: "Production"
+  type: "prod"
+  description: "Production environment for live operations"
+
+# ============================================================================
+# FIND_REPLACE SECTION - Native fabric-cicd parameter replacement (REQ-004)
+# ============================================================================
+find_replace:
+  # Lakehouse and data source configurations
+  - find_value: "{{LAKEHOUSE_ID}}"
+    replace_value: "prod-lakehouse-xxxxxxxx-xxxx-xxxx"
+
+  - find_value: "{{SQL_ENDPOINT}}"
+    replace_value: "customerxxx-prod-onelake.dfs.fabric.microsoft.com"
+
+  - find_value: "{{SQL_DATABASE}}"
+    replace_value: "customerxxx_prod_db"
+
+  # Storage and connection configurations
+  - find_value: "{{STORAGE_ACCOUNT}}"
+    replace_value: "customerxxxprodstore"
+
+  - find_value: "{{CONTAINER_NAME}}"
+    replace_value: "prod-data"
+
+  - find_value: "{{KEY_VAULT_URI}}"
+    replace_value: "https://customerxxx-prod-kv.vault.azure.net/"
+
+  # Environment identifiers
+  - find_value: "{{ENVIRONMENT_NAME}}"
+    replace_value: "PRODUCTION"
+
+  - find_value: "{{ENVIRONMENT_TAG}}"
+    replace_value: "[PROD]"
+
+  - find_value: "{{ENVIRONMENT_PREFIX}}"
+    replace_value: "prod_"
+
+  # Customer information
+  - find_value: "{{CUSTOMER_ID}}"
+    replace_value: "customer-xxx"
+
+  - find_value: "{{CUSTOMER_NAME}}"
+    replace_value: "Customer Name"
+
+  - find_value: "{{CUSTOMER_CODE}}"
+    replace_value: "CUST_XXX"
+
+  # Version and build information
+  - find_value: "{{VERSION}}"
+    replace_value: "1.0.0"  # Stable version in production
+
+  - find_value: "{{BUILD_NUMBER}}"
+    replace_value: "${BUILD_ID}"  # Will be replaced by pipeline
+
+  - find_value: "{{DEPLOYMENT_USER}}"
+    replace_value: "${DEPLOYMENT_USER}"  # Will be replaced by pipeline
+
+  - find_value: "{{DEPLOYMENT_TIMESTAMP}}"
+    replace_value: "${DEPLOYMENT_TIMESTAMP}"  # Will be replaced by pipeline
+
+  # Feature flags and settings - More conservative in production
+  - find_value: "{{ENABLE_DEBUG}}"
+    replace_value: "false"  # No debug in production
+
+  - find_value: "{{ENABLE_TELEMETRY}}"
+    replace_value: "true"
+
+  - find_value: "{{ENABLE_ADVANCED_FEATURES}}"
+    replace_value: "false"  # Disabled until proven stable
+
+  - find_value: "{{LOG_LEVEL}}"
+    replace_value: "WARNING"  # Less verbose in production
+
+  # Performance and capacity settings - Higher for production
+  - find_value: "{{CAPACITY_SKU}}"
+    replace_value: "F64"  # Larger capacity for production
+
+  - find_value: "{{MAX_PARALLELISM}}"
+    replace_value: "16"  # Higher parallelism
+
+  - find_value: "{{TIMEOUT_SECONDS}}"
+    replace_value: "600"  # Longer timeout
+
+  - find_value: "{{RETRY_COUNT}}"
+    replace_value: "5"  # More retries
+
+  # Data pipeline configurations
+  - find_value: "{{SOURCE_SYSTEM}}"
+    replace_value: "prod_source_system"
+
+  - find_value: "{{TARGET_SYSTEM}}"
+    replace_value: "prod_target_system"
+
+  - find_value: "{{BATCH_SIZE}}"
+    replace_value: "10000"  # Larger batches
+
+  - find_value: "{{PROCESSING_MODE}}"
+    replace_value: "batch"  # batch | streaming
+
+  # Notification settings - Production alerts
+  - find_value: "{{ALERT_EMAIL}}"
+    replace_value: "prod-ops@company.com"
+
+  - find_value: "{{TEAMS_WEBHOOK}}"
+    replace_value: "https://company.webhook.office.com/prod-alerts"
+
+  # API and service endpoints - Production URLs
+  - find_value: "{{API_ENDPOINT}}"
+    replace_value: "https://api.company.com"
+
+  - find_value: "{{AUTH_ENDPOINT}}"
+    replace_value: "https://auth.company.com"
+
+  - find_value: "{{SERVICE_BUS_CONNECTION}}"
+    replace_value: "Endpoint=sb://customerxxx-prod.servicebus.windows.net/"
+
+  # Report and semantic model settings
+  - find_value: "{{DEFAULT_REFRESH_SCHEDULE}}"
+    replace_value: "0 2,14 * * *"  # Twice daily at 2 AM and 2 PM
+
+  - find_value: "{{CACHE_DURATION_MINUTES}}"
+    replace_value: "240"  # Longer cache in production
+
+  - find_value: "{{ROW_LIMIT}}"
+    replace_value: "1000000"  # Higher limit for production
+
+  # Custom application settings
+  - find_value: "{{APP_SETTING_1}}"
+    replace_value: "prod_value_1"
+
+  - find_value: "{{APP_SETTING_2}}"
+    replace_value: "prod_value_2"
+
+  - find_value: "{{APP_SETTING_3}}"
+    replace_value: "prod_value_3"

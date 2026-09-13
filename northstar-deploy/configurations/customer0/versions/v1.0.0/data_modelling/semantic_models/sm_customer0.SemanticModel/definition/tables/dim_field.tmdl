@@ -1,0 +1,36 @@
+table dim_field
+	lineageTag: c77e0496-3782-4126-81af-4f45a51f39f9
+
+	column FieldId_key
+		dataType: int64
+		sourceColumn: FieldId_key
+		lineageTag: 261640ac-215d-422d-a8cd-e30d10b0e9b8
+
+	column FieldId
+		dataType: string
+		sourceColumn: FieldId
+		lineageTag: 1e820080-05f7-4ead-b45c-d9c2e059e41d
+
+	column FieldName
+		dataType: string
+		sourceColumn: FieldName
+		lineageTag: 143da3d5-f0e0-493c-baac-ae4dae39095e
+
+	column ExportPoint
+		dataType: string
+		sourceColumn: ExportPoint
+		lineageTag: cd2b9ccb-4bfa-4a22-8c53-f990ea58315d
+
+	column WellsTotal
+		dataType: int64
+		sourceColumn: WellsTotal
+		lineageTag: 10432ef1-8d9e-4b97-8fbb-7cff3140b2d9
+
+	partition dim_field = entity
+		mode: directLake
+		source
+			entityName: dim_field
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

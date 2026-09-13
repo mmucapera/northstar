@@ -1,0 +1,50 @@
+model:
+  name: dim_wellbore
+  description: CUSTOMER0 gold wellbore dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.wellbore
+  depends_on_tables: [silver.wellbore]
+  merge_keys:
+    merge_keys:
+    - WellboreId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: WellboreId_key
+    expression: CAST(xxhash64(WellboreId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of WellboreId. Join key for fact_* tables.
+  - name: WellboreId
+    expression: WellboreId
+    data_type: NVARCHAR(60)
+  - name: WellId_key
+    expression: CAST(xxhash64(WellId) AS BIGINT)
+    data_type: BIGINT
+    description: FK to dim_well.WellId_key
+  - name: WellboreName
+    expression: WellboreName
+    data_type: NVARCHAR(200)
+  - name: Trajectory
+    expression: Trajectory
+    data_type: NVARCHAR(20)
+  - name: IsSidetrack
+    expression: IsSidetrack
+    data_type: BOOLEAN
+  - name: MeasuredDepthM
+    expression: MeasuredDepthM
+    data_type: DECIMAL(18,2)
+  - name: TrueVerticalDepthM
+    expression: TrueVerticalDepthM
+    data_type: DECIMAL(18,2)
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

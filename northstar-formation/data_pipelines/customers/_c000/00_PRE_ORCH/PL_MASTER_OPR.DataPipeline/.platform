@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "PL_MASTER_OPR",
+    "description": "This pipeline is not configured via CONFIG because it will be replaced by Orchestrator\nStrategy TBD"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9d4e19a3-43a3-a689-4c9c-074b3ae710cb"
+  }
+}

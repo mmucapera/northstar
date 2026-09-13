@@ -1,0 +1,73 @@
+table fact_production
+	lineageTag: 5951e020-6759-47a5-b2ee-6d22f8d59687
+
+	column PeriodId_key
+		dataType: int64
+		sourceColumn: PeriodId_key
+		lineageTag: 632a0c14-3681-4f95-8fd9-b25148e586e6
+
+	column FieldId_key
+		dataType: int64
+		sourceColumn: FieldId_key
+		lineageTag: c8cf0a9a-ce04-4bfc-aac0-116767e3123e
+
+	column ActualBopd
+		dataType: decimal
+		sourceColumn: ActualBopd
+		lineageTag: 7a7f7d19-4b02-4832-948c-22c5b2bcefeb
+
+	column ForecastBopd
+		dataType: decimal
+		sourceColumn: ForecastBopd
+		lineageTag: 71aa63c7-4ce2-4ba3-ad16-9743232cd8fe
+
+	column ForecastVariancePct
+		dataType: decimal
+		sourceColumn: ForecastVariancePct
+		lineageTag: e6bfbeaf-30b1-4563-9def-31b1350267af
+
+	column WellsOnline
+		dataType: int64
+		sourceColumn: WellsOnline
+		lineageTag: c02f06fe-5a3b-4eb6-8c3e-9e838c7c691a
+
+	column UptimePct
+		dataType: decimal
+		sourceColumn: UptimePct
+		lineageTag: fe056acd-424d-4ad8-80ba-797f54b4dad9
+
+	column OpsStatus
+		dataType: string
+		sourceColumn: OpsStatus
+		lineageTag: 9ff58604-e5ec-40bd-a79c-98c58f8fde94
+
+	column Manifest_package
+		dataType: string
+		sourceColumn: Manifest_package
+		lineageTag: 6cc1357c-14c7-4b6b-aa1a-478262ebddd5
+
+	column Manifest_file
+		dataType: string
+		sourceColumn: Manifest_file
+		lineageTag: cd73df54-13ca-4e01-af22-42271b374b8c
+
+	measure 'Total Actual Bopd' = SUM('fact_production'[ActualBopd])
+		formatString: #,0
+		lineageTag: feaeb7bb-9a59-4061-a12c-c26893405e1a
+
+	measure 'Total Forecast Bopd' = SUM('fact_production'[ForecastBopd])
+		formatString: #,0
+		lineageTag: 57efb4d1-bd44-419f-9de0-a0bdbca181e6
+
+	measure 'Avg Uptime Pct' = AVERAGE('fact_production'[UptimePct])
+		formatString: #,0.0
+		lineageTag: 152d4eff-0c0d-4c33-8bf0-b21ec5877a6e
+
+	partition fact_production = entity
+		mode: directLake
+		source
+			entityName: fact_production
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_flow_control",
+    "description": "stop_notebook, fail_notebook"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "17e70f31-8ba8-4940-be4d-26e015bcb81f"
+  }
+}

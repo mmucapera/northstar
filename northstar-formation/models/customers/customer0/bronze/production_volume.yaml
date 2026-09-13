@@ -1,0 +1,61 @@
+# CUSTOMER0 bronze production_volume - well-level monthly production volumes.
+# Shape matches Project Spark's `FctProductionVolume` type
+# (src/data/warehouse.ts), translated to customer0's Id/PascalCase convention.
+# Different grain than bronze/production.yaml (field-level) - this is
+# well-level, complementary not duplicate.
+# Pre-discovery - see docs/customer0-pilot-kickoff.md.
+
+model:
+  name: production_volume
+  description: CUSTOMER0 bronze well-level monthly production volume records
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: PeriodId
+    data_type: VARCHAR(7)
+  - name: WellId
+    data_type: VARCHAR(50)
+  - name: FieldId
+    data_type: VARCHAR(50)
+  - name: FacilityId
+    data_type: VARCHAR(50)
+  - name: OilBbl
+    data_type: DECIMAL(18,2)
+  - name: GasMscf
+    data_type: DECIMAL(18,2)
+  - name: WaterBbl
+    data_type: DECIMAL(18,2)
+  - name: OnstreamHours
+    data_type: DECIMAL(9,2)
+  - name: WaterCutPct
+    data_type: DECIMAL(9,2)
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP

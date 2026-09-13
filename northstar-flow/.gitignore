@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+# Virtual environments
+.venv
+.qodo
+.vscode
+archive
+.env
+uv.toml
+
+*.duckdb
+*.duckdb.wal
+
+# DuckDB extensions
+duckdb_extensions/v1.4.0/*
+
+# Export files directory
+exports/
+!uv.lock
+*.db

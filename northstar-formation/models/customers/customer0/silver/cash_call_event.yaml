@@ -1,0 +1,24 @@
+model:
+  name: cash_call_event
+  description: CUSTOMER0 silver cash-call status-change events
+  layer: silver
+  kind: TABLE
+  extends: bronze.cash_call_event
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.cash_call_event
+  depends_on_tables: [bronze.cash_call_event]
+  merge_keys:
+    merge_keys:
+    - PeriodId
+    - PartnerId
+    - FieldId
+    - Stage
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

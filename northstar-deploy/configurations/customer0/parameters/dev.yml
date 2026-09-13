@@ -1,0 +1,143 @@
+# Development Environment Parameters
+# These values will be used for find/replace operations during deployment
+
+# ============================================================================
+# ENVIRONMENT METADATA - Custom section for tracking
+# ============================================================================
+environment:
+  name: "Development"
+  type: "dev"
+  description: "Development environment for testing and experimentation"
+
+# ============================================================================
+# FIND_REPLACE SECTION - Native fabric-cicd parameter replacement (REQ-004)
+# ============================================================================
+find_replace:
+  # Lakehouse and data source configurations
+  - find_value: "{{LAKEHOUSE_ID}}"
+    replace_value: "dev-lakehouse-xxxxxxxx-xxxx-xxxx"
+
+  - find_value: "{{SQL_ENDPOINT}}"
+    replace_value: "customerxxx-dev-onelake.dfs.fabric.microsoft.com"
+
+  - find_value: "{{SQL_DATABASE}}"
+    replace_value: "customerxxx_dev_db"
+
+  # Storage and connection configurations
+  - find_value: "{{STORAGE_ACCOUNT}}"
+    replace_value: "stcustomer0devri7hdc"
+
+  - find_value: "{{CONTAINER_NAME}}"
+    replace_value: "dev-data"
+
+  - find_value: "{{KEY_VAULT_URI}}"
+    replace_value: "https://kv-northstar-customer0-dev.vault.azure.net/"
+
+  # Environment identifiers
+  - find_value: "{{ENVIRONMENT_NAME}}"
+    replace_value: "DEVELOPMENT"
+
+  - find_value: "{{ENVIRONMENT_TAG}}"
+    replace_value: "[DEV]"
+
+  - find_value: "{{ENVIRONMENT_PREFIX}}"
+    replace_value: "dev_"
+
+  # Customer information
+  - find_value: "{{CUSTOMER_ID}}"
+    replace_value: "customer0"
+
+  - find_value: "{{CUSTOMER_NAME}}"
+    replace_value: "CUSTOMER0"
+
+  - find_value: "{{CUSTOMER_CODE}}"
+    replace_value: "CUSTOMER0"
+
+  # Version and build information
+  - find_value: "{{VERSION}}"
+    replace_value: "2.0.0"
+
+  - find_value: "{{BUILD_NUMBER}}"
+    replace_value: "${BUILD_ID}"  # Will be replaced by pipeline
+
+  - find_value: "{{DEPLOYMENT_USER}}"
+    replace_value: "${DEPLOYMENT_USER}"  # Will be replaced by pipeline
+
+  - find_value: "{{DEPLOYMENT_TIMESTAMP}}"
+    replace_value: "${DEPLOYMENT_TIMESTAMP}"  # Will be replaced by pipeline
+
+  # Feature flags and settings
+  - find_value: "{{ENABLE_DEBUG}}"
+    replace_value: "true"
+
+  - find_value: "{{ENABLE_TELEMETRY}}"
+    replace_value: "true"
+
+  - find_value: "{{ENABLE_ADVANCED_FEATURES}}"
+    replace_value: "true"
+
+  - find_value: "{{LOG_LEVEL}}"
+    replace_value: "DEBUG"
+
+  # Performance and capacity settings
+  - find_value: "{{CAPACITY_SKU}}"
+    replace_value: "F2"  # Small capacity for dev
+
+  - find_value: "{{MAX_PARALLELISM}}"
+    replace_value: "4"
+
+  - find_value: "{{TIMEOUT_SECONDS}}"
+    replace_value: "300"
+
+  - find_value: "{{RETRY_COUNT}}"
+    replace_value: "3"
+
+  # Data pipeline configurations
+  - find_value: "{{SOURCE_SYSTEM}}"
+    replace_value: "dev_source_system"
+
+  - find_value: "{{TARGET_SYSTEM}}"
+    replace_value: "dev_target_system"
+
+  - find_value: "{{BATCH_SIZE}}"
+    replace_value: "1000"
+
+  - find_value: "{{PROCESSING_MODE}}"
+    replace_value: "batch"  # batch | streaming
+
+  # Notification settings
+  - find_value: "{{ALERT_EMAIL}}"
+    replace_value: "dev-team@company.com"
+
+  - find_value: "{{TEAMS_WEBHOOK}}"
+    replace_value: "https://company.webhook.office.com/dev-channel"
+
+  # API and service endpoints
+  - find_value: "{{API_ENDPOINT}}"
+    replace_value: "https://api-dev.company.com"
+
+  - find_value: "{{AUTH_ENDPOINT}}"
+    replace_value: "https://auth-dev.company.com"
+
+  - find_value: "{{SERVICE_BUS_CONNECTION}}"
+    replace_value: "Endpoint=sb://customerxxx-dev.servicebus.windows.net/"
+
+  # Report and semantic model settings
+  - find_value: "{{DEFAULT_REFRESH_SCHEDULE}}"
+    replace_value: "0 */4 * * *"  # Every 4 hours in dev
+
+  - find_value: "{{CACHE_DURATION_MINUTES}}"
+    replace_value: "60"
+
+  - find_value: "{{ROW_LIMIT}}"
+    replace_value: "10000"  # Lower limit for dev
+
+  # Custom application settings
+  - find_value: "{{APP_SETTING_1}}"
+    replace_value: "dev_value_1"
+
+  - find_value: "{{APP_SETTING_2}}"
+    replace_value: "dev_value_2"
+
+  - find_value: "{{APP_SETTING_3}}"
+    replace_value: "dev_value_3"

@@ -1,0 +1,40 @@
+model:
+  name: dim_partner
+  description: CUSTOMER0 gold JV partner dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.partner
+  depends_on_tables: [silver.partner]
+  merge_keys:
+    merge_keys:
+    - PartnerId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: PartnerId_key
+    expression: CAST(xxhash64(PartnerId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of PartnerId. Join key for fact_* tables.
+  - name: PartnerId
+    expression: PartnerId
+    data_type: NVARCHAR(50)
+  - name: PartnerName
+    expression: PartnerName
+    data_type: NVARCHAR(200)
+  - name: PartnerRole
+    expression: PartnerRole
+    data_type: NVARCHAR(100)
+  - name: EquityPct
+    expression: EquityPct
+    data_type: DECIMAL(6,3)
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

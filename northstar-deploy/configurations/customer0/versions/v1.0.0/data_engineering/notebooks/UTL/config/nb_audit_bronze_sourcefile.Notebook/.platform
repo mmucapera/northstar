@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_audit_bronze_sourcefile"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c85ca3ee-c634-8cff-4438-d8f118e2af88"
+  }
+}

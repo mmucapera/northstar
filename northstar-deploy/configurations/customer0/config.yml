@@ -1,0 +1,201 @@
+# Customer Configuration for customer0
+# PRE-DISCOVERY: no real Fabric workspace access exists yet. Every workspace_id
+# below is still a template placeholder - fill in real GUIDs once a workspace
+# is provisioned. See docs/customer0-pilot-kickoff.md for status.
+
+# ============================================================================
+# METADATA SECTION - Custom tracking information (not used by fabric-cicd)
+# ============================================================================
+metadata:
+  customer_id: "customer0"
+  customer_name: "CUSTOMER0"
+  created_date: "2026-09-06"
+  maintained_by: "team@company.com"  # TODO: replace with real delivery team contact
+  deployment_mode: "standard"
+  description: "Upstream JV pilot - reconciliation, production, downtime, HSE, and cash-call domains, matching Project Spark's frontend exactly. Pre-discovery, synthetic data only."
+
+# ============================================================================
+# CORE SECTION - Native fabric-cicd configuration
+# ============================================================================
+core:
+  # Workspace IDs for each environment (REQ-003)
+  # dev = the real terraform/-provisioned workspace "customer0-dev" (see
+  # docs/fabric-environment-setup-log.md). test/uat/prod deliberately
+  # omitted, not left as "xxxxxxxx-..." placeholders - fabric-cicd's own
+  # config validator (not just our Pydantic model) checks every listed
+  # environment's workspace_id upfront, even ones we're not deploying to,
+  # and rejects placeholder GUIDs outright ("must be a valid GUID format").
+  # Add test/uat/prod back here once those workspaces actually exist.
+  workspace_id:
+    dev: "2349db9d-a206-41d6-bb9b-c134bee74ee0"
+
+  # Repository directory containing Fabric items (REQ-013)
+  # Can be relative (to this config file) or absolute paths
+  # test/uat/prod omitted along with workspace_id above, for the same reason.
+  repository_directory:
+    dev: "./versions/v1.0.0"    # First real deployment
+
+  # Item types to deploy (REQ-014)
+  # Order here doesn't matter, use deployment_sequence for ordering
+  #
+  # Lakehouse is deliberately NOT in scope here - lkh_001 is created and
+  # owned by terraform/fabric_lakehouse.tf, not by anything in this repo
+  # folder. Including it would mean fabric-cicd sees a real Lakehouse in the
+  # workspace with no matching item in repository_directory and could treat
+  # it as an orphan to unpublish/delete during cleanup - a real, destructive
+  # risk, not a theoretical one, since dev's unpublish.skip is false. Keep
+  # Lakehouse management in Terraform only; this repo only ever adds
+  # Notebook/DataPipeline content into the Lakehouse Terraform already made.
+  # SemanticModel (sm_customer0) is real, generated content and deploys cleanly.
+  # Report (sr_customer0) is generated too (northstar-formation report) but NOT yet in
+  # scope - Fabric's Report import API rejects it with a generic
+  # "Content provider provided invalid package content stream" error not
+  # resolved despite matching every documented/source-verified requirement.
+  # See docs/fabric-environment-setup-log.md for the full diagnostic trail
+  # before re-attempting.
+  item_types_in_scope:
+    - Notebook
+    - DataPipeline
+    - SemanticModel
+    # Supported types: DataPipeline, Environment, Notebook, Report,
+    # SemanticModel, Lakehouse, MirroredDatabase, Warehouse, SQLDatabase,
+    # Eventstream, Eventhouse, KQLDatabase, KQLQueryset, Reflex
+
+  # `core.parameter` (template default: a per-env dict of parameter file
+  # paths) doesn't match this orchestrator's actual Pydantic schema
+  # (scripts/deployment/config_models.py CoreConfig.parameter is
+  # Optional[str], not a dict) - deploying with the template's dict shape
+  # fails validation outright. Omitted rather than guessed at, since our
+  # generated content has no {{PLACEHOLDER}} tokens to substitute anyway
+  # (northstar-formation bakes in real IDs at generation time - see
+  # docs/fabric-environment-setup-log.md). The parameters/*.yml files still
+  # exist and are still updated with real values for reference/future use,
+  # just not wired in here as core.parameter.
+
+# ============================================================================
+# DEPLOYMENT SECTION - Custom orchestration settings
+# ============================================================================
+deployment:
+  # Deployment sequence - items deployed in this order (REQ-008, REQ-016)
+  # Lakehouse/Report intentionally absent - see item_types_in_scope comment
+  # above. SemanticModel deploys last - it's DirectLake over the gold tables
+  # the notebooks/pipelines populate.
+  deployment_sequence:
+    - Notebook         # Deploy first (depends on the Terraform-managed Lakehouse)
+    - DataPipeline     # Deploy second (depends on Lakehouse)
+    - SemanticModel    # Deploy last (DirectLake over gold.* tables)
+    # Report deliberately not listed - not currently in item_types_in_scope, see above.
+
+  # Deployment modes configuration (REQ-006)
+  modes:
+    full:
+      enabled: true
+      cleanup_orphans: true      # Remove items not in repository
+      validate_all: true         # Run all validations
+    incremental:
+      enabled: true
+      cleanup_orphans: false     # Keep existing items
+      validate_changes_only: true
+    selective:
+      enabled: true
+      cleanup_orphans: false     # Never remove in selective mode (REQ-023)
+      skip_validation: false     # Can skip non-essential validation (REQ-021)
+
+  # Retry configuration (REQ-019)
+  retry:
+    max_attempts: 3              # Maximum retry attempts
+    backoff_seconds: 30          # Initial backoff duration
+    retriable_errors:            # Error types to retry
+      - "TooManyRequests"
+      - "ServiceUnavailable"
+      - "GatewayTimeout"
+
+# ============================================================================
+# PUBLISH SECTION - Native fabric-cicd publish configuration
+# ============================================================================
+publish:
+  # Regex patterns to exclude items from publishing
+  exclude_regex:
+    dev: "^(TEMPLATE_|DEPRECATED_).*"
+    test: "^(TEMPLATE_|DEPRECATED_|DEV_ONLY_).*"
+    uat: "^(TEMPLATE_|DEPRECATED_|DEV_ONLY_|TEST_ONLY_).*"
+    prod: "^(TEMPLATE_|DEPRECATED_|DEV_ONLY_|TEST_ONLY_|DEBUG_).*"
+
+  # Exclude items in specific folders
+  folder_exclude_regex:
+    dev: "^archive/"
+    test: "^(archive/|experimental/).*"
+    uat: "^(archive/|experimental/|testing/).*"
+    prod: "^(archive/|experimental/|testing/|staging/).*"
+
+  # Skip publishing for specific environments
+  skip:
+    dev: false
+    test: false
+    uat: false
+    prod: false
+
+# ============================================================================
+# UNPUBLISH SECTION - Native fabric-cicd unpublish configuration
+# ============================================================================
+unpublish:
+  # Items matching this pattern won't be removed (even if orphaned)
+  exclude_regex: "^(SYSTEM_|SHARED_|READONLY_).*"
+
+  # Skip unpublishing for specific environments
+  skip:
+    dev: false    # Allow cleanup in dev
+    test: false   # Allow cleanup in test
+    uat: true     # No auto-cleanup in UAT (safer)
+    prod: true    # Never auto-cleanup in production
+
+# ============================================================================
+# FEATURES SECTION - Required fabric-cicd feature flags
+# ============================================================================
+features:
+  - enable_experimental_features  # Required for config deployment
+  - enable_config_deploy          # Required for deploy_with_config()
+  - enable_items_to_include       # For selective deployment (REQ-020)
+  - enable_exclude_folder         # For folder exclusions
+  - enable_response_collection    # To get deployment responses
+
+# ============================================================================
+# VALIDATION SECTION - Custom validation checks (REQ-007)
+# ============================================================================
+validation:
+  # Pre-deployment checks
+  pre_deployment:
+    - check_workspace_exists     # Verify workspace is accessible
+    - check_capacity_available   # Verify capacity is active
+    - validate_connections       # Check required connections
+    - verify_dependencies       # Verify item dependencies
+    - check_version_compatibility  # Verify version compatibility
+    - validate_parameter_files  # Validate parameter file format
+
+  # Post-deployment checks
+  post_deployment:
+    - verify_item_count         # Verify expected items deployed
+    - test_connections          # Test data connections work
+    - run_smoke_tests          # Run basic functionality tests
+    - verify_specific_items    # For selective deployment verification
+
+# ============================================================================
+# NOTIFICATIONS SECTION - Optional notification settings (custom)
+# ============================================================================
+notifications:
+  enabled: false
+  channels:
+    teams:
+      webhook_url: ""  # Teams webhook URL
+      notify_on: ["failure", "success_with_warnings"]
+    email:
+      recipients: []
+      notify_on: ["failure"]
+
+# ============================================================================
+# MONITORING SECTION - Optional monitoring settings (custom)
+# ============================================================================
+monitoring:
+  enabled: false
+  log_level: "INFO"  # DEBUG | INFO | WARNING | ERROR
+  retention_days: 30  # How long to keep deployment logs

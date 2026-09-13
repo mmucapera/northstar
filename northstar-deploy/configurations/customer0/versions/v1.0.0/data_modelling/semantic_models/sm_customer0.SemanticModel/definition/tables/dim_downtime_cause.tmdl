@@ -1,0 +1,26 @@
+table dim_downtime_cause
+	lineageTag: ead29fca-c0a5-46b3-bb01-19cb8b0193af
+
+	column CauseId_key
+		dataType: int64
+		sourceColumn: CauseId_key
+		lineageTag: 02ad91ab-2919-4244-9599-4ba61d0ba4b3
+
+	column CauseId
+		dataType: string
+		sourceColumn: CauseId
+		lineageTag: ab8e029b-ab4d-4a72-8df6-6c06e71c04aa
+
+	column CauseName
+		dataType: string
+		sourceColumn: CauseName
+		lineageTag: 5ed67c78-16d1-4feb-86ba-8788f85eca81
+
+	partition dim_downtime_cause = entity
+		mode: directLake
+		source
+			entityName: dim_downtime_cause
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

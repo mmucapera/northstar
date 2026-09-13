@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "brz_production",
+    "description": "Generated notebook for bronze.production"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "23a5b200-8f7d-5595-966e-44782874d453"
+  }
+}

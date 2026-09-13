@@ -1,0 +1,21 @@
+model:
+  name: well
+  description: CUSTOMER0 silver well header reference data
+  layer: silver
+  kind: TABLE
+  extends: bronze.well
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.well
+  depends_on_tables: [bronze.well]
+  merge_keys:
+    merge_keys:
+    - WellId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

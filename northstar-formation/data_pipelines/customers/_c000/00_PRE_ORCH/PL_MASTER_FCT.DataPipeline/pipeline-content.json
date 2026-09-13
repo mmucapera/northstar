@@ -1,0 +1,290 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@variables('dateList')",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "batchid": {
+                    "value": "@pipeline().parameters.batchid",
+                    "type": "Expression"
+                  },
+                  "domain": {
+                    "value": "@pipeline().parameters.domain",
+                    "type": "Expression"
+                  },
+                  "extract_id": {
+                    "value": "@pipeline().parameters.extract_id",
+                    "type": "Expression"
+                  },
+                  "processing_date": {
+                    "value": "@if(\n  equals(toLower(pipeline().parameters.mode),'daily'),\n  formatDateTime(addDays(variables('var_startDate'), item()), 'yyyy/MM/dd'),\n  formatDateTime(addDays(pipeline().parameters.startDate, item()), 'yyyy/MM/dd')\n)\n",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "7d5ec26b-3352-56f6-9216-3a38040e7114",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "PL_BRONZE_FCT_CONFIG",
+              "dependsOn": []
+            },
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {},
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "66b5aed3-9b5e-57a2-a905-f3263f7c1afa",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "PL_SILVER_FCT_CONFIG",
+              "dependsOn": [
+                {
+                  "activity": "nb_audit_bronze_sourcefile",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                },
+                {
+                  "activity": "nb_audit_bronze_null_cols",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "c85ca3ee-c634-8cff-4438-d8f118e2af88",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "domain": {
+                    "value": {
+                      "value": "FCT",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_audit_bronze_sourcefile",
+              "dependsOn": [
+                {
+                  "activity": "PL_BRONZE_FCT_CONFIG",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "1d754f13-4728-8350-474e-183d5669f9b3",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "domain": {
+                    "value": {
+                      "value": "FCT",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_audit_bronze_null_cols",
+              "dependsOn": [
+                {
+                  "activity": "PL_BRONZE_FCT_CONFIG",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "ForEach_Day",
+        "dependsOn": [
+          {
+            "activity": "BuildDateArray",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "var_endDate",
+          "value": {
+            "value": "@if(\n    equals(\n        toLower(pipeline().parameters.mode),\n        'daily'\n    ),\n    formatDateTime(utcNow(),'yyyy/MM/dd'),\n    formatDateTime(utcNow(),'yyyy/MM/dd')\n)\n\n",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "ResolveEndDate",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "var_startDate",
+          "value": {
+            "value": "@if(equals(toLower(pipeline().parameters.mode),'daily'), formatDateTime(addDays(variables('var_endDate'), -1),'yyyy/MM/dd'), formatDateTime(pipeline().parameters.startDate,'yyyy/MM/dd'))",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "ResolveStartDate",
+        "dependsOn": [
+          {
+            "activity": "ResolveEndDate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "dateList",
+          "value": {
+            "value": "@range(0, int(if(equals(toLower(pipeline().parameters.mode),'daily'), pipeline().parameters.nrofdays_to_load, add(0, div(sub(ticks(variables('var_endDate')), ticks(pipeline().parameters.startDate)), 864000000000)))))",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "BuildDateArray",
+        "dependsOn": [
+          {
+            "activity": "ResolveStartDate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {},
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "acf35227-8279-51e0-a874-0f0f1ca2af8f",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "PL_GOLD_FCT_CONFIG",
+        "dependsOn": [
+          {
+            "activity": "ForEach_Day",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "mode": {
+        "type": "String",
+        "defaultValue": "daily"
+      },
+      "startDate": {
+        "type": "String",
+        "defaultValue": "2026-03-20"
+      },
+      "nrofdays_to_load": {
+        "type": "int",
+        "defaultValue": 1
+      },
+      "batchid": {
+        "type": "int"
+      },
+      "domain": {
+        "type": "string"
+      },
+      "extract_id": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "dateList": {
+        "type": "Array"
+      },
+      "var_endDate": {
+        "type": "String"
+      },
+      "var_startDate": {
+        "type": "String"
+      }
+    }
+  }
+}

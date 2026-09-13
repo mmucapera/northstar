@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_access_control"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "49db0cd1-fac4-42a2-bf3e-d473b4d40b52"
+  }
+}

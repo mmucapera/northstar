@@ -1,0 +1,431 @@
+<mxfile host="app.diagrams.net" modified="2024-11-20T00:00:00.000Z" agent="Claude Code" version="24.0.0">
+  <diagram name="Fabric Multi-Customer Deployment Architecture" id="fabric-deployment">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Fabric Multi-Customer Deployment System - Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="800" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ========== SOURCE REPOSITORIES SECTION ========== -->
+        <mxCell id="repo-section-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="700" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="repo-section-label" value="SOURCE REPOSITORIES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="90" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Current ADO Org -->
+        <mxCell id="current-org-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="130" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="current-org-label" value="Current ADO Org/Project" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="135" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="deployment-repo" value="Deployment Code Repo&#xa;bi_fabric_insights-4/uix-deploy" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="85" y="170" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="deployment-repo-items" value="• scripts/&#xa;• configurations/&#xa;• pipelines/" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="220" y="175" width="130" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- External ADO Org -->
+        <mxCell id="external-org-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="130" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="external-org-label" value="External ADO Org/Project" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="135" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="artifacts-repo" value="Fabric Artifacts Repo&#xa;versions/vX.Y.Z/" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="445" y="170" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="artifacts-repo-items" value="• Lakehouse&#xa;• Notebook&#xa;• DataPipeline&#xa;• SemanticModel" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="175" width="130" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Service Connection -->
+        <mxCell id="service-connection" value="Service Connection&#xa;(PAT Auth)" style="endArrow=classic;startArrow=classic;html=1;strokeWidth=2;strokeColor=#d79b00;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="deployment-repo" target="artifacts-repo">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="350" as="sourcePoint" />
+            <mxPoint x="450" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ========== AZURE DEVOPS PIPELINE SECTION ========== -->
+        <mxCell id="pipeline-section-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="320" width="700" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="pipeline-section-label" value="AZURE DEVOPS PIPELINE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="330" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Trigger -->
+        <mxCell id="pipeline-trigger" value="Manual Trigger" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="370" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pipeline-params" value="Parameters:&#xa;• customerID&#xa;• environments[]&#xa;• deploymentMode&#xa;• artifactVersion" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="365" width="150" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 1: Validation -->
+        <mxCell id="stage1-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="470" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="stage1-label" value="Stage 1: Pre-Deployment Validation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="475" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="validation-checks" value="✓ check_workspace_exists&#xa;✓ check_capacity_available&#xa;✓ validate_parameter_files&#xa;✓ validate_parameter_deployment_order&#xa;&#xa;❌ BLOCKS deployment if failed" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="505" width="280" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 2-5: Deployment Stages -->
+        <mxCell id="deploy-stages-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="400" y="470" width="320" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy-stages-label" value="Deployment Stages (Sequential)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="475" width="320" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 2: Dev -->
+        <mxCell id="stage2" value="Stage 2: Deploy to Dev&#xa;🔗 Git Integration Enabled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="510" width="280" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 3: Test -->
+        <mxCell id="stage3" value="Stage 3: Deploy to Test&#xa;(No Git Integration)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="420" y="575" width="280" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 4: UAT with Approval -->
+        <mxCell id="stage4" value="Stage 4: Deploy to UAT&#xa;(No Git Integration)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="420" y="640" width="280" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="approval-uat" value="🛡️ Approval Gate" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="697" width="120" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 5: Prod with Approval -->
+        <mxCell id="stage5" value="Stage 5: Deploy to Production&#xa;(No Git Integration)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="750" width="280" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="approval-prod" value="🛡️ Approval Gate" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="807" width="120" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 6: Post-Validation -->
+        <mxCell id="stage6" value="Stage 6: Post-Deployment Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="620" width="300" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Connections between stages -->
+        <mxCell id="conn-trigger-stage1" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#666666;" edge="1" parent="1" source="pipeline-trigger" target="stage1-box">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn-stage1-stage2" value="if passed" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="stage1-box" target="stage2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn-stage2-stage3" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#10739e;" edge="1" parent="1" source="stage2" target="stage3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn-stage3-stage4" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#10739e;" edge="1" parent="1" source="stage3" target="stage4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn-stage4-approval" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#d6b656;" edge="1" parent="1" source="stage4" target="approval-uat">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn-approval-stage5" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#d6b656;" edge="1" parent="1" source="approval-uat" target="stage5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn-stage5-approval-prod" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#b85450;" edge="1" parent="1" source="stage5" target="approval-prod">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ========== VALIDATION ENGINE SECTION ========== -->
+        <mxCell id="validation-section-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="800" y="80" width="380" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="validation-section-label" value="VALIDATION ENGINE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="810" y="90" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="validation-engine" value="validation.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="820" y="130" width="150" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="validation-inputs" value="Inputs:&#xa;• config.yml&#xa;• Service Principal&#xa;• Environment" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="185" width="150" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="validation-checks-detail" value="Validation Checks:&#xa;✓ Workspace exists (Fabric API)&#xa;✓ Capacity available&#xa;✓ Parameter files valid&#xa;✓ Deployment order correct&#xa;   (Notebook before Lakehouse ❌)&#xa;&#xa;Output:&#xa;• validation-report.json&#xa;• Console errors/warnings&#xa;• Exit code (0/1)" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="990" y="130" width="180" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="validation-output" value="validation-report.json" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="820" y="270" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Connection from Stage 1 to Validation Engine -->
+        <mxCell id="conn-stage1-validation" value="calls" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#82b366;dashed=1;" edge="1" parent="1" source="stage1-box" target="validation-engine">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ========== DEPLOYMENT ORCHESTRATOR SECTION ========== -->
+        <mxCell id="orchestrator-section-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="800" y="390" width="380" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="orchestrator-section-label" value="DEPLOYMENT ORCHESTRATOR" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="810" y="400" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="orchestrator" value="deploy_orchestrator.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="820" y="440" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="orchestrator-flow" value="Deployment Flow:&#xa;1. Load config.yml&#xa;2. Authenticate (Service Principal)&#xa;3. Generate parameter.yml dynamically&#xa;4. For each item in deployment_sequence:&#xa;   • Lakehouse&#xa;   • VariableLibrary&#xa;   • Notebook&#xa;   • DataPipeline&#xa;   • SemanticModel&#xa;   • Report&#xa;5. Deploy via fabric-cicd&#xa;6. Track succeeded/failed items&#xa;7. Generate deployment report" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="495" width="220" height="210" as="geometry" />
+        </mxCell>
+
+        <mxCell id="retry-handler" value="Retry Handler" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1060" y="495" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="retry-handler-detail" value="• Max attempts: 3&#xa;• Backoff: 30s&#xa;• Exponential: 2.0&#xa;• Retriable errors:&#xa;  - TooManyRequests&#xa;  - ServiceUnavailable&#xa;  - Timeout" style="text;html=1;strokeColor=#d79b00;fillColor=#ffe6cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="555" width="110" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="deployment-report" value="deployment_report.json" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="820" y="725" width="150" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="deployment-report-detail" value="Report:&#xa;• status: SUCCESS/&#xa;  PARTIAL_SUCCESS/FAILED&#xa;• items_succeeded[]&#xa;• items_failed[]&#xa;• errors[]&#xa;• warnings[]&#xa;• duration" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="990" y="725" width="180" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Connection from Deploy Stages to Orchestrator -->
+        <mxCell id="conn-deploy-orchestrator" value="executes" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6c8ebf;dashed=1;" edge="1" parent="1" source="deploy-stages-box" target="orchestrator">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ========== CONFIGURATION SECTION ========== -->
+        <mxCell id="config-section-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="800" y="860" width="380" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="config-section-label" value="CONFIGURATION FILES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="810" y="870" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="config-file" value="config.yml&#xa;(per customer)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="820" y="910" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="config-contents" value="Contents:&#xa;• workspace_id (per env)&#xa;• repository_directory&#xa;• deployment_sequence&#xa;• parameter_replacements:&#xa;  - find_replace&#xa;  - key_value_replace&#xa;  - spark_pool&#xa;  - gateway_binding&#xa;• validation checks&#xa;• retry configuration" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="960" y="910" width="210" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dynamic-param" value="parameter.yml&#xa;(generated)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="820" y="980" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ========== MICROSOFT FABRIC SECTION ========== -->
+        <mxCell id="fabric-section-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="860" width="700" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="fabric-section-label" value="MICROSOFT FABRIC" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="870" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Authentication -->
+        <mxCell id="fabric-auth" value="Microsoft Entra ID&#xa;(Service Principal)" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="60" y="910" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="fabric-auth-detail" value="Authentication:&#xa;• TENANT_ID&#xa;• CLIENT_ID&#xa;• CLIENT_SECRET&#xa;&#xa;Permissions:&#xa;✓ Workspace Admin&#xa;✗ No Capacity perms" style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="220" y="915" width="140" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Workspaces -->
+        <mxCell id="workspace-dev" value="Dev Workspace&#xa;🔗 Git Integration&#xa;(ADO Connected)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="1020" width="150" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="workspace-test" value="Test Workspace&#xa;(Deploy Only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="230" y="1020" width="130" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="workspace-uat" value="UAT Workspace&#xa;(Deploy Only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="380" y="1020" width="130" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="workspace-prod" value="Prod Workspace&#xa;(Deploy Only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="530" y="1020" width="130" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Fabric Items -->
+        <mxCell id="fabric-items" value="Fabric Items:&#xa;• Lakehouse&#xa;• VariableLibrary&#xa;• Notebook&#xa;• DataPipeline&#xa;• SemanticModel&#xa;• Report" style="text;html=1;strokeColor=#9673a6;fillColor=#e1d5e7;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="1110" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- fabric-cicd library -->
+        <mxCell id="fabric-cicd" value="fabric-cicd Library&#xa;(v0.1.19+)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="220" y="1115" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Fabric API -->
+        <mxCell id="fabric-api" value="Fabric REST API" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="380" y="1115" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fabric-operations" value="Operations:&#xa;• publish_all_items()&#xa;• unpublish_orphans()&#xa;• query items" style="text;html=1;strokeColor=#9673a6;fillColor=#e1d5e7;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="520" y="1115" width="140" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Key Connections -->
+        <mxCell id="conn-orchestrator-fabric-auth" value="authenticates" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#b85450;dashed=1;" edge="1" parent="1" source="orchestrator" target="fabric-auth">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="1000" as="sourcePoint" />
+            <mxPoint x="450" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn-orchestrator-fabric-cicd" value="uses" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#9673a6;dashed=1;" edge="1" parent="1" source="orchestrator" target="fabric-cicd">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="1000" as="sourcePoint" />
+            <mxPoint x="450" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn-fabric-cicd-api" value="calls" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#9673a6;" edge="1" parent="1" source="fabric-cicd" target="fabric-api">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="1000" as="sourcePoint" />
+            <mxPoint x="450" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn-api-workspaces" value="deploys to" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#9673a6;" edge="1" parent="1" source="fabric-api" target="workspace-dev">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="1000" as="sourcePoint" />
+            <mxPoint x="450" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Git Integration Connection -->
+        <mxCell id="conn-ado-dev-git" value="Git Sync&#xa;(Dev Only)" style="endArrow=classic;startArrow=classic;html=1;strokeWidth=2;strokeColor=#10739e;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="deployment-repo" target="workspace-dev">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Connection from config to orchestrator -->
+        <mxCell id="conn-config-orchestrator" value="reads" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;" edge="1" parent="1" source="config-file" target="orchestrator">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="800" as="sourcePoint" />
+            <mxPoint x="450" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Connection from config to validation -->
+        <mxCell id="conn-config-validation" value="reads" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;" edge="1" parent="1" source="config-file" target="validation-engine">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="800" as="sourcePoint" />
+            <mxPoint x="450" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="80" width="330" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" value="LEGEND" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1230" y="90" width="330" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-source" value="Source Repositories" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="130" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-external" value="External Org Repo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="130" width="140" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-validation" value="Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="170" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-deployment" value="Deployment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="170" width="140" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-dev" value="Dev (Git Integrated)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1250" y="210" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-prod" value="Production" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1400" y="210" width="140" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-approval" value="Approval Gate" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="250" width="140" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-retry" value="Retry Handler" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="250" width="140" height="35" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-report" value="Reports/Outputs" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="295" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-config" value="Config Files" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="295" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Key Notes Box -->
+        <mxCell id="notes-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="390" width="330" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-title" value="KEY FEATURES" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1230" y="400" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-content" value="✓ Cross-Org Repository Access&#xa;  (Service Connection)&#xa;&#xa;✓ Deployment Order Validation&#xa;  (Prevents Notebook before Lakehouse)&#xa;&#xa;✓ Dynamic Parameter Generation&#xa;  (No hardcoded values in parameter.yml)&#xa;&#xa;✓ Detailed Deployment Reports&#xa;  (SUCCESS/PARTIAL_SUCCESS/FAILED)&#xa;&#xa;✓ Git Integration on Dev Only&#xa;  (Test/UAT/Prod are deploy-only)&#xa;&#xa;✓ Approval Gates (UAT + Prod)&#xa;&#xa;✓ Automatic Retry (3 attempts, 30s backoff)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="435" width="300" height="145" as="geometry" />
+        </mxCell>
+
+        <!-- Data Flow Summary -->
+        <mxCell id="flow-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="620" width="330" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="flow-title" value="DATA FLOW" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1230" y="630" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="flow-content" value="1️⃣ Trigger pipeline with parameters&#xa;&#xa;2️⃣ Checkout deployment code (current org)&#xa;&#xa;3️⃣ Checkout artifacts (external org)&#xa;&#xa;4️⃣ Pre-deployment validation&#xa;   → Blocks if deployment order wrong&#xa;&#xa;5️⃣ Deploy to Dev (with git sync)&#xa;&#xa;6️⃣ Deploy to Test/UAT/Prod&#xa;   (with approvals, no git sync)&#xa;&#xa;7️⃣ Generate reports:&#xa;   • validation-report.json&#xa;   • deployment_report.json&#xa;   • Console summary" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="665" width="300" height="145" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

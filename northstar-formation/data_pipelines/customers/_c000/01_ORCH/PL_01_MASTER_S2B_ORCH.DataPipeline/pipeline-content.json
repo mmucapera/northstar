@@ -1,0 +1,463 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "bd655bed-783c-91ec-4f39-3943519b47a7",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batchid": {
+              "value": {
+                "value": "@variables('batchid')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "nr_days_to_count": {
+              "value": "1",
+              "type": "int"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "audit_package_receipt",
+        "dependsOn": [
+          {
+            "activity": "Set BatchId",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Switch",
+        "typeProperties": {
+          "on": {
+            "value": "@pipeline().parameters.domain_code",
+            "type": "Expression"
+          },
+          "cases": [
+            {
+              "value": "DP",
+              "activities": [
+                {
+                  "type": "InvokePipeline",
+                  "typeProperties": {
+                    "parameters": {
+                      "batchid": {
+                        "value": "@variables('batchid')",
+                        "type": "Expression"
+                      },
+                      "domain": {
+                        "value": "@pipeline().parameters.domain_code",
+                        "type": "Expression"
+                      },
+                      "extract_id": {
+                        "value": "@pipeline().parameters.extract_id",
+                        "type": "Expression"
+                      },
+                      "processing_date": {
+                        "value": "@formatDateTime(utcNow(), 'yyyy/MM/dd')",
+                        "type": "Expression"
+                      }
+                    },
+                    "waitOnCompletion": true,
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "pipelineId": "7d5ec26b-3352-56f6-9216-3a38040e7114",
+                    "operationType": "InvokeFabricPipeline"
+                  },
+                  "externalReferences": {
+                    "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "BRZ_FCT_ONLY",
+                  "dependsOn": []
+                },
+                {
+                  "type": "InvokePipeline",
+                  "typeProperties": {
+                    "parameters": {},
+                    "waitOnCompletion": true,
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "pipelineId": "66b5aed3-9b5e-57a2-a905-f3263f7c1afa",
+                    "operationType": "InvokeFabricPipeline"
+                  },
+                  "externalReferences": {
+                    "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "SLV_FCT_ONLY",
+                  "dependsOn": [
+                    {
+                      "activity": "BRZ_FCT_ONLY",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "value": "SP",
+              "activities": [
+                {
+                  "type": "InvokePipeline",
+                  "typeProperties": {
+                    "parameters": {
+                      "batchid": {
+                        "value": "@variables('batchid')",
+                        "type": "Expression"
+                      },
+                      "domain": {
+                        "value": "@pipeline().parameters.domain_code",
+                        "type": "Expression"
+                      },
+                      "extract_id": {
+                        "value": "@pipeline().parameters.extract_id",
+                        "type": "Expression"
+                      },
+                      "processing_date": {
+                        "value": "@formatDateTime(utcNow(), 'yyyy/MM/dd')",
+                        "type": "Expression"
+                      }
+                    },
+                    "waitOnCompletion": true,
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "pipelineId": "a7f56450-02a1-59ec-afe5-425a57e74f4c",
+                    "operationType": "InvokeFabricPipeline"
+                  },
+                  "externalReferences": {
+                    "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "BRZ_OPR_ONLY",
+                  "dependsOn": []
+                },
+                {
+                  "type": "InvokePipeline",
+                  "typeProperties": {
+                    "parameters": {},
+                    "waitOnCompletion": true,
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "pipelineId": "334760c9-f65d-5b1b-8214-599c379a557d",
+                    "operationType": "InvokeFabricPipeline"
+                  },
+                  "externalReferences": {
+                    "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "SLV_OPR_ONLY",
+                  "dependsOn": [
+                    {
+                      "activity": "BRZ_OPR_ONLY",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "value": "NONE",
+              "activities": [
+                {
+                  "type": "Wait",
+                  "typeProperties": {
+                    "waitTimeInSeconds": 1
+                  },
+                  "name": "Dummy",
+                  "dependsOn": []
+                }
+              ]
+            }
+          ],
+          "defaultActivities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "batchid": {
+                    "value": "@variables('batchid')",
+                    "type": "Expression"
+                  },
+                  "domain": {
+                    "value": "@pipeline().parameters.domain_code",
+                    "type": "Expression"
+                  },
+                  "extract_id": {
+                    "value": "@pipeline().parameters.extract_id",
+                    "type": "Expression"
+                  },
+                  "processing_date": {
+                    "value": "@formatDateTime(utcNow(), 'yyyy/MM/dd')",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "7d5ec26b-3352-56f6-9216-3a38040e7114",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "BRZ_FCT_Default",
+              "dependsOn": []
+            },
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "batchid": {
+                    "value": "@variables('batchid')",
+                    "type": "Expression"
+                  },
+                  "domain": {
+                    "value": "@pipeline().parameters.domain_code",
+                    "type": "Expression"
+                  },
+                  "extract_id": {
+                    "value": "@pipeline().parameters.extract_id",
+                    "type": "Expression"
+                  },
+                  "processing_date": {
+                    "value": "@formatDateTime(utcNow(), 'yyyy/MM/dd')",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "a7f56450-02a1-59ec-afe5-425a57e74f4c",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "BRZ_OPR_Default",
+              "dependsOn": []
+            },
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {},
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "66b5aed3-9b5e-57a2-a905-f3263f7c1afa",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "SLV_FCT_Default",
+              "dependsOn": [
+                {
+                  "activity": "BRZ_FCT_Default",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {},
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "334760c9-f65d-5b1b-8214-599c379a557d",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "SLV_OPR_Default",
+              "dependsOn": [
+                {
+                  "activity": "BRZ_OPR_Default",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "Switch S2B",
+        "dependsOn": [
+          {
+            "activity": "audit_package_receipt",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "97e21b7f-09e6-8533-4a63-0ef16e9190b6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pl_start": {
+              "value": {
+                "value": "@pipeline().TriggerTime",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "source_system": {
+              "value": {
+                "value": "@pipeline().parameters.source_system",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "executed_by": {
+              "value": {
+                "value": "@pipeline().parameters.executed_by",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "domain_code": {
+              "value": {
+                "value": "@pipeline().parameters.domain_code",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "extract_id": {
+              "value": {
+                "value": "@pipeline().parameters.extract_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "audit_batch_control",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "batchid",
+          "value": {
+            "value": "@activity('audit_batch_control').output.result.exitValue",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set BatchId",
+        "dependsOn": [
+          {
+            "activity": "audit_batch_control",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "source_system": {
+        "type": "string",
+        "defaultValue": "Orchestrator"
+      },
+      "executed_by": {
+        "type": "string",
+        "defaultValue": "Orchestrator"
+      },
+      "domain_code": {
+        "type": "string"
+      },
+      "extract_id": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "batchid": {
+        "type": "String"
+      }
+    }
+  }
+}

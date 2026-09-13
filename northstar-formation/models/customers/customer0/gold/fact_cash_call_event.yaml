@@ -1,0 +1,50 @@
+model:
+  name: fact_cash_call_event
+  description: CUSTOMER0 gold cash-call status-change events fact
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.cash_call_event
+  depends_on_tables:
+    - silver.cash_call_event
+  merge_keys:
+    merge_keys:
+      - PeriodId_key
+      - PartnerId_key
+      - FieldId_key
+      - Stage
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: PeriodId_key
+      expression: CAST(xxhash64(PeriodId) AS BIGINT)
+      data_type: BIGINT
+    - name: PartnerId_key
+      expression: CAST(xxhash64(PartnerId) AS BIGINT)
+      data_type: BIGINT
+    - name: FieldId_key
+      expression: CAST(xxhash64(FieldId) AS BIGINT)
+      data_type: BIGINT
+    - name: Stage
+      expression: Stage
+      data_type: NVARCHAR(20)
+    - name: EventTimestamp
+      expression: EventTimestamp
+      data_type: TIMESTAMP
+    - name: Note
+      expression: Note
+      data_type: NVARCHAR(500)
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

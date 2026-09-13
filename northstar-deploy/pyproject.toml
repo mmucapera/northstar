@@ -1,0 +1,43 @@
+[project]
+name = "insights-deploy"
+version = "0.2.0"
+description = "Fabric Multi-Customer Deployment System"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # Core deployment
+    "fabric-cicd",
+    "ms-fabric-cli",
+    # Configuration & validation
+    "pyyaml",
+    "pydantic>=2.0",
+    # HTTP & authentication
+    "requests",
+    "azure-identity",
+    # Logging
+    "colorlog",
+    "pyodbc>=5.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "black",
+    "flake8",
+    "mypy",
+]
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+]
+
+[project.scripts]
+fabric-deploy = "deploy.deploy_cli:main"
+
+[dependency-groups]
+dev = [
+    "streamlit>=1.60.0",
+    "pandas>=2.0",
+]

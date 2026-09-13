@@ -1,0 +1,21 @@
+model:
+  name: well_test
+  description: CUSTOMER0 silver quarterly well test records
+  layer: silver
+  kind: TABLE
+  extends: bronze.well_test
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.well_test
+  depends_on_tables: [bronze.well_test]
+  merge_keys:
+    merge_keys:
+    - TestId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

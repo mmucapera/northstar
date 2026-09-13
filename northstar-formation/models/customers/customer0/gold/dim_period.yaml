@@ -1,0 +1,49 @@
+model:
+  name: dim_period
+  description: CUSTOMER0 gold reporting-period calendar dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.period
+  depends_on_tables: [silver.period]
+  merge_keys:
+    merge_keys:
+    - PeriodId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: PeriodId_key
+    expression: CAST(xxhash64(PeriodId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of PeriodId. Join key for fact_* tables.
+  - name: PeriodId
+    expression: PeriodId
+    data_type: NVARCHAR(7)
+  - name: Period
+    expression: Period
+    data_type: DATE
+  - name: Label
+    expression: Label
+    data_type: NVARCHAR(20)
+  - name: Year
+    expression: Year
+    data_type: INT
+  - name: Quarter
+    expression: Quarter
+    data_type: INT
+  - name: MonthNumber
+    expression: MonthNumber
+    data_type: INT
+  - name: MonthName
+    expression: MonthName
+    data_type: NVARCHAR(20)
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

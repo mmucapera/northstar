@@ -1,0 +1,21 @@
+model:
+  name: completion
+  description: CUSTOMER0 silver completion reference data
+  layer: silver
+  kind: TABLE
+  extends: bronze.completion
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.completion
+  depends_on_tables: [bronze.completion]
+  merge_keys:
+    merge_keys:
+    - CompletionId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

@@ -1,0 +1,69 @@
+# CUSTOMER0 bronze hse_incidents - one row per HSE incident. Shape matches Project
+# Spark's `Incident` type exactly (src/data/delta-basin.ts).
+#
+# CORRECTED (2026-09-06): this table used to be monthly-aggregate grain
+# (Period, RecordableIncidentCount, HoursWorkedYtd). Project Spark's frontend
+# was built with the more correct incident-grain model (one row per incident,
+# with Severity) - this brings Fabric in line with that, which is now the
+# source of truth. Exposure hours moved to the separate hse_exposure table,
+# since hours-worked is a period-level rostering metric, not tied to any one
+# incident. TRIR itself is intentionally NOT a stored column here - Project
+# Spark recomputes it as a trailing-12-month rolling rate on every load
+# (recordable incidents x 200,000 / hours worked); the equivalent in Fabric
+# is a Power BI DAX time-intelligence measure over this fact + hse_exposure,
+# not a physical column, so the figure is never stale.
+# Pre-discovery - see docs/customer0-pilot-kickoff.md.
+
+model:
+  name: hse_incidents
+  description: CUSTOMER0 bronze HSE incident log, one row per incident
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: IncidentId
+    data_type: VARCHAR(50)
+    description: Natural key - e.g. "2026-08-0"
+  - name: PeriodId
+    data_type: VARCHAR(7)
+  - name: IncidentDate
+    data_type: DATE
+  - name: FieldId
+    data_type: VARCHAR(50)
+  - name: Severity
+    data_type: VARCHAR(30)
+    description: One of First aid, Medical treatment, Restricted work, Lost time
+  - name: Recordable
+    data_type: BOOLEAN
+    description: False only for First aid severity
+  - name: Description
+    data_type: VARCHAR(500)
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP

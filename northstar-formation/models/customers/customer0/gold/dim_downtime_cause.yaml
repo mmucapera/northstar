@@ -1,0 +1,34 @@
+model:
+  name: dim_downtime_cause
+  description: CUSTOMER0 gold deferred-production cause dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.downtime_cause
+  depends_on_tables: [silver.downtime_cause]
+  merge_keys:
+    merge_keys:
+    - CauseId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: CauseId_key
+    expression: CAST(xxhash64(CauseId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of CauseId. Join key for fact_* tables.
+  - name: CauseId
+    expression: CauseId
+    data_type: NVARCHAR(50)
+  - name: CauseName
+    expression: CauseName
+    data_type: NVARCHAR(100)
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

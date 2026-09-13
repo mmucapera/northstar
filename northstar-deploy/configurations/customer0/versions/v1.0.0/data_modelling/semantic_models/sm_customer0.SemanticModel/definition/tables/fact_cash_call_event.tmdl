@@ -1,0 +1,52 @@
+table fact_cash_call_event
+	lineageTag: 3e4c274d-5611-43d6-a7f4-902e31111ffb
+
+	column PeriodId_key
+		dataType: int64
+		sourceColumn: PeriodId_key
+		lineageTag: 7405e682-9a2f-444c-bbf7-1c568e864cfe
+
+	column PartnerId_key
+		dataType: int64
+		sourceColumn: PartnerId_key
+		lineageTag: 04d8d6c8-a171-410d-ba15-9ae284166c87
+
+	column FieldId_key
+		dataType: int64
+		sourceColumn: FieldId_key
+		lineageTag: 2733a537-aef8-4347-8460-b14d626c8eee
+
+	column Stage
+		dataType: string
+		sourceColumn: Stage
+		lineageTag: a52986c0-f04f-4933-96c9-f8243f36740e
+
+	column EventTimestamp
+		dataType: dateTime
+		formatString: dd mmm yyyy hh:mm
+		sourceColumn: EventTimestamp
+		lineageTag: ab679ed8-4b27-4adf-bf8c-bbe4c7668d93
+
+	column Note
+		dataType: string
+		sourceColumn: Note
+		lineageTag: 3422451c-0886-4195-b8e0-d55806949bbf
+
+	column Manifest_package
+		dataType: string
+		sourceColumn: Manifest_package
+		lineageTag: a42ae551-7c8d-43be-90d5-e67391489e83
+
+	column Manifest_file
+		dataType: string
+		sourceColumn: Manifest_file
+		lineageTag: 8cb49b25-40a8-4e58-b088-d4586105cb66
+
+	partition fact_cash_call_event = entity
+		mode: directLake
+		source
+			entityName: fact_cash_call_event
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

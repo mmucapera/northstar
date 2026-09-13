@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "fact_reconciliation",
+    "description": "Generated notebook for gold.fact_reconciliation"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "55251f37-d996-5cd1-9eb7-9a5ffd02b78f"
+  }
+}

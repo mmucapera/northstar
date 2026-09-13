@@ -1,0 +1,61 @@
+table fact_hse_incidents
+	lineageTag: 2576f651-caeb-486b-a42e-1c4d4855aea4
+
+	column IncidentId
+		dataType: string
+		sourceColumn: IncidentId
+		lineageTag: 4902208b-fbad-440a-974e-48b081d33685
+
+	column PeriodId_key
+		dataType: int64
+		sourceColumn: PeriodId_key
+		lineageTag: 31de50aa-c723-4ac3-83a1-69799d2f57a6
+
+	column IncidentDate
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		sourceColumn: IncidentDate
+		lineageTag: f80b2e1f-5789-4ae8-9914-38117f3beb7c
+
+	column FieldId_key
+		dataType: int64
+		sourceColumn: FieldId_key
+		lineageTag: 69be01a0-2b12-452a-9c82-579316c3743e
+
+	column Severity
+		dataType: string
+		sourceColumn: Severity
+		lineageTag: b1a387e2-acb6-4e54-8ca1-50d9917f833a
+
+	column Recordable
+		dataType: boolean
+		sourceColumn: Recordable
+		lineageTag: f32b687b-0449-48cd-811a-e5edc9c2da3e
+
+	column Description
+		dataType: string
+		sourceColumn: Description
+		lineageTag: f4b53c7e-b4df-4ae3-a7e4-4806c336ace5
+
+	column Manifest_package
+		dataType: string
+		sourceColumn: Manifest_package
+		lineageTag: 89819278-49f9-4a68-8c17-b3bf4fdb6412
+
+	column Manifest_file
+		dataType: string
+		sourceColumn: Manifest_file
+		lineageTag: dbc01f89-4355-432d-8e07-d26b05faffc1
+
+	measure 'Incident Count' = COUNTROWS('fact_hse_incidents')
+		formatString: #,0
+		lineageTag: f0ce8887-b51d-4642-8033-f50d6dade961
+
+	partition fact_hse_incidents = entity
+		mode: directLake
+		source
+			entityName: fact_hse_incidents
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

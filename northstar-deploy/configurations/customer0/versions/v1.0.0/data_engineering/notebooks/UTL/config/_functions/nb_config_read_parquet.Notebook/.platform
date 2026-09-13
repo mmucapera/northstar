@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_read_parquet",
+    "description": "drop_rn, read_parquet_bulk"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5e3050ae-1f1c-409f-bd7b-e3d820a3dbec"
+  }
+}

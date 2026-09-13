@@ -1,0 +1,8 @@
+# Excludes every shared FMCG/CPG base model - CUSTOMER0 (oil & gas) doesn't extend
+# any of them (extends: null on all 3 of its own tables). Without this,
+# northstar-formation still compiles the full _base catalog into CUSTOMER0's build
+# output (harmless clutter - the generated *pipeline* JSON is already
+# correctly scoped to CUSTOMER0's own tables - but confusing to browse and slow
+# to regenerate). See docs/customer0-pilot-kickoff.md.
+excluded_models:
+  

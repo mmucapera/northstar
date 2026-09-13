@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+dist/
+build/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+metastore_db
+spark-warehouse
+deployment_report*
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/*
+!.vscode/settings.json
+.venv
+
+# Local Spark testing scratch (enableHiveSupport() writes these into the
+# current directory by default when not pointed at /tmp)
+derby.log
+metastore_db/
+
+# Deployment run logs - regenerated on every deploy.py run, not source
+logs/

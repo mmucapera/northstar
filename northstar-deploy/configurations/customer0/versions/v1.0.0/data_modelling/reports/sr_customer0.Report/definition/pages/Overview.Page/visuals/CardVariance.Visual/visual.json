@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "5bb4a9e824c244348a1a",
+  "position": {
+    "x": 740,
+    "y": 0,
+    "z": 0,
+    "height": 120,
+    "width": 250,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "Avg Variance Pct"
+                }
+              },
+              "queryRef": "fact_reconciliation.Avg Variance Pct",
+              "nativeQueryRef": "Avg Variance Pct"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Avg Variance %'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

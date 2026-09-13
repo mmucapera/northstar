@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_overwrite_partition",
+    "description": "overwrite_partition"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c7366205-dc18-41c1-a0a0-cd56d24c96a4"
+  }
+}

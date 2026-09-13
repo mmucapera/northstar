@@ -1,0 +1,67 @@
+table dim_completion
+	lineageTag: 4fb79659-f1e8-4594-9708-8166192bbd58
+
+	column CompletionId_key
+		dataType: int64
+		sourceColumn: CompletionId_key
+		lineageTag: 2deaca33-8e41-4759-8090-04c099407133
+
+	column CompletionId
+		dataType: string
+		sourceColumn: CompletionId
+		lineageTag: 3df5ef84-3103-464e-9811-3f507ffd1fdd
+
+	column WellboreId_key
+		dataType: int64
+		sourceColumn: WellboreId_key
+		lineageTag: d51dc837-af21-4316-a2f8-acfc43c4f54e
+
+	column WellId_key
+		dataType: int64
+		sourceColumn: WellId_key
+		lineageTag: e2684bc9-2343-4668-ba96-6e939693e32f
+
+	column CompletionType
+		dataType: string
+		sourceColumn: CompletionType
+		lineageTag: 2d18edb6-e274-4ae2-9dff-8a50e8744a85
+
+	column ReservoirUnit
+		dataType: string
+		sourceColumn: ReservoirUnit
+		lineageTag: 8fe5d21d-ebab-4e29-81a8-c462fbd8b3c3
+
+	column PerforationTopM
+		dataType: decimal
+		sourceColumn: PerforationTopM
+		lineageTag: 5c9bd3ab-b77e-45e8-be7a-2cd234dbf032
+
+	column PerforationBaseM
+		dataType: decimal
+		sourceColumn: PerforationBaseM
+		lineageTag: 31ac9b7f-997d-40fb-8b8c-cbac8d0c04c3
+
+	column ArtificialLift
+		dataType: string
+		sourceColumn: ArtificialLift
+		lineageTag: cb5622b6-c710-4c13-9851-097dac39d783
+
+	column CompletionDate
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		sourceColumn: CompletionDate
+		lineageTag: ee87d156-2946-4239-95af-330a4893fff3
+
+	column IsActive
+		dataType: boolean
+		sourceColumn: IsActive
+		lineageTag: a8aaa2d0-41b9-4d20-b579-4be3364a4127
+
+	partition dim_completion = entity
+		mode: directLake
+		source
+			entityName: dim_completion
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

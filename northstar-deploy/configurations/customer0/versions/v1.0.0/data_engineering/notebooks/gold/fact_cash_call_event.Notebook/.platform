@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "fact_cash_call_event",
+    "description": "Generated notebook for gold.fact_cash_call_event"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6e4ca40e-3a84-5901-a486-62e8630c3802"
+  }
+}

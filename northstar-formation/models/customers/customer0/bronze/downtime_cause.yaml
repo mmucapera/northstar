@@ -1,0 +1,59 @@
+# CUSTOMER0 bronze downtime_cause - deferred-production cause taxonomy.
+# Matches Project Spark's `downtimeCauses` list exactly (src/data/delta-basin.ts).
+# This is a hypothesis, not a confirmed CUSTOMER0 taxonomy - see docs/customer0-pilot-kickoff.md
+# and Project Spark's production page note: "Downtime causes are placeholder
+# categories until source systems capture them."
+#
+# dim_/fact_ naming is reserved for gold - see bronze/partner.yaml.
+
+model:
+  name: downtime_cause
+  description: CUSTOMER0 bronze deferred-production cause reference data
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: CauseId
+    data_type: VARCHAR(50)
+    description: Stable cause slug (natural key)
+  - name: CauseName
+    data_type: VARCHAR(100)
+    description: 'Display name - e.g. "Flowline integrity"'
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP
+  - name: valid_from
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: valid_to
+    expression: CAST(NULL AS TIMESTAMP)
+    data_type: TIMESTAMP
+  - name: is_current
+    expression: CAST(TRUE AS BOOLEAN)
+    data_type: BOOLEAN

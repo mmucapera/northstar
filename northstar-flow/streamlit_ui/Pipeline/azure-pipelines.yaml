@@ -1,0 +1,72 @@
+  default: Northstar-Apps
+  default: Northstar-Apps-SC
+  default: Northstar-Apps-SC
+---
+trigger:
+  branches:
+    include:
+      - feature/northstar-flow-ui/*
+parameters:
+  - name: ImageName
+    type: string
+    default: northstar-flow-ui
+  - name: DockerFileLocation
+    type: string
+    default: 'northstar-flow/streamlit_ui/Dockerfile'
+  - name: BuildArguments
+    type: string
+    default: ' '
+  - name: TargetDockerRepository
+    type: string
+    default: Northstar-Apps
+  - name: TargetDockerContainerRegistry
+    type: string
+    default: Northstar-Apps-SC
+  - name: SourceDockerContainerRegistry
+    type: string
+    default: Northstar-Apps-SC
+  - name: TargetDockerTags
+    type: string
+    default: $(Build.BuildId),latest
+  - name: PruneImagesAfterBuild
+    type: boolean
+    displayName: Prune Docker Images After build
+    default: true
+
+pool:
+  name: iac_linux
+
+steps:
+  - task: Docker@2
+    inputs:
+      command: login
+      containerRegistry: ${{ parameters.SourceDockerContainerRegistry }}
+  - task: Docker@2
+    inputs:
+      repository: ${{ parameters.TargetDockerRepository}}/library/${{ parameters.ImageName }}
+      containerRegistry: ${{ parameters.TargetDockerContainerRegistry }}
+      tags: ${{ parameters.TargetDockerTags }}
+      command: 'build'
+      Dockerfile: "**/${{ parameters.DockerFileLocation }}"
+      arguments: ${{ parameters.BuildArguments }}
+    displayName: 'Docker Build ${{ parameters.ImageName }}'
+  - task: Docker@2
+    inputs:
+      command: logout
+      containerRegistry: ${{ parameters.SourceDockerContainerRegistry }}
+  - task: Docker@2
+    inputs:
+      command: login
+      containerRegistry: ${{ parameters.TargetDockerContainerRegistry }}
+  - task: Docker@2
+    inputs:
+      repository: ${{ parameters.TargetDockerRepository}}/library/${{ parameters.ImageName }}
+      containerRegistry: ${{ parameters.TargetDockerContainerRegistry }}
+      tags: ${{ parameters.TargetDockerTags }}
+      command: 'push'
+    displayName: 'Docker Push ${{ parameters.ImageName }}'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+  - script: 'docker system prune -f -a'
+    displayName: 'Prune dangling and unused docker images'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), ${{ parameters.PruneImagesAfterBuild }})

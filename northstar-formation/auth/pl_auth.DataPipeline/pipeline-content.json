@@ -1,0 +1,72 @@
+{
+  "name": "pl_auth",
+  "objectId": "710e2f3c-38a6-4858-8bfd-fa4ea255cc0f",
+  "properties": {
+    "activities": [
+      {
+        "name": "fetch_reports",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "8ceace9d-2711-4115-8348-034def090d12",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "sessionTag": "insights_auth"
+        }
+      },
+      {
+        "name": "auth_nb",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "fetch_reports",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "get_users",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "77b8d84f-025d-4156-a1ca-2bba88d14af8",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "sessionTag": "insights_auth"
+        }
+      },
+      {
+        "name": "get_users",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "477f8b8b-65b1-477d-a1b7-548447258f83",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "sessionTag": "insights_auth"
+        }
+      }
+    ]
+  }
+}

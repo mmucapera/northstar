@@ -1,0 +1,69 @@
+# CUSTOMER0 bronze well_test - quarterly well test records. Shape matches
+# Project Spark's `FctWellTest` type (src/data/warehouse.ts), translated to
+# customer0's Id/PascalCase convention.
+# Pre-discovery - see docs/customer0-pilot-kickoff.md.
+
+model:
+  name: well_test
+  description: CUSTOMER0 bronze quarterly well test records
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: TestId
+    data_type: VARCHAR(80)
+    description: Stable test slug (natural key) - e.g. "WT-WEL-obago-001-2026-06"
+  - name: TestDate
+    data_type: DATE
+  - name: PeriodId
+    data_type: VARCHAR(7)
+  - name: WellId
+    data_type: VARCHAR(50)
+  - name: CompletionId
+    data_type: VARCHAR(70)
+  - name: DurationHours
+    data_type: DECIMAL(9,2)
+  - name: OilRateBopd
+    data_type: DECIMAL(18,2)
+  - name: GasRateMscfd
+    data_type: DECIMAL(18,2)
+  - name: WaterCutPct
+    data_type: DECIMAL(9,2)
+  - name: GorScf
+    data_type: DECIMAL(18,2)
+  - name: ChokeSize64ths
+    data_type: INT
+  - name: ThpPsi
+    data_type: DECIMAL(18,2)
+  - name: Validity
+    data_type: VARCHAR(20)
+    description: One of Valid, Suspect, Rejected
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP

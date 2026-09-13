@@ -1,0 +1,10 @@
+pipeline:
+  name: PL_BRONZE_CONFIG
+  auto_from_models:
+    layer: bronze
+    domain_prefix: ""
+    pass_parameters:
+      domain: "@pipeline().parameters.domain"
+      extract_id: "@pipeline().parameters.extract_id"
+      processing_date: "@pipeline().parameters.processing_date"
+      batchid: "@pipeline().parameters.batchid"

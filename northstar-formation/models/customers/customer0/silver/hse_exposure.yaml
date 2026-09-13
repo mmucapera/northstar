@@ -1,0 +1,21 @@
+model:
+  name: hse_exposure
+  description: CUSTOMER0 silver exposure hours worked, one row per period
+  layer: silver
+  kind: TABLE
+  extends: bronze.hse_exposure
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.hse_exposure
+  depends_on_tables: [bronze.hse_exposure]
+  merge_keys:
+    merge_keys:
+    - PeriodId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

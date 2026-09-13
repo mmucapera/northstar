@@ -1,0 +1,21 @@
+model:
+  name: field
+  description: CUSTOMER0 silver field/block reference data
+  layer: silver
+  kind: TABLE
+  extends: bronze.field
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.field
+  depends_on_tables: [bronze.field]
+  merge_keys:
+    merge_keys:
+    - FieldId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

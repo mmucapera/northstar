@@ -1,0 +1,78 @@
+# CUSTOMER0 gold reconciliation fact - allocated vs. lifted variance by
+# partner/field/period. PartnerId_key/FieldId_key/PeriodId_key are integer
+# surrogate keys (hash of the natural key, matching dim_partner/dim_field/
+# dim_period's own PartnerId_key/FieldId_key/PeriodId_key) - star-schema
+# facts hold only keys into dims, not the dims' text attributes. Flag
+# thresholds (watch >=1.5%, investigate >=3%) match Project Spark's
+# VARIANCE_TOLERANCE constant exactly (src/data/delta-basin.ts) - keep these
+# two in sync if either changes.
+
+model:
+  name: fact_reconciliation
+  description: CUSTOMER0 gold reconciliation fact
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.reconciliation
+  depends_on_tables:
+    - silver.reconciliation
+  merge_keys:
+    merge_keys:
+      - PeriodId_key
+      - FieldId_key
+      - PartnerId_key
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: PeriodId_key
+      expression: CAST(xxhash64(PeriodId) AS BIGINT)
+      data_type: BIGINT
+    - name: FieldId_key
+      expression: CAST(xxhash64(FieldId) AS BIGINT)
+      data_type: BIGINT
+    - name: PartnerId_key
+      expression: CAST(xxhash64(PartnerId) AS BIGINT)
+      data_type: BIGINT
+    - name: AllocatedBbl
+      expression: AllocatedBbl
+      data_type: DECIMAL(18,2)
+    - name: LiftedBbl
+      expression: LiftedBbl
+      data_type: DECIMAL(18,2)
+    - name: VarianceBbl
+      expression: LiftedBbl - AllocatedBbl
+      data_type: DECIMAL(18,2)
+    - name: VariancePct
+      expression: CASE WHEN AllocatedBbl = 0 THEN NULL ELSE (LiftedBbl - AllocatedBbl) / AllocatedBbl * 100 END
+      data_type: DECIMAL(9,3)
+    # `northstar-formation orphans` reports this column as "missing" upstream - a
+    # false positive, verified by inspecting the generated SQL directly. Its
+    # multi-branch CASE expression only references AllocatedBbl/LiftedBbl,
+    # both real upstream columns; the orphan-tracer's column extractor
+    # appears not to handle 3-branch CASE/WHEN (VariancePct's single-branch
+    # CASE above passes fine). Not a data issue - a tooling gap in the
+    # orphan-detection heuristic for this expression shape.
+    - name: Flag
+      expression: "CASE WHEN AllocatedBbl = 0 THEN NULL WHEN ABS((LiftedBbl - AllocatedBbl) / AllocatedBbl * 100) >= 3 THEN 'investigate' WHEN ABS((LiftedBbl - AllocatedBbl) / AllocatedBbl * 100) >= 1.5 THEN 'watch' ELSE 'within-tolerance' END"
+      data_type: NVARCHAR(20)
+      description: One of within-tolerance, watch, investigate
+    - name: CashCallStatus
+      expression: CashCallStatus
+      data_type: NVARCHAR(20)
+    - name: CashCallUsd
+      expression: CashCallUsd
+      data_type: DECIMAL(18,2)
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

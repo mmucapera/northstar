@@ -1,0 +1,22 @@
+model:
+  name: downtime
+  description: CUSTOMER0 silver deferred production hours by cause and period
+  layer: silver
+  kind: TABLE
+  extends: bronze.downtime
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.downtime
+  depends_on_tables: [bronze.downtime]
+  merge_keys:
+    merge_keys:
+    - PeriodId
+    - CauseId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

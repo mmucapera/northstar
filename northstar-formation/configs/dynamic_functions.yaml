@@ -1,0 +1,67 @@
+# configs/dynamic_functions.yaml
+dynamic_functions:
+  # Core functions - generic and reusable
+  core:
+    - name: "@FROMDATE"
+      description: "Converts FROMDATE to date format"
+      sql_replacement: "CAST(FROMDATE AS DATE)"
+
+    - name: "@timestamp"
+      description: "Current UTC timestamp"
+      sql_replacement: "CURRENT_TIMESTAMP AT TIME ZONE 'UTC'"
+
+    - name: "@current_user"
+      description: "Current database user"
+      sql_replacement: "CURRENT_USER()"
+
+    # Simple transformations
+    - name: "@uppercase"
+      description: "Convert to uppercase"
+      parameters: [field]
+      sql_replacement: "UPPER(TRIM({field}))"
+
+    - name: "@lowercase"
+      description: "Convert to lowercase"
+      parameters: [field]
+      sql_replacement: "LOWER(TRIM({field}))"
+
+    - name: "@initcap"
+      description: "Initial capitalize"
+      parameters: [field]
+      sql_replacement: "INITCAP(TRIM({field}))"
+
+    # Calculations
+    - name: "@calculate_trend"
+      description: "Calculate trend using lag"
+      parameters: [id_field, date_field]
+      sql_replacement: "LAG({id_field}) OVER (ORDER BY {date_field})"
+
+    - name: "@detect_anomaly"
+      description: "Simple anomaly detection"
+      parameters: [field, threshold]
+      sql_replacement: "CASE WHEN {field} > AVG({field}) * {threshold} THEN TRUE ELSE FALSE END"
+
+    - name: "@row_number"
+      description: "Row number window function"
+      parameters: [order_field]
+      sql_replacement: "ROW_NUMBER() OVER (ORDER BY {order_field})"
+
+    - name: "@average"
+      description: "Average calculation"
+      parameters: [field]
+      sql_replacement: "AVG({field})"
+
+    - name: "@max"
+      description: "Maximum value"
+      parameters: [field]
+      sql_replacement: "MAX({field})"
+
+    - name: "@count"
+      description: "Count records"
+      sql_replacement: "COUNT(*)"
+
+    # Date functions
+    - name: "@days_ago"
+      description: "Date N days ago"
+      parameters: [days]
+      sql_replacement: "DATEADD(day, -{days}, CURRENT_DATE)"

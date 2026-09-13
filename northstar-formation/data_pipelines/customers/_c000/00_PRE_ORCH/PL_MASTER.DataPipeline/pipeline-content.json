@@ -1,0 +1,428 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "bd655bed-783c-91ec-4f39-3943519b47a7",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batchid": {
+              "value": {
+                "value": "@variables('batchid')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "nr_days_to_count": {
+              "value": "2",
+              "type": "int"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "audit_package_receipt",
+        "dependsOn": [
+          {
+            "activity": "Set BatchId",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Switch",
+        "typeProperties": {
+          "on": {
+            "value": "@variables('domain')",
+            "type": "Expression"
+          },
+          "cases": [
+            {
+              "value": "FCT",
+              "activities": [
+                {
+                  "type": "InvokePipeline",
+                  "typeProperties": {
+                    "parameters": {
+                      "mode": "daily",
+                      "startDate": "2026-02-14",
+                      "nrofdays_to_load": 2,
+                      "batchid": {
+                        "value": "@variables('batchid')",
+                        "type": "Expression"
+                      },
+                      "domain": {
+                        "value": "@pipeline().parameters.domain",
+                        "type": "Expression"
+                      },
+                      "extract_id": {
+                        "value": "@pipeline().parameters.extract_id",
+                        "type": "Expression"
+                      }
+                    },
+                    "waitOnCompletion": true,
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "pipelineId": "aa35c480-0acb-a44e-4b12-4ac305d614a0",
+                    "operationType": "InvokeFabricPipeline"
+                  },
+                  "externalReferences": {
+                    "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "PL_MASTER_FCT_ONLY",
+                  "dependsOn": []
+                }
+              ]
+            },
+            {
+              "value": "OPR",
+              "activities": [
+                {
+                  "type": "InvokePipeline",
+                  "typeProperties": {
+                    "parameters": {
+                      "mode": "daily",
+                      "startDate": "2026-02-14",
+                      "nrofdays_to_load": 2,
+                      "batchid": {
+                        "value": "@variables('batchid')",
+                        "type": "Expression"
+                      },
+                      "domain": {
+                        "value": "@pipeline().parameters.domain",
+                        "type": "Expression"
+                      },
+                      "extract_id": {
+                        "value": "@pipeline().parameters.extract_id",
+                        "type": "Expression"
+                      }
+                    },
+                    "waitOnCompletion": true,
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "pipelineId": "9d4e19a3-43a3-a689-4c9c-074b3ae710cb",
+                    "operationType": "InvokeFabricPipeline"
+                  },
+                  "externalReferences": {
+                    "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "PL_MASTER_OPR_ONLY",
+                  "dependsOn": []
+                }
+              ]
+            },
+            {
+              "value": "NONE",
+              "activities": [
+                {
+                  "type": "Wait",
+                  "typeProperties": {
+                    "waitTimeInSeconds": 1
+                  },
+                  "name": "Dummy",
+                  "dependsOn": []
+                }
+              ]
+            }
+          ],
+          "defaultActivities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "mode": "daily",
+                  "startDate": "2026-02-14",
+                  "nrofdays_to_load": 2,
+                  "batchid": {
+                    "value": "@variables('batchid')",
+                    "type": "Expression"
+                  },
+                  "domain": {
+                    "value": "@pipeline().parameters.domain",
+                    "type": "Expression"
+                  },
+                  "extract_id": {
+                    "value": "@pipeline().parameters.extract_id",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "aa35c480-0acb-a44e-4b12-4ac305d614a0",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "PL_MASTER_FCT_Default",
+              "dependsOn": []
+            },
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "mode": "daily",
+                  "startDate": "2026-02-14",
+                  "nrofdays_to_load": 2,
+                  "batchid": {
+                    "value": "@variables('batchid')",
+                    "type": "Expression"
+                  },
+                  "domain": {
+                    "value": "@pipeline().parameters.domain",
+                    "type": "Expression"
+                  },
+                  "extract_id": {
+                    "value": "@pipeline().parameters.extract_id",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "9d4e19a3-43a3-a689-4c9c-074b3ae710cb",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "e6971e5f-7b70-4407-8afb-19607abaa274"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "PL_MASTER_OPR_Default",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Switch Domain",
+        "dependsOn": [
+          {
+            "activity": "Set Domain",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "domain",
+          "value": {
+            "value": "@activity('audit_package_receipt').output.result.exitValue",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set Domain",
+        "dependsOn": [
+          {
+            "activity": "audit_package_receipt",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "97e21b7f-09e6-8533-4a63-0ef16e9190b6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pl_start": {
+              "value": {
+                "value": "@pipeline().TriggerTime",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "source_system": {
+              "value": {
+                "value": "@pipeline().parameters.source_system",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "executed_by": {
+              "value": {
+                "value": "@pipeline().parameters.executed_by",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "audit_batch_control",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "batchid",
+          "value": {
+            "value": "@activity('audit_batch_control').output.result.exitValue",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set BatchId",
+        "dependsOn": [
+          {
+            "activity": "audit_batch_control",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "2d6d03c4-12f1-9ec8-4985-e5c68345957e",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batchid": {
+              "value": {
+                "value": "@variables('batchid')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "status": {
+              "value": "1",
+              "type": "int"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "audit_batch_update_success",
+        "dependsOn": [
+          {
+            "activity": "Switch Domain",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "2d6d03c4-12f1-9ec8-4985-e5c68345957e",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batchid": {
+              "value": {
+                "value": "@variables('batchid')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "status": {
+              "value": "0",
+              "type": "int"
+            },
+            "error_msg": {
+              "value": "TBD",
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "audit_batch_update_failure",
+        "dependsOn": [
+          {
+            "activity": "Switch Domain",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "source_system": {
+        "type": "string",
+        "defaultValue": "Orchestrator"
+      },
+      "executed_by": {
+        "type": "string",
+        "defaultValue": "Orchestrator"
+      },
+      "domain": {
+        "type": "string"
+      },
+      "extract_id": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "domain": {
+        "type": "String"
+      },
+      "batchid": {
+        "type": "String"
+      },
+      "nr_days_to_count": {
+        "type": "Integer",
+        "defaultValue": 1
+      }
+    }
+  }
+}

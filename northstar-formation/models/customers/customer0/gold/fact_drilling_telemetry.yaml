@@ -1,0 +1,61 @@
+model:
+  name: fact_drilling_telemetry
+  description: CUSTOMER0 gold daily drilling telemetry fact (drilling wells only)
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.drilling_telemetry
+  depends_on_tables:
+    - silver.drilling_telemetry
+  merge_keys:
+    merge_keys:
+      - WellId_key
+      - WellboreId_key
+      - ReportDate
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: WellId_key
+      expression: CAST(xxhash64(WellId) AS BIGINT)
+      data_type: BIGINT
+    - name: WellboreId_key
+      expression: CAST(xxhash64(WellboreId) AS BIGINT)
+      data_type: BIGINT
+    - name: ReportDate
+      expression: ReportDate
+      data_type: DATE
+    - name: DepthM
+      expression: DepthM
+      data_type: DECIMAL(18,2)
+    - name: RopMPerHr
+      expression: RopMPerHr
+      data_type: DECIMAL(9,2)
+    - name: WobKlbs
+      expression: WobKlbs
+      data_type: DECIMAL(9,2)
+    - name: Rpm
+      expression: Rpm
+      data_type: DECIMAL(9,2)
+    - name: MudWeightPpg
+      expression: MudWeightPpg
+      data_type: DECIMAL(9,2)
+    - name: FlowRateGpm
+      expression: FlowRateGpm
+      data_type: DECIMAL(9,2)
+    - name: Npt
+      expression: Npt
+      data_type: BOOLEAN
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

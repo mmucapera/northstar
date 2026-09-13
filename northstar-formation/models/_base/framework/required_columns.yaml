@@ -1,0 +1,92 @@
+# Framework column contract — the columns every bronze/silver model must expose.
+#
+# Rules:
+#   * `layer` maps to layer-qualified model keys (bronze / silver / interface).
+#   * `required` — presence enforced on *every* model in that layer.
+#   * `required_for_dims` — presence enforced only on dim models. A model is a
+#     dim unless its table name (case-insensitive, without the `bronze.` /
+#     `silver.` prefix) appears in the top-level `facts` list below.
+#   * `expected_type` — advisory; the checker prints a warning if the declared
+#     data_type mismatches (case-insensitive prefix match) but does not fail.
+#   * Case-insensitive match on column names.
+#
+# Add/remove entries here — no Python edit needed. The check picks up changes
+# on the next `northstar-formation check-framework` or `northstar-formation build --check-framework`.
+
+bronze:
+  required:
+    - name: Sourcefile
+      expected_type: STRING
+    # Version_id used to be required only for opr-domain models (the fct
+    # pipeline family never carries it, apart from generalunitconversion).
+    # Domain-based filtering (`only_domains`) was removed along with the
+    # fct/opr split, and there is no name-based or other reliable signal left
+    # to scope this per model, so it is dropped from hard enforcement here
+    # rather than incorrectly required on every bronze model. Add it back
+    # (globally, or via a future non-domain mechanism) if/when needed.
+    - name: Manifest_package
+      expected_type: STRING
+    - name: Manifest_file
+      expected_type: STRING
+    - name: Load_date
+      expected_type: DATE
+    - name: Load_timestamp
+      expected_type: TIMESTAMP
+    - name: Partitionkey
+      expected_type: STRING
+    - name: ins_batchid
+      expected_type: INT
+    - name: upd_batchid
+      expected_type: INT
+    - name: Exportdate
+      expected_type: TIMESTAMP
+  # SCD-anchor columns — only enforced on dimensions (transactional facts
+  # never carry current-version anchoring).
+  required_for_dims:
+    - name: valid_from
+      expected_type: TIMESTAMP
+    - name: valid_to
+      expected_type: TIMESTAMP
+    - name: is_current
+      expected_type: BOOLEAN
+
+silver:
+  # Silver models use `extends: bronze.<table>` + `inherit_columns: true` to
+  # pull the framework tail from bronze at build time. Since that inheritance
+  # happens at compile time (not at yaml parse time), the check would report
+  # false-positives if we duplicated bronze's list here. Bronze's check is the
+  # source of truth; silver adds nothing framework-wise on top.
+  required: []
+  required_for_dims: []
+
+# Silver SCD models — matched by name suffix "_scd" — must explicitly declare
+# scd_hash (the hash used for change detection), which is not inherited.
+silver_scd:
+  name_suffix: _scd
+  required:
+    - name: scd_hash
+      expected_type: BIGINT
+
+# Interface/gold has no universal contract — different fact/dim families project
+# different framework columns. Left empty so the check is skipped for gold.
+interface: {}
+
+# Case-insensitive short table names that identify transactional facts (i.e.
+# NOT dimensions). Any bronze/silver model whose stem is in this list skips the
+# `required_for_dims` block above.
+#
+# Add a new entry when introducing a new fact table. When in doubt: does the
+# table have a corresponding `f_<name>` gold model? Then it's a fact.
+facts:
+  # CUSTOMER0 (oil & gas) - event/transactional grain, not dims.
+  - reconciliation
+  - production
+  - downtime
+  - hse_incidents
+  - hse_exposure
+  - cash_call_event
+  - order
+  # customer0 (oil & gas, pre-discovery — see docs/customer0-pilot-kickoff.md)
+  - reconciliation
+  - production
+  - hse_incidents

@@ -1,0 +1,400 @@
+  name: Northstar/insights_customer0
+# =============================================================================
+# Fabric Multi-Customer Deployment Pipeline
+# =============================================================================
+# Version: 2.0.0
+# Description: Production-grade pipeline for deploying Microsoft Fabric items
+#              with phased deployment, notebook execution, and Direct Lake support
+#
+# Features:
+#   - Phased deployment: Lakehouse -> Notebook -> Execute -> SemanticModel
+#   - Dynamic $items variable resolution via Fabric API
+#   - Multi-environment support: dev, test, uat, prod
+#   - Approval gates for production deployments
+#   - Comprehensive validation and reporting
+#
+# Prerequisites:
+#   - Service Principal with Fabric API permissions
+#   - Pipeline variables: TENANT_ID, CLIENT_ID, CLIENT_SECRET
+#   - Azure DevOps environments: Fabric-Dev, Fabric-Test, Fabric-UAT, Fabric-Production
+# =============================================================================
+
+name: 'Fabric-Deploy-$(Date:yyyyMMdd)-$(Rev:r)'
+
+resources:
+  repositories:
+    - repository: customer_repo
+      type: git
+      name: Northstar/insights_customer0
+      ref: refs/heads/main
+
+trigger: none
+pr: none
+
+# =============================================================================
+# PARAMETERS
+# =============================================================================
+parameters:
+  - name: customerID
+    displayName: 'Customer ID'
+    type: string
+    default: 'sample-customer'
+    values:
+      - sample-customer
+      - deploy-c
+
+  - name: deployToDev
+    displayName: 'Deploy to DEV'
+    type: boolean
+    default: true
+
+  - name: deployToTest
+    displayName: 'Deploy to TEST'
+    type: boolean
+    default: false
+
+  - name: deployToUat
+    displayName: 'Deploy to UAT'
+    type: boolean
+    default: false
+
+  - name: deployToProd
+    displayName: 'Deploy to PROD'
+    type: boolean
+    default: false
+
+  - name: deploymentMode
+    displayName: 'Deployment Mode'
+    type: string
+    default: 'full'
+    values:
+      - full         # Deploy all items in phases
+      - incremental  # Deploy changed items only
+      - selective    # Deploy specific items only
+
+  - name: selectiveItems
+    displayName: 'Selective Items (comma-separated, only for selective mode)'
+    type: string
+    default: 'N/A'
+
+  - name: skipValidation
+    displayName: 'Skip Pre-Deployment Validation'
+    type: boolean
+    default: false
+
+  - name: dryRun
+    displayName: 'Dry Run (validate only, no deployment)'
+    type: boolean
+    default: false
+
+# =============================================================================
+# VARIABLES
+# =============================================================================
+variables:
+  - group: Fabric-Credentials  # Variable group containing TENANT_ID, CLIENT_ID, CLIENT_SECRET
+  - name: pythonVersion
+    value: '3.11'
+  - name: workingDir
+    value: '$(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/Unison Insight Deploy'
+  - name: configPath
+    value: '$(workingDir)/configurations/${{ parameters.customerID }}'
+
+# =============================================================================
+# STAGES
+# =============================================================================
+stages:
+
+  # ---------------------------------------------------------------------------
+  # STAGE: Validation
+  # ---------------------------------------------------------------------------
+  - stage: Validate
+    displayName: 'Validate Configuration'
+    condition: |
+      and(
+        eq('${{ parameters.skipValidation }}', false),
+        or(
+          eq('${{ parameters.deployToDev }}', true),
+          eq('${{ parameters.deployToTest }}', true),
+          eq('${{ parameters.deployToUat }}', true),
+          eq('${{ parameters.deployToProd }}', true)
+        )
+      )
+    jobs:
+      - job: ValidateConfig
+        displayName: 'Validate ${{ parameters.customerID }} config'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            fetchDepth: 1
+          - checkout: customer_repo
+
+          - task: UsePythonVersion@0
+            displayName: 'Setup Python $(pythonVersion)'
+            inputs:
+              versionSpec: '$(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install pyyaml pydantic requests colorlog azure-identity
+            displayName: 'Install validation dependencies'
+
+          - script: |
+              cd "$(workingDir)"
+              ENVIRONMENTS=""
+              if [ "${{ parameters.deployToDev }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS dev"
+              fi
+              if [ "${{ parameters.deployToTest }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS test"
+              fi
+              if [ "${{ parameters.deployToUat }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS uat"
+              fi
+              if [ "${{ parameters.deployToProd }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS prod"
+              fi
+
+              python scripts/deployment/validation.py \
+                --config-path "$(configPath)" \
+                --mode pre-deployment \
+                --customer ${{ parameters.customerID }} \
+                --environments $ENVIRONMENTS
+            displayName: 'Run pre-deployment validation'
+            env:
+              TENANT_ID: $(TENANT_ID)
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+            continueOnError: true
+
+          - script: |
+              REPORT_PATH="$(workingDir)/validation-report.json"
+              if [ -f "$REPORT_PATH" ]; then
+                echo "Validation report found at: $REPORT_PATH"
+                echo "##vso[task.setvariable variable=reportExists]true"
+              else
+                echo "Validation report not found at: $REPORT_PATH"
+                echo "##vso[task.setvariable variable=reportExists]false"
+              fi
+            displayName: 'Check validation report exists'
+            condition: always()
+
+          - publish: $(workingDir)/validation-report.json
+            artifact: validation-report
+            displayName: 'Publish Validation Report'
+            condition: and(always(), eq(variables['reportExists'], 'true'))
+
+  # ---------------------------------------------------------------------------
+  # STAGE: Deploy to DEV
+  # ---------------------------------------------------------------------------
+  - stage: DeployDev
+    displayName: 'Deploy to DEV'
+    dependsOn:
+      - ${{ if eq(parameters.skipValidation, false) }}:
+        - Validate
+    condition: |
+      and(
+        succeeded(),
+        eq('${{ parameters.dryRun }}', false),
+        eq('${{ parameters.deployToDev }}', true)
+      )
+    jobs:
+      - deployment: DeployFabricItemsDev
+        displayName: 'Deploy to DEV'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-steps.yml
+                  parameters:
+                    customerID: ${{ parameters.customerID }}
+                    environment: 'dev'
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    workingDir: '$(workingDir)'
+
+  # ---------------------------------------------------------------------------
+  # STAGE: Deploy to TEST
+  # ---------------------------------------------------------------------------
+  - stage: DeployTest
+    displayName: 'Deploy to TEST'
+    dependsOn:
+      - ${{ if eq(parameters.skipValidation, false) }}:
+        - Validate
+      - DeployDev
+    condition: |
+      and(
+        in(dependencies.DeployDev.result, 'Succeeded', 'Skipped'),
+        eq('${{ parameters.dryRun }}', false),
+        eq('${{ parameters.deployToTest }}', true)
+      )
+    jobs:
+      - deployment: DeployFabricItemsTest
+        displayName: 'Deploy to TEST'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-test'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-steps.yml
+                  parameters:
+                    customerID: ${{ parameters.customerID }}
+                    environment: 'test'
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    workingDir: '$(workingDir)'
+
+  # ---------------------------------------------------------------------------
+  # STAGE: Deploy to UAT
+  # ---------------------------------------------------------------------------
+  - stage: DeployUat
+    displayName: 'Deploy to UAT'
+    dependsOn:
+      - ${{ if eq(parameters.skipValidation, false) }}:
+        - Validate
+      - DeployTest
+    condition: |
+      and(
+        in(dependencies.DeployTest.result, 'Succeeded', 'Skipped'),
+        eq('${{ parameters.dryRun }}', false),
+        eq('${{ parameters.deployToUat }}', true)
+      )
+    jobs:
+      - deployment: DeployFabricItemsUat
+        displayName: 'Deploy to UAT'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-uat'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-steps.yml
+                  parameters:
+                    customerID: ${{ parameters.customerID }}
+                    environment: 'uat'
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    workingDir: '$(workingDir)'
+
+  # ---------------------------------------------------------------------------
+  # STAGE: Deploy to PROD
+  # ---------------------------------------------------------------------------
+  - stage: DeployProd
+    displayName: 'Deploy to PROD'
+    dependsOn:
+      - ${{ if eq(parameters.skipValidation, false) }}:
+        - Validate
+      - DeployUat
+    condition: |
+      and(
+        in(dependencies.DeployUat.result, 'Succeeded', 'Skipped'),
+        eq('${{ parameters.dryRun }}', false),
+        eq('${{ parameters.deployToProd }}', true)
+      )
+    jobs:
+      - deployment: DeployFabricItemsProd
+        displayName: 'Deploy to PROD'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-prod'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deployment-steps.yml
+                  parameters:
+                    customerID: ${{ parameters.customerID }}
+                    environment: 'prod'
+                    deploymentMode: ${{ parameters.deploymentMode }}
+                    workingDir: '$(workingDir)'
+
+  # ---------------------------------------------------------------------------
+  # STAGE: Post-Deployment Validation
+  # ---------------------------------------------------------------------------
+  - stage: PostValidation
+    displayName: 'Post-Deployment Validation'
+    dependsOn:
+      - DeployDev
+      - DeployTest
+      - DeployUat
+      - DeployProd
+    condition: |
+      or(
+        eq(dependencies.DeployDev.result, 'Succeeded'),
+        eq(dependencies.DeployTest.result, 'Succeeded'),
+        eq(dependencies.DeployUat.result, 'Succeeded'),
+        eq(dependencies.DeployProd.result, 'Succeeded')
+      )
+    jobs:
+      - job: ValidateDeployment
+        displayName: 'Validate deployed items'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: UsePythonVersion@0
+            displayName: 'Setup Python $(pythonVersion)'
+            inputs:
+              versionSpec: '$(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install pyyaml requests colorlog azure-identity
+            displayName: 'Install dependencies'
+
+          - script: |
+              cd "$(workingDir)"
+              ENVIRONMENTS=""
+              if [ "${{ parameters.deployToDev }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS dev"
+              fi
+              if [ "${{ parameters.deployToTest }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS test"
+              fi
+              if [ "${{ parameters.deployToUat }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS uat"
+              fi
+              if [ "${{ parameters.deployToProd }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS prod"
+              fi
+
+              python scripts/deployment/validation.py \
+                --config-path "$(configPath)" \
+                --mode post-deployment \
+                --customer ${{ parameters.customerID }} \
+                --environments $ENVIRONMENTS
+            displayName: 'Run post-deployment validation'
+            env:
+              TENANT_ID: $(TENANT_ID)
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+            continueOnError: true
+
+          - script: |
+              echo "=============================================="
+              echo "DEPLOYMENT COMPLETE"
+              echo "=============================================="
+              echo "Customer:    ${{ parameters.customerID }}"
+              ENVIRONMENTS=""
+              if [ "${{ parameters.deployToDev }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS DEV"
+              fi
+              if [ "${{ parameters.deployToTest }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS TEST"
+              fi
+              if [ "${{ parameters.deployToUat }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS UAT"
+              fi
+              if [ "${{ parameters.deployToProd }}" == "True" ]; then
+                ENVIRONMENTS="$ENVIRONMENTS PROD"
+              fi
+              echo "Environments:$ENVIRONMENTS"
+              echo "Mode:        ${{ parameters.deploymentMode }}"
+              echo "Build:       $(Build.BuildId)"
+              echo "=============================================="
+            displayName: 'Print deployment summary'

@@ -1,0 +1,162 @@
+# Deployment Stage Template
+# Reusable template for deploying to any environment
+
+parameters:
+  - name: environment
+    type: string
+  - name: customerID
+    type: string
+  - name: deploymentMode
+    type: string
+  - name: selectiveItems
+    type: string
+    default: ''
+  - name: isProduction
+    type: boolean
+    default: false
+
+steps:
+  - checkout: self
+    persistCredentials: true
+
+  - task: UsePythonVersion@0
+    displayName: 'Use Python $(pythonVersion)'
+    inputs:
+      versionSpec: '$(pythonVersion)'
+
+  - script: |
+      echo "##vso[task.setvariable variable=DEPLOYMENT_TIMESTAMP]$(date +%Y%m%d-%H%M%S)"
+      echo "Deployment initiated by: $(deploymentUser)"
+      echo "Customer: ${{ parameters.customerID }}"
+      echo "Environment: ${{ parameters.environment }}"
+      echo "Mode: ${{ parameters.deploymentMode }}"
+      echo "Build ID: $(buildId)"
+    displayName: 'Set Deployment Variables'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install fabric-cicd
+      pip install pyyaml
+      pip install requests
+      pip install colorlog
+      pip install jsonschema
+    displayName: 'Install Python Dependencies'
+
+  # Authenticate with Service Principal
+  - task: PythonScript@0
+    displayName: 'Authenticate with Service Principal'
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '$(System.DefaultWorkingDirectory)/scripts/auth/auth_spn.py'
+    env:
+      TENANT_ID: $(TENANT_ID)
+      CLIENT_ID: $(CLIENT_ID)
+      CLIENT_SECRET: $(CLIENT_SECRET)
+
+  # Pre-deployment backup (for production only)
+  - ${{ if eq(parameters.isProduction, true) }}:
+    - task: PythonScript@0
+      displayName: 'Backup Production Workspace'
+      inputs:
+        scriptSource: 'inline'
+        script: |
+          import json
+          import os
+          from datetime import datetime
+
+          # This is a placeholder for backup logic
+          # In real implementation, you would export workspace items
+          print(f"Creating backup for production workspace")
+
+          backup_metadata = {
+              "timestamp": datetime.now().isoformat(),
+              "customer": "${{ parameters.customerID }}",
+              "environment": "${{ parameters.environment }}",
+              "user": "$(deploymentUser)",
+              "build_id": "$(buildId)"
+          }
+
+          with open("backup_metadata.json", "w") as f:
+              json.dump(backup_metadata, f, indent=2)
+
+      continueOnError: true
+
+  # Replace variables in parameter files
+  - task: PowerShell@2
+    displayName: 'Prepare Parameter Files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $configPath = "$(System.DefaultWorkingDirectory)/configurations/${{ parameters.customerID }}"
+        $paramFile = "$configPath/parameters/${{ parameters.environment }}.yml"
+
+        # Replace pipeline variables
+        $content = Get-Content $paramFile -Raw
+        $content = $content -replace '\$\{BUILD_ID\}', '$(buildId)'
+        $content = $content -replace '\$\{DEPLOYMENT_USER\}', '$(deploymentUser)'
+        $content = $content -replace '\$\{DEPLOYMENT_TIMESTAMP\}', '$(DEPLOYMENT_TIMESTAMP)'
+
+        Set-Content $paramFile $content
+        Write-Host "Parameter file updated for ${{ parameters.environment }}"
+
+  # Main deployment orchestration
+  - task: PythonScript@0
+    displayName: 'Deploy to ${{ parameters.environment }}'
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '$(System.DefaultWorkingDirectory)/scripts/deployment/deploy_orchestrator.py'
+      arguments: |
+        --customer "${{ parameters.customerID }}"
+        --environment "${{ parameters.environment }}"
+        --mode "${{ parameters.deploymentMode }}"
+        --selective-items "${{ parameters.selectiveItems }}"
+        --build-id "$(buildId)"
+        --user "$(deploymentUser)"
+    env:
+      TENANT_ID: $(TENANT_ID)
+      CLIENT_ID: $(CLIENT_ID)
+      CLIENT_SECRET: $(CLIENT_SECRET)
+      DEPLOYMENT_MODE: ${{ parameters.deploymentMode }}
+      IS_PRODUCTION: ${{ parameters.isProduction }}
+    timeoutInMinutes: ${{ if eq(parameters.deploymentMode, 'full') }} 15 ${{ else }} 5 ${{ endif }}
+
+  # Capture deployment logs
+  - script: |
+      mkdir -p $(Build.ArtifactStagingDirectory)/logs
+      cp -r logs/* $(Build.ArtifactStagingDirectory)/logs/ 2>/dev/null || true
+      cp deployment_report_*.json $(Build.ArtifactStagingDirectory)/ 2>/dev/null || true
+    displayName: 'Collect Deployment Logs'
+    condition: always()
+    continueOnError: true
+
+  # Publish deployment artifacts
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Deployment Artifacts'
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'deployment-${{ parameters.customerID }}-${{ parameters.environment }}-$(buildId)'
+      publishLocation: 'Container'
+    condition: always()
+
+  # Send notification (optional)
+  - task: PowerShell@2
+    displayName: 'Send Deployment Notification'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $status = if ($LASTEXITCODE -eq 0) { "SUCCESS" } else { "FAILED" }
+        $message = @"
+        Deployment $status
+        Customer: ${{ parameters.customerID }}
+        Environment: ${{ parameters.environment }}
+        Mode: ${{ parameters.deploymentMode }}
+        User: $(deploymentUser)
+        Build: $(buildId)
+        Time: $(DEPLOYMENT_TIMESTAMP)
+        "@
+
+        Write-Host $message
+
+        # Add your notification logic here (Teams, Email, etc.)
+    condition: always()
+    continueOnError: true

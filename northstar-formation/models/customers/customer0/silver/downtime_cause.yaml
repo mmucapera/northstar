@@ -1,0 +1,21 @@
+model:
+  name: downtime_cause
+  description: CUSTOMER0 silver deferred-production cause reference data
+  layer: silver
+  kind: TABLE
+  extends: bronze.downtime_cause
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.downtime_cause
+  depends_on_tables: [bronze.downtime_cause]
+  merge_keys:
+    merge_keys:
+    - CauseId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

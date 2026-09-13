@@ -1,0 +1,73 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "bda93a4a-4e0e-9415-439c-3bd1b713da73",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "SAMPLE_PERCENT": {
+              "value": {
+                "value": "@pipeline().parameters.Sample_percent",
+                "type": "Expression"
+              },
+              "type": "int"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_demo_data_generator",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "28bc4673-d4cc-859b-412f-94a4490765c0",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "customer": {
+              "value": {
+                "value": "@pipeline().parameters.Customer",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_export_gold_parquet",
+        "dependsOn": [
+          {
+            "activity": "nb_demo_data_generator",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "Customer": {
+        "type": "string",
+        "defaultValue": "CUSTOMER0"
+      },
+      "Sample_percent": {
+        "type": "int",
+        "defaultValue": 15
+      }
+    }
+  }
+}

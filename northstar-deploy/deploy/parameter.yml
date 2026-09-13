@@ -1,0 +1,10 @@
+find_replace:
+- find_value: FEATURE_WS_MMUCAPERA_EU
+  replace_value: {}
+  item_type:
+  - Notebook
+spark_pool: []
+spark_pool_replace_value: []
+key_value_replace: []
+gateway_binding: []
+semantic_model_binding: []

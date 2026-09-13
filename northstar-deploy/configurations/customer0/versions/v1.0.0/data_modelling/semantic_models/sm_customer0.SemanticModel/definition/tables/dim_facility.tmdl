@@ -1,0 +1,46 @@
+table dim_facility
+	lineageTag: 76ac1e43-6a07-45be-afcc-6e547943b3ff
+
+	column FacilityId_key
+		dataType: int64
+		sourceColumn: FacilityId_key
+		lineageTag: 066b3eb8-6715-4be7-aafe-3e5b2800d44d
+
+	column FacilityId
+		dataType: string
+		sourceColumn: FacilityId
+		lineageTag: 1c959136-1a60-4bc6-8410-b0a55a4a0b50
+
+	column FacilityName
+		dataType: string
+		sourceColumn: FacilityName
+		lineageTag: 24905f35-cba0-4349-a5fd-fb63694b96b6
+
+	column FacilityType
+		dataType: string
+		sourceColumn: FacilityType
+		lineageTag: 72bd053c-7f16-4d60-96aa-9836dac6c2f6
+
+	column FieldId_key
+		dataType: int64
+		sourceColumn: FieldId_key
+		lineageTag: 645d5abd-f3e6-4c0a-a696-93ce290c08ab
+
+	column ExportPoint
+		dataType: string
+		sourceColumn: ExportPoint
+		lineageTag: 72a38721-69bf-423f-bc2a-5632eba247e6
+
+	column CapacityBopd
+		dataType: decimal
+		sourceColumn: CapacityBopd
+		lineageTag: a2f81996-96b8-47b4-a85f-3797ef081753
+
+	partition dim_facility = entity
+		mode: directLake
+		source
+			entityName: dim_facility
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

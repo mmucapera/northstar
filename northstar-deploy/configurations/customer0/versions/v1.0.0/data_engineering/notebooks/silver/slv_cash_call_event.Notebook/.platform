@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "slv_cash_call_event",
+    "description": "Generated notebook for silver.cash_call_event"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "06882935-64a6-5f03-aa58-ebc810b3887a"
+  }
+}

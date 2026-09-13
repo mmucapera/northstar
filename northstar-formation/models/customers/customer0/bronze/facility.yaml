@@ -1,0 +1,66 @@
+# CUSTOMER0 bronze facility - facility reference data (export terminals,
+# flowstations, gas plants). Shape matches Project Spark's `DimFacility`
+# type (src/data/warehouse.ts), translated to customer0's Id/PascalCase
+# convention.
+# Pre-discovery - see docs/customer0-pilot-kickoff.md.
+
+model:
+  name: facility
+  description: CUSTOMER0 bronze facility reference data
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: FacilityId
+    data_type: VARCHAR(50)
+    description: Stable facility slug (natural key) - e.g. "FAC-T01"
+  - name: FacilityName
+    data_type: VARCHAR(200)
+  - name: FacilityType
+    data_type: VARCHAR(30)
+    description: One of Export terminal, Flowstation, Gas plant
+  - name: FieldId
+    data_type: VARCHAR(50)
+    description: Field this facility serves (FK to dim_field) - null for export terminals
+  - name: ExportPoint
+    data_type: VARCHAR(200)
+  - name: CapacityBopd
+    data_type: DECIMAL(18,2)
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP
+  - name: valid_from
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: valid_to
+    expression: CAST(NULL AS TIMESTAMP)
+    data_type: TIMESTAMP
+  - name: is_current
+    expression: CAST(TRUE AS BOOLEAN)
+    data_type: BOOLEAN

@@ -1,0 +1,72 @@
+table fact_drilling_telemetry
+	lineageTag: 5e1a54c5-4757-4b36-942e-65661fcd9629
+
+	column WellId_key
+		dataType: int64
+		sourceColumn: WellId_key
+		lineageTag: b1f0376a-31d0-4213-a7e3-3845acf852a1
+
+	column WellboreId_key
+		dataType: int64
+		sourceColumn: WellboreId_key
+		lineageTag: 4a2fb15e-2068-48e5-b513-d4715527068e
+
+	column ReportDate
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		sourceColumn: ReportDate
+		lineageTag: c6d2099d-8484-48d5-be00-64c32791b4d2
+
+	column DepthM
+		dataType: decimal
+		sourceColumn: DepthM
+		lineageTag: 9ae99f68-e656-4d47-bbb4-04db98136d76
+
+	column RopMPerHr
+		dataType: decimal
+		sourceColumn: RopMPerHr
+		lineageTag: 5fd8dfe8-28b0-4913-8294-84ca25da766d
+
+	column WobKlbs
+		dataType: decimal
+		sourceColumn: WobKlbs
+		lineageTag: ad9bcf47-46f1-438f-8e92-39ac41d769bd
+
+	column Rpm
+		dataType: decimal
+		sourceColumn: Rpm
+		lineageTag: a309fe78-9cc4-4f50-8a66-86115febc71a
+
+	column MudWeightPpg
+		dataType: decimal
+		sourceColumn: MudWeightPpg
+		lineageTag: 44dc7e2e-9693-47b8-bd8d-3c251238ab79
+
+	column FlowRateGpm
+		dataType: decimal
+		sourceColumn: FlowRateGpm
+		lineageTag: 6ba1acfa-de3f-479e-adc2-b4b3a3001dcf
+
+	column Npt
+		dataType: boolean
+		sourceColumn: Npt
+		lineageTag: ccdfab5a-308e-4ae6-a899-d1cfebef1953
+
+	column Manifest_package
+		dataType: string
+		sourceColumn: Manifest_package
+		lineageTag: db809aa3-22f8-4a45-8e85-fa06a6f8d6da
+
+	column Manifest_file
+		dataType: string
+		sourceColumn: Manifest_file
+		lineageTag: d30b8981-583b-4828-a0d7-2e4562fac11f
+
+	partition fact_drilling_telemetry = entity
+		mode: directLake
+		source
+			entityName: fact_drilling_telemetry
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,50 @@
+model:
+  name: fact_hse_incidents
+  description: CUSTOMER0 gold HSE incident fact, one row per incident
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.hse_incidents
+  depends_on_tables:
+    - silver.hse_incidents
+  merge_keys:
+    merge_keys:
+      - IncidentId
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: IncidentId
+      expression: IncidentId
+      data_type: NVARCHAR(50)
+    - name: PeriodId_key
+      expression: CAST(xxhash64(PeriodId) AS BIGINT)
+      data_type: BIGINT
+    - name: IncidentDate
+      expression: IncidentDate
+      data_type: DATE
+    - name: FieldId_key
+      expression: CAST(xxhash64(FieldId) AS BIGINT)
+      data_type: BIGINT
+    - name: Severity
+      expression: Severity
+      data_type: NVARCHAR(30)
+    - name: Recordable
+      expression: Recordable
+      data_type: BOOLEAN
+    - name: Description
+      expression: Description
+      data_type: NVARCHAR(500)
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

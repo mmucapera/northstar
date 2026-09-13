@@ -1,0 +1,21 @@
+model:
+  name: drilling_telemetry
+  description: CUSTOMER0 silver daily drilling report telemetry
+  layer: silver
+  kind: TABLE
+  extends: bronze.drilling_telemetry
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.drilling_telemetry
+  depends_on_tables: [bronze.drilling_telemetry]
+  merge_keys:
+    merge_keys:
+    - ReportId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

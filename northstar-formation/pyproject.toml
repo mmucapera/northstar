@@ -1,0 +1,301 @@
+[project]
+name = "northstar-formation"
+version = "1.0.0"
+description = "Transform YAML model definitions to Spark SQL and Microsoft Fabric notebooks"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Platform Team", email = "support@example.com"}
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Code Generators",
+    "Typing :: Typed",
+]
+keywords = ["spark", "sql", "fabric", "notebooks", "yaml", "data-engineering"]
+
+dependencies = [
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "jinja2>=3.0.0",
+    "networkx>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+    "types-PyYAML>=6.0.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+
+[project.scripts]
+northstar-formation = "northstar_formation.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/northstar_formation"]
+
+# ============================================================
+# RUFF - Linting & Formatting
+# ============================================================
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG",    # flake8-unused-arguments
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "PTH",    # flake8-use-pathlib
+    "ERA",    # eradicate (commented-out code)
+    "PL",     # Pylint
+    "RUF",    # Ruff-specific rules
+    "D",      # pydocstyle
+    "ANN",    # flake8-annotations
+    "S",      # flake8-bandit (security)
+    "N",      # pep8-naming
+]
+ignore = [
+    "D100",    # Missing docstring in public module
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in __init__
+    "D203",    # 1 blank line required before class docstring (conflicts with D211)
+    "D213",    # Multi-line docstring summary should start at the second line (conflicts with D212)
+    "ANN001",  # Missing type annotation for function argument
+    "ANN002",  # Missing type annotation for *args
+    "ANN003",  # Missing type annotation for **kwargs
+    "ANN201",  # Missing return type annotation for public function
+    "ANN202",  # Missing return type annotation for private function
+    "ANN204",  # Missing return type annotation for special method
+    "ANN206",  # Missing return type annotation for classmethod
+    "ANN401",  # Dynamically typed expressions (Any)
+    "PLR0912", # Too many branches
+    "PLR0913", # Too many arguments
+    "PLR0915", # Too many statements
+    "S101",    # Use of assert (fine in tests)
+    "PLR2004", # Magic value used in comparison
+    "PLW2901", # Outer for loop variable overwritten
+    "PTH123",  # open() should be replaced by Path.open()
+    "UP006",   # Use dict instead of Dict
+    "UP007",   # Use X | Y instead of Union
+    "UP035",   # Import from typing instead of typing_extensions
+    "UP038",   # Use X | Y in isinstance instead of tuple
+    "B008",    # Do not perform function call in argument defaults
+    "ARG001",  # Unused function argument
+    "ARG002",  # Unused method argument
+    "N802",    # Function name should be lowercase
+    "N803",    # Argument name should be lowercase
+    "N806",    # Variable in function should be lowercase
+    "SIM108",  # Use ternary operator instead of if-else
+    "SIM105",  # Use contextlib.suppress
+    "SIM102",  # Use a single if statement
+    "SIM103",  # Return condition directly
+    "SIM110",  # Use any() instead of for loop
+    "SIM118",  # Use key in dict instead of dict.keys()
+    "E501",    # Line too long (handled by formatter)
+    "PLC0415", # import should be at top-level
+    "RUF012",  # Mutable class attributes should use ClassVar
+    "RUF005",  # Consider list unpacking
+    "RUF003",  # Ambiguous unicode character
+    "RUF013",  # PEP 484 prohibits implicit Optional
+    "B904",    # Raise from err
+    "S110",    # try-except-pass
+    "S603",    # subprocess call check
+    "S607",    # Partial executable path
+    "S608",    # Possible SQL injection
+    "S701",    # Jinja2 autoescape
+    "D205",    # Blank line between summary and description
+    "D415",    # First line should end with punctuation
+    "N805",    # First argument should be self
+    "F841",    # Local variable assigned but never used
+    "B007",    # Loop control variable not used
+    "B023",    # Function definition does not bind loop variable
+    "C414",    # Unnecessary list() call within sorted()
+    "E722",    # Do not use bare except
+    "PLR0911", # Too many return statements
+    "PLW3301", # Nested max calls can be flattened
+    "RUF002",  # Docstring contains ambiguous character
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ANN", "D", "PLR2004"]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["northstar_formation"]
+force-single-line = false
+lines-after-imports = 2
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+# ============================================================
+# MYPY - Type Checking
+# ============================================================
+[tool.mypy]
+python_version = "3.9"
+# Start with lenient settings for existing codebase
+# Gradually enable stricter settings as code is improved
+strict = false
+warn_return_any = false
+warn_unused_ignores = false
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_configs = true
+show_error_codes = true
+show_column_numbers = true
+pretty = true
+
+[[tool.mypy.overrides]]
+module = [
+    "networkx.*",
+    "yaml.*",
+    "rich.*",
+    "click.*",
+    "jinja2.*",
+    "pydantic.*",
+]
+ignore_missing_imports = true
+
+# Ignore type checking in modules that need more extensive refactoring
+[[tool.mypy.overrides]]
+module = [
+    "northstar_formation.cli",
+    "northstar_formation.core.resolver",
+    "northstar_formation.core.parser",
+    "northstar_formation.core.master_config",
+    "northstar_formation.core.models",
+    "northstar_formation.sql.generator",
+    "northstar_formation.generators.notebook",
+    "northstar_formation.generators.skeleton",
+    "northstar_formation.lineage.*",
+    "northstar_formation.validators.pipeline",
+    "northstar_formation.functions.registry",
+]
+ignore_errors = true
+
+# ============================================================
+# PYTEST - Comprehensive Test Configuration
+# ============================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "-v",
+    "--cov=northstar_formation",
+    "--cov-report=term-missing",
+    "--cov-report=html:coverage_html",
+    "--cov-report=xml:coverage.xml",
+    "--cov-fail-under=50",
+    "--strict-markers",
+    "--tb=short",
+    "-x",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks integration tests (deselect with '-m \"not integration\"')",
+    "unit: marks unit tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+norecursedirs = [
+    ".git",
+    ".tox",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "__pycache__",
+    "*.egg-info",
+    "node_modules",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src/northstar_formation"]
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+    "*/cli.py",
+]
+parallel = true
+relative_files = true
+
+[tool.coverage.paths]
+source = [
+    "src/northstar_formation",
+    "*/site-packages/northstar_formation",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "raise AssertionError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+    "if self.debug:",
+    "if debug:",
+    "if settings.DEBUG",
+    "@abstractmethod",
+    "pass",
+    "\\.\\.\\.",
+]
+skip_covered = false
+show_missing = true
+precision = 2
+fail_under = 50
+
+[tool.coverage.html]
+directory = "coverage_html"
+title = "Northstar Formation Coverage Report"

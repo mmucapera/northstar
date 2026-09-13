@@ -1,0 +1,23 @@
+model:
+  name: reconciliation
+  description: CUSTOMER0 silver JV allocation/lifting/cash-call records
+  layer: silver
+  kind: TABLE
+  extends: bronze.reconciliation
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.reconciliation
+  depends_on_tables: [bronze.reconciliation]
+  merge_keys:
+    merge_keys:
+    - PeriodId
+    - FieldId
+    - PartnerId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

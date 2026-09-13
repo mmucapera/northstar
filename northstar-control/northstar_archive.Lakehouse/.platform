@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Lakehouse",
+    "displayName": "northstar_archive"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d990aa1c-d725-aab3-4b4e-92e9e6f1202d"
+  }
+}

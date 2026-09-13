@@ -1,0 +1,158 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "c18eeb248ecc4c52b46d",
+  "position": {
+    "x": 750,
+    "y": 140,
+    "z": 0,
+    "height": 280,
+    "width": 500,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "PeriodId"
+                }
+              },
+              "queryRef": "fact_reconciliation.PeriodId",
+              "nativeQueryRef": "PeriodId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "PartnerId"
+                }
+              },
+              "queryRef": "fact_reconciliation.PartnerId",
+              "nativeQueryRef": "PartnerId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "FieldId"
+                }
+              },
+              "queryRef": "fact_reconciliation.FieldId",
+              "nativeQueryRef": "FieldId"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "AllocatedBbl"
+                }
+              },
+              "queryRef": "fact_reconciliation.AllocatedBbl",
+              "nativeQueryRef": "AllocatedBbl"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "LiftedBbl"
+                }
+              },
+              "queryRef": "fact_reconciliation.LiftedBbl",
+              "nativeQueryRef": "LiftedBbl"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "VariancePct"
+                }
+              },
+              "queryRef": "fact_reconciliation.VariancePct",
+              "nativeQueryRef": "VariancePct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "Flag"
+                }
+              },
+              "queryRef": "fact_reconciliation.Flag",
+              "nativeQueryRef": "Flag"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "CashCallStatus"
+                }
+              },
+              "queryRef": "fact_reconciliation.CashCallStatus",
+              "nativeQueryRef": "CashCallStatus"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Reconciliation Detail'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

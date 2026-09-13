@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_paths",
+    "description": "check_for_model_files, _path_exists, _resolve_orchestrator_base_path"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bd0c78e8-448d-4062-818d-222dbc106c29"
+  }
+}

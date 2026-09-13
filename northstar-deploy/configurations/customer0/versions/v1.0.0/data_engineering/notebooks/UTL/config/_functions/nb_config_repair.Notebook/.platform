@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_repair",
+    "description": "_repair_if_corrupted"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "eaf9fbdf-3442-49ae-bf06-d42afb757ec0"
+  }
+}

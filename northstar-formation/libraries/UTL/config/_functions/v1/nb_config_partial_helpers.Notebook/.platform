@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_partial_helpers",
+    "description": "_normalize_domain, _extract_package_folder_from_df, _auto_track_package_entity, _log_partial_load_unified, _get_current_notebook_name"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "52fc1b7f-0b58-4ec4-91db-2e617be67fb4"
+  }
+}

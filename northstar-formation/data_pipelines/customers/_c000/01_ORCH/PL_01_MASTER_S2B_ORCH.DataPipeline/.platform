@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "PL_MASTER_B2S_ORCH"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "1bd77cb9-11d5-85db-4459-e62a6e9767ef"
+  }
+}

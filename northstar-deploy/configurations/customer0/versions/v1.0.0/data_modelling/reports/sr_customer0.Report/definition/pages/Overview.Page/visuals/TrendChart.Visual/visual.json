@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "320880fb48c643648489",
+  "position": {
+    "x": 220,
+    "y": 140,
+    "z": 0,
+    "height": 280,
+    "width": 510,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_period"
+                    }
+                  },
+                  "Property": "PeriodId"
+                }
+              },
+              "queryRef": "dim_period.PeriodId",
+              "nativeQueryRef": "PeriodId"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "Total Allocated Bbl"
+                }
+              },
+              "queryRef": "fact_reconciliation.Total Allocated Bbl",
+              "nativeQueryRef": "Total Allocated Bbl"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reconciliation"
+                    }
+                  },
+                  "Property": "Total Lifted Bbl"
+                }
+              },
+              "queryRef": "fact_reconciliation.Total Lifted Bbl",
+              "nativeQueryRef": "Total Lifted Bbl"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Allocated vs. Lifted by Period'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

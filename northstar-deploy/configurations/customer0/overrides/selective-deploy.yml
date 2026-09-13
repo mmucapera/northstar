@@ -1,0 +1,10 @@
+# Selective Deployment Overrides
+# Use this file to configure specific items for selective deployment
+
+deployment:
+  selective_items:
+    - "specific-notebook-name"
+    - "specific-pipeline-name"
+
+validation:
+  skip_for_selective: true

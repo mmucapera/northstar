@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "brz_hse_incidents",
+    "description": "Generated notebook for bronze.hse_incidents"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2554c3eb-dd2a-5e98-b53c-91e95c7b13db"
+  }
+}

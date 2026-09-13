@@ -1,0 +1,47 @@
+model:
+  name: dim_facility
+  description: CUSTOMER0 gold facility dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.facility
+  depends_on_tables: [silver.facility]
+  merge_keys:
+    merge_keys:
+    - FacilityId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: FacilityId_key
+    expression: CAST(xxhash64(FacilityId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of FacilityId. Join key for fact_* tables.
+  - name: FacilityId
+    expression: FacilityId
+    data_type: NVARCHAR(50)
+  - name: FacilityName
+    expression: FacilityName
+    data_type: NVARCHAR(200)
+  - name: FacilityType
+    expression: FacilityType
+    data_type: NVARCHAR(30)
+  - name: FieldId_key
+    expression: CAST(xxhash64(FieldId) AS BIGINT)
+    data_type: BIGINT
+    description: FK to dim_field.FieldId_key - null for export terminals
+  - name: ExportPoint
+    expression: ExportPoint
+    data_type: NVARCHAR(200)
+  - name: CapacityBopd
+    expression: CapacityBopd
+    data_type: DECIMAL(18,2)
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

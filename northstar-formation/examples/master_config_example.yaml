@@ -1,0 +1,218 @@
+# Example Master Configuration for Northstar Formation Skeleton Generation
+# This demonstrates the flexible vertical/horizontal layering system
+
+project:
+  name: "enterprise_data_platform"
+  version: "1.0.0"
+  output_dir: "./generated_models"
+  description: "Enterprise data platform with flexible layering"
+
+# Horizontal layers - data processing stages (user-definable names)
+horizontal_layers:
+  - name: "raw"
+    description: "Raw data ingestion layer"
+    order: 1
+  - name: "staging"
+    description: "Cleaned and standardized data"
+    order: 2
+  - name: "mart"
+    description: "Business-ready data marts"
+    order: 3
+
+# Vertical layers - business domains (user-definable names)
+vertical_layers:
+  - name: "core"
+    description: "Core platform models - foundational data"
+
+  - name: "domain"
+    description: "Domain-specific business models"
+    sublayers:
+      retail: "Retail business domain"
+      manufacturing: "Manufacturing business domain"
+      finance: "Financial domain models"
+
+  - name: "tenant"
+    description: "Customer-specific model customizations"
+    sublayers:
+      customer0: "CUSTOMER0 customizations"
+      volkswagen: "Volkswagen customizations"
+
+# Global variants for partial/conditional files
+variants:
+  - "analytics"
+  - "ml_features"
+  - "v2_migration"
+  - "gdpr_compliant"
+  - "real_time"
+
+# Model definitions organized by vertical/horizontal structure
+models:
+  # Core vertical - foundational models
+  core:
+    - name: "customer_base"
+      horizontal_layer: "raw"
+      source_table: "external.raw_customers"
+      description: "Base customer data from external sources"
+      variants: ["analytics", "gdpr_compliant", "v2_migration"]
+      kind: "VIEW"
+
+    - name: "customer_staged"
+      horizontal_layer: "staging"
+      inherits_from: "core.raw.customer_base"
+      description: "Cleaned and standardized customer data"
+      variants: ["analytics", "gdpr_compliant"]
+      kind: "VIEW"
+
+    - name: "customer_mart"
+      horizontal_layer: "mart"
+      inherits_from: "core.staging.customer_staged"
+      description: "Business-ready customer master data"
+      variants: ["analytics", "ml_features", "real_time"]
+      kind: "MATERIALIZED"
+
+    - name: "product_base"
+      horizontal_layer: "raw"
+      source_table: "external.raw_products"
+      description: "Base product catalog data"
+      variants: ["v2_migration"]
+      kind: "VIEW"
+
+    - name: "product_staged"
+      horizontal_layer: "staging"
+      inherits_from: "core.raw.product_base"
+      description: "Cleaned product data with standardized attributes"
+      kind: "VIEW"
+
+    - name: "product_mart"
+      horizontal_layer: "mart"
+      inherits_from: "core.staging.product_staged"
+      description: "Business-ready product master data"
+      variants: ["analytics", "ml_features"]
+      kind: "MATERIALIZED"
+
+  # Domain vertical - business-specific models
+  domain:
+    retail:
+      - name: "retail_customer"
+        horizontal_layer: "raw"
+        inherits_from: "core.raw.customer_base"
+        description: "Retail-specific customer data enhancements"
+        variants: ["analytics", "gdpr_compliant"]
+        kind: "VIEW"
+
+      - name: "retail_customer_staged"
+        horizontal_layer: "staging"
+        inherits_from: "core.staging.customer_staged"
+        description: "Retail customer data with segment classifications"
+        variants: ["analytics"]
+        kind: "VIEW"
+
+      - name: "retail_customer_mart"
+        horizontal_layer: "mart"
+        inherits_from: "core.mart.customer_mart"
+        description: "Retail customer analytics with purchase behavior"
+        variants: ["analytics", "ml_features"]
+        kind: "MATERIALIZED"
+
+      - name: "retail_sales"
+        horizontal_layer: "raw"
+        source_table: "external.retail_transactions"
+        description: "Retail sales transaction data"
+        variants: ["real_time", "analytics"]
+        kind: "TABLE"
+
+      - name: "retail_sales_mart"
+        horizontal_layer: "mart"
+        inherits_from: "domain.retail.raw.retail_sales"
+        description: "Aggregated retail sales analytics"
+        variants: ["analytics", "real_time"]
+        kind: "INCREMENTAL"
+
+    manufacturing:
+      - name: "mfg_customer"
+        horizontal_layer: "raw"
+        inherits_from: "core.raw.customer_base"
+        description: "Manufacturing customer data with industry classifications"
+        variants: ["analytics"]
+        kind: "VIEW"
+
+      - name: "mfg_customer_staged"
+        horizontal_layer: "staging"
+        inherits_from: "core.staging.customer_staged"
+        description: "Manufacturing customer data with supply chain attributes"
+        kind: "VIEW"
+
+      - name: "mfg_orders"
+        horizontal_layer: "raw"
+        source_table: "external.manufacturing_orders"
+        description: "Manufacturing order and production data"
+        variants: ["real_time", "analytics"]
+        kind: "TABLE"
+
+      - name: "mfg_production_mart"
+        horizontal_layer: "mart"
+        inherits_from: "domain.manufacturing.raw.mfg_orders"
+        description: "Manufacturing production analytics and KPIs"
+        variants: ["analytics", "real_time"]
+        kind: "MATERIALIZED"
+
+    finance:
+      - name: "financial_transactions"
+        horizontal_layer: "raw"
+        source_table: "external.financial_data"
+        description: "Financial transaction data"
+        variants: ["gdpr_compliant", "analytics"]
+        kind: "VIEW"
+
+      - name: "financial_reporting_mart"
+        horizontal_layer: "mart"
+        inherits_from: "domain.finance.raw.financial_transactions"
+        description: "Financial reporting and compliance data"
+        variants: ["gdpr_compliant", "analytics"]
+        kind: "MATERIALIZED"
+
+  # Tenant vertical - customer-specific customizations
+  tenant:
+    customer0:
+      - name: "customer0_customer"
+        horizontal_layer: "raw"
+        inherits_from: "domain.manufacturing.raw.mfg_customer"
+        description: "CUSTOMER0-specific customer data with oil & gas industry attributes"
+        variants: ["analytics", "gdpr_compliant", "v2_migration"]
+        kind: "VIEW"
+
+      - name: "customer0_customer_staged"
+        horizontal_layer: "staging"
+        inherits_from: "domain.manufacturing.staging.mfg_customer_staged"
+        description: "CUSTOMER0 customer data with custom business rules"
+        variants: ["analytics", "gdpr_compliant"]
+        kind: "VIEW"
+
+      - name: "customer0_production_mart"
+        horizontal_layer: "mart"
+        inherits_from: "domain.manufacturing.mart.mfg_production_mart"
+        description: "CUSTOMER0 production analytics and compliance"
+        variants: ["analytics", "real_time", "gdpr_compliant"]
+        kind: "MATERIALIZED"
+
+    volkswagen:
+      - name: "vw_customer"
+        horizontal_layer: "raw"
+        inherits_from: "core.raw.customer_base"  # Direct inheritance, skip domain layer
+        description: "Volkswagen customer data with automotive focus"
+        variants: ["ml_features", "gdpr_compliant"]
+        kind: "VIEW"
+
+      - name: "vw_customer_staged"
+        horizontal_layer: "staging"
+        inherits_from: "core.staging.customer_staged"  # Direct inheritance
+        description: "Volkswagen customer data with vehicle preferences"
+        variants: ["ml_features"]
+        kind: "VIEW"
+
+      - name: "vw_vehicle_sales"
+        horizontal_layer: "mart"
+        source_table: "external.vw_vehicle_sales"
+        description: "Volkswagen vehicle sales and customer journey analytics"
+        variants: ["analytics", "ml_features", "real_time"]
+        kind: "MATERIALIZED"

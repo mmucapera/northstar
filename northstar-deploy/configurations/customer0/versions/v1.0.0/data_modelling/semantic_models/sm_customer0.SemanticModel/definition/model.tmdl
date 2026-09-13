@@ -1,0 +1,26 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+
+annotation PBI_QueryOrder = ["dim_completion", "dim_downtime_cause", "dim_facility", "dim_field", "dim_partner", "dim_period", "dim_well", "dim_wellbore", "fact_cash_call_event", "fact_downtime", "fact_drilling_telemetry", "fact_hse_exposure", "fact_hse_incidents", "fact_production", "fact_production_volume", "fact_reconciliation", "fact_well_test"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+ref table dim_completion
+ref table dim_downtime_cause
+ref table dim_facility
+ref table dim_field
+ref table dim_partner
+ref table dim_period
+ref table dim_well
+ref table dim_wellbore
+ref table fact_cash_call_event
+ref table fact_downtime
+ref table fact_drilling_telemetry
+ref table fact_hse_exposure
+ref table fact_hse_incidents
+ref table fact_production
+ref table fact_production_volume
+ref table fact_reconciliation
+ref table fact_well_test

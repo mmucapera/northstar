@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_delete_insert_manifest",
+    "description": "delete_insert_manifest"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "283c56e9-e941-4265-acf4-2917bf2b6803"
+  }
+}

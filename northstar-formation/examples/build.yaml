@@ -1,0 +1,47 @@
+# Simple Build Configuration for Northstar Formation
+# Place this file in your project root or config/ directory
+
+# Default build settings
+default:
+  customer: STANDARD
+  version: "1.0.0"
+  features: []
+  environment: production
+  output_format: notebook
+  output_dir: ./results
+  workspace_id: YOUR_FABRIC_WORKSPACE_ID
+  fabric_conn_id: fabric_conn
+
+# Customer-specific build profiles
+profiles:
+  customer0:
+    customer: CUSTOMER0
+    features:
+      - analytics
+      - gdpr_compliant
+    output_dir: ./results/customer0
+
+  volkswagen:
+    customer: VOLKSWAGEN
+    features:
+      - ml_features
+      - real_time
+    output_dir: ./results/volkswagen
+
+# Development profiles
+dev:
+  environment: development
+  features:
+    - analytics
+  output_dir: ./results/dev
+
+# Production with all features
+prod_full:
+  environment: production
+  output_format: all
+  features:
+    - analytics
+    - ml_features
+    - gdpr_compliant
+    - real_time
+  output_dir: ./results/production

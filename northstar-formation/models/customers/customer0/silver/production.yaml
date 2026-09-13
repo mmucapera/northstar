@@ -1,0 +1,22 @@
+model:
+  name: production
+  description: CUSTOMER0 silver field production and well-uptime records
+  layer: silver
+  kind: TABLE
+  extends: bronze.production
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.production
+  depends_on_tables: [bronze.production]
+  merge_keys:
+    merge_keys:
+    - PeriodId
+    - FieldId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

@@ -1,0 +1,67 @@
+model:
+  name: fact_well_test
+  description: CUSTOMER0 gold quarterly well test fact
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, fact, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: gold
+  load_strategy: merge
+
+source:
+  base_table: silver.well_test
+  depends_on_tables:
+    - silver.well_test
+  merge_keys:
+    merge_keys:
+      - PeriodId_key
+      - WellId_key
+      - CompletionId_key
+    load_strategy: silver_to_gold
+
+transformations:
+  columns:
+    - name: PeriodId_key
+      expression: CAST(xxhash64(PeriodId) AS BIGINT)
+      data_type: BIGINT
+    - name: WellId_key
+      expression: CAST(xxhash64(WellId) AS BIGINT)
+      data_type: BIGINT
+    - name: CompletionId_key
+      expression: CAST(xxhash64(CompletionId) AS BIGINT)
+      data_type: BIGINT
+    - name: TestDate
+      expression: TestDate
+      data_type: DATE
+    - name: DurationHours
+      expression: DurationHours
+      data_type: DECIMAL(9,2)
+    - name: OilRateBopd
+      expression: OilRateBopd
+      data_type: DECIMAL(18,2)
+    - name: GasRateMscfd
+      expression: GasRateMscfd
+      data_type: DECIMAL(18,2)
+    - name: WaterCutPct
+      expression: WaterCutPct
+      data_type: DECIMAL(9,2)
+    - name: GorScf
+      expression: GorScf
+      data_type: DECIMAL(18,2)
+    - name: ChokeSize64ths
+      expression: ChokeSize64ths
+      data_type: INT
+    - name: ThpPsi
+      expression: ThpPsi
+      data_type: DECIMAL(18,2)
+    - name: Validity
+      expression: Validity
+      data_type: NVARCHAR(20)
+    - name: Manifest_package
+      data_type: VARCHAR (8000)
+    - name: Manifest_file
+      data_type: VARCHAR (8000)
+
+  inherit_columns: false

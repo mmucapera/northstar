@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_config_audit_control",
+    "description": "update_audit_batch_control"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fbc0b2d9-a751-4c60-b822-f9ad839ce669"
+  }
+}

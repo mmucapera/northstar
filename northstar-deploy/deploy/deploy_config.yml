@@ -1,0 +1,15 @@
+# deploy_config.yml — versioned deployment configuration
+#
+# pinned:  Workspace targets that are not auto-discovered from the Fabric API,
+#          or that need specific field overrides (e.g. repository_directory: null
+#          to trigger the interactive folder prompt at deploy time).
+#          Pinned entries always take precedence over API-discovered entries
+#          with the same name.
+#
+# hidden:  Target names to suppress from the interactive CLI picker.
+#          The entries remain in deploy_targets.yml and are still deployable
+#          directly, but will not appear in the numbered selection list.
+
+pinned: {}
+
+hidden: []

@@ -1,0 +1,66 @@
+table fact_production_volume
+	lineageTag: 56ea96b2-63c5-4b04-a944-432ddba4fb48
+
+	column PeriodId_key
+		dataType: int64
+		sourceColumn: PeriodId_key
+		lineageTag: 4809b611-7515-490b-a37e-118cb16a6868
+
+	column WellId_key
+		dataType: int64
+		sourceColumn: WellId_key
+		lineageTag: 2f93360f-d56c-40f3-8127-4929807a2dfb
+
+	column FieldId_key
+		dataType: int64
+		sourceColumn: FieldId_key
+		lineageTag: 3aa069ab-f346-474e-8cbc-ac0512c57282
+
+	column FacilityId_key
+		dataType: int64
+		sourceColumn: FacilityId_key
+		lineageTag: 7d852603-53a3-462f-8ba6-80ea8664e6e2
+
+	column OilBbl
+		dataType: decimal
+		sourceColumn: OilBbl
+		lineageTag: 22b2ba11-ca18-4beb-bd70-cd52cf52a847
+
+	column GasMscf
+		dataType: decimal
+		sourceColumn: GasMscf
+		lineageTag: 07565e6d-ea72-4b64-947d-f1d1315d1b44
+
+	column WaterBbl
+		dataType: decimal
+		sourceColumn: WaterBbl
+		lineageTag: 9fbcdc87-6b11-4492-b61d-3c2844d193a2
+
+	column OnstreamHours
+		dataType: decimal
+		sourceColumn: OnstreamHours
+		lineageTag: 91b64e6d-12f0-476f-bfa3-c2ae66388f70
+
+	column WaterCutPct
+		dataType: decimal
+		sourceColumn: WaterCutPct
+		lineageTag: 9431923b-4c10-48a2-ace3-4cff8b3a0cd4
+
+	column Manifest_package
+		dataType: string
+		sourceColumn: Manifest_package
+		lineageTag: 0afd515b-064a-4ee0-8038-10c2835f998c
+
+	column Manifest_file
+		dataType: string
+		sourceColumn: Manifest_file
+		lineageTag: a768d39d-033f-46c4-a7ab-0828c8d8d2ff
+
+	partition fact_production_volume = entity
+		mode: directLake
+		source
+			entityName: fact_production_volume
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

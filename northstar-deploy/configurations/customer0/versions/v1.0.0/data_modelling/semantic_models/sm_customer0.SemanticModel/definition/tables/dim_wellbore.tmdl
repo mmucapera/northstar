@@ -1,0 +1,51 @@
+table dim_wellbore
+	lineageTag: fa18e1db-ba85-4ab1-a887-baa66ba22fc2
+
+	column WellboreId_key
+		dataType: int64
+		sourceColumn: WellboreId_key
+		lineageTag: 7e1efcea-aa9e-4f9c-9271-070ec90097fa
+
+	column WellboreId
+		dataType: string
+		sourceColumn: WellboreId
+		lineageTag: 4b5feecb-d09a-4f48-bc87-c4506f8f8bc6
+
+	column WellId_key
+		dataType: int64
+		sourceColumn: WellId_key
+		lineageTag: abf3c0a7-bef7-4156-801f-c21f7fb81f65
+
+	column WellboreName
+		dataType: string
+		sourceColumn: WellboreName
+		lineageTag: 355fd71e-bc03-4ed0-ae17-ac4e99099a9f
+
+	column Trajectory
+		dataType: string
+		sourceColumn: Trajectory
+		lineageTag: b096e856-ae47-4174-8079-9e702c77a9bb
+
+	column IsSidetrack
+		dataType: boolean
+		sourceColumn: IsSidetrack
+		lineageTag: fae52394-f8b2-4f34-becc-43ffd1154d1d
+
+	column MeasuredDepthM
+		dataType: decimal
+		sourceColumn: MeasuredDepthM
+		lineageTag: b1acbb98-8e83-4aed-8cfc-ba6c63913f02
+
+	column TrueVerticalDepthM
+		dataType: decimal
+		sourceColumn: TrueVerticalDepthM
+		lineageTag: 4dfb4c49-1837-4a1c-b979-e6c4b41fbf20
+
+	partition dim_wellbore = entity
+		mode: directLake
+		source
+			entityName: dim_wellbore
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

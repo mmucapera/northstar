@@ -1,0 +1,5 @@
+pipeline:
+  name: PL_SILVER_CONFIG
+  auto_from_models:
+    layer: silver
+    domain_prefix: ""

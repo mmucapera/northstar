@@ -1,0 +1,35 @@
+table fact_hse_exposure
+	lineageTag: 2c97affc-efe3-4357-9c8d-c760d725d3d5
+
+	column PeriodId_key
+		dataType: int64
+		sourceColumn: PeriodId_key
+		lineageTag: 5fea8a75-6974-4b51-919a-545d9f27070a
+
+	column HoursWorked
+		dataType: decimal
+		sourceColumn: HoursWorked
+		lineageTag: 798847e0-bae2-4599-8a6d-a5e48e11aba1
+
+	column Manifest_package
+		dataType: string
+		sourceColumn: Manifest_package
+		lineageTag: 488db5c0-2dc2-4f14-95e6-aa46f1a49d91
+
+	column Manifest_file
+		dataType: string
+		sourceColumn: Manifest_file
+		lineageTag: c8038a54-bbeb-4ddd-b25c-95c13fcfbd35
+
+	measure 'Total Exposure Hours' = SUM('fact_hse_exposure'[HoursWorked])
+		formatString: #,0
+		lineageTag: 7d27380e-1fc2-4553-af03-56691423a7ba
+
+	partition fact_hse_exposure = entity
+		mode: directLake
+		source
+			entityName: fact_hse_exposure
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table

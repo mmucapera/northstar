@@ -1,0 +1,40 @@
+model:
+  name: dim_field
+  description: CUSTOMER0 gold field/block dimension
+  layer: gold
+  kind: TABLE
+  customer: customer0
+  owner: data_engineering
+  tags: [gold, customer0, oil_gas, pre_discovery, dim]
+  refresh_frequency: daily
+  domain: gold
+source:
+  base_table: silver.field
+  depends_on_tables: [silver.field]
+  merge_keys:
+    merge_keys:
+    - FieldId_key
+    load_strategy: silver_to_gold
+transformations:
+  inherit_columns: false
+  columns:
+  - name: FieldId_key
+    expression: CAST(xxhash64(FieldId) AS BIGINT)
+    data_type: BIGINT
+    description: Integer surrogate key - hash of FieldId. Join key for fact_* tables.
+  - name: FieldId
+    expression: FieldId
+    data_type: NVARCHAR(50)
+  - name: FieldName
+    expression: FieldName
+    data_type: NVARCHAR(200)
+  - name: ExportPoint
+    expression: ExportPoint
+    data_type: NVARCHAR(200)
+  - name: WellsTotal
+    expression: WellsTotal
+    data_type: INT
+filters:
+  where_conditions:
+    - id: latest_data
+      condition: T.Is_current = 1

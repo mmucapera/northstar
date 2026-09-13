@@ -1,0 +1,21 @@
+model:
+  name: hse_incidents
+  description: CUSTOMER0 silver HSE incident log
+  layer: silver
+  kind: TABLE
+  extends: bronze.hse_incidents
+  customer: customer0
+  owner: data_engineering
+  tags: [silver, merged, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: silver
+source:
+  base_table: bronze.hse_incidents
+  depends_on_tables: [bronze.hse_incidents]
+  merge_keys:
+    merge_keys:
+    - IncidentId
+    load_strategy: bronze_to_silver_latest
+transformations:
+  inherit_columns: true
+  columns: []

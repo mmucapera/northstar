@@ -1,0 +1,66 @@
+# CUSTOMER0 bronze drilling_telemetry - daily drilling report telemetry for
+# wells currently in Drilling status. Shape matches Project Spark's
+# `FctDrillingTelemetry` type (src/data/warehouse.ts), translated to
+# customer0's Id/PascalCase convention.
+# Pre-discovery - see docs/customer0-pilot-kickoff.md.
+
+model:
+  name: drilling_telemetry
+  description: CUSTOMER0 bronze daily drilling report telemetry
+  layer: bronze
+  kind: TABLE
+  extends: null
+  customer: customer0
+  owner: data_engineering
+  tags: [bronze, schema_only, customer0, oil_gas, pre_discovery]
+  refresh_frequency: daily
+  domain: bronze
+source:
+  base_table: __SCHEMA_ONLY__
+transformations:
+  inherit_columns: false
+  columns:
+  - name: ReportId
+    data_type: VARCHAR(80)
+    description: Stable report slug (natural key) - e.g. "DRL-WEL-obago-001-2026-08-01"
+  - name: WellId
+    data_type: VARCHAR(50)
+  - name: WellboreId
+    data_type: VARCHAR(60)
+  - name: ReportDate
+    data_type: DATE
+  - name: DepthM
+    data_type: DECIMAL(18,2)
+  - name: RopMPerHr
+    data_type: DECIMAL(9,2)
+  - name: WobKlbs
+    data_type: DECIMAL(9,2)
+  - name: Rpm
+    data_type: DECIMAL(9,2)
+  - name: MudWeightPpg
+    data_type: DECIMAL(9,2)
+  - name: FlowRateGpm
+    data_type: DECIMAL(9,2)
+  - name: Npt
+    data_type: BOOLEAN
+    description: Non-productive time flag
+  - name: Sourcefile
+    data_type: STRING
+  - name: Manifest_package
+    data_type: STRING
+  - name: Manifest_file
+    data_type: STRING
+  - name: Load_date
+    expression: current_date
+    data_type: DATE
+  - name: Load_timestamp
+    expression: current_timestamp
+    data_type: TIMESTAMP
+  - name: Partitionkey
+    data_type: STRING
+  - name: ins_batchid
+    data_type: INT
+  - name: upd_batchid
+    data_type: INT
+  - name: Exportdate
+    data_type: TIMESTAMP

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "fact_production",
+    "description": "Generated notebook for gold.fact_production"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "cb93c3dd-d2a2-5350-bac8-c070f18dd93c"
+  }
+}

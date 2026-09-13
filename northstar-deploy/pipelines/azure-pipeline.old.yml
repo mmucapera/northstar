@@ -1,0 +1,444 @@
+  name: Northstar/insights_customer0
+# ============================================================================
+# Fabric Multi-Customer Deployment Pipeline - FIXED VERSION
+# ============================================================================
+# This pipeline deploys Fabric items (Lakehouses, Notebooks, Pipelines, etc.)
+# to customer workspaces across multiple environments.
+#
+# Prerequisites:
+# - Service Principal credentials stored in pipeline variables (TENANT_ID, CLIENT_ID, CLIENT_SECRET)
+# - Repository structure: repository/versions/vX.Y.Z/
+# - Customer configurations: configurations/<customer-id>/
+#
+# Usage:
+# - Select customer ID from dropdown
+# - Choose target environment(s): dev, test, uat, prod
+# - Select deployment mode: incremental (recommended), full, selective
+# ============================================================================
+resources:
+  repositories:
+    - repository: customer_repo
+      type: git
+      name: Northstar/insights_customer0
+      ref: refs/heads/main
+
+trigger: none  # Manual trigger only
+
+parameters:
+  - name: customerID
+    displayName: 'Customer ID'
+    type: string
+    default: 'sample-customer'
+    values:
+      - deploy-c
+      - sample-customer
+
+  # FIXED: Changed from object type with values to a proper multi-select checkbox
+  - name: deployToEnvironments
+    displayName: 'Deploy to Environment(s)'
+    type: object
+    default:
+      - dev
+
+  - name: deploymentMode
+    displayName: 'Deployment Mode'
+    type: string
+    default: 'incremental'
+    values:
+      - incremental  # Deploy changed items only (recommended)
+      - full         # Deploy all items + cleanup orphans
+      - selective    # Deploy specific items only
+
+  # FIXED: Made this optional by removing validation requirement
+  - name: selectiveItems
+    displayName: 'Selective Items (only required for selective mode, comma-separated)'
+    type: string
+    default: ' '
+
+  - name: skipValidation
+    displayName: 'Skip Pre-Deployment Validation'
+    type: boolean
+    default: false
+
+# Global variables
+variables:
+  pythonVersion: '3.11'
+  buildId: $(Build.BuildId)
+  deploymentUser: $(Build.RequestedFor)
+  # IMPORTANT: Repository root is bi_fabric_insights-4, deployment code is in uix-deploy subdirectory
+  workingDir: $(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/uix-deploy
+  configPath: $(System.DefaultWorkingDirectory)/$(Build.Repository.Name)/uix-deploy/configurations/${{ parameters.customerID }}
+  # workingDir: $(System.DefaultWorkingDirectory)/uix-deploy
+  # configPath: $(System.DefaultWorkingDirectory)/uix-deploy/configurations/${{ parameters.customerID }}
+  # Helper variable to process selective items
+  ${{ if eq(parameters.deploymentMode, 'selective') }}:
+    processedSelectiveItems: ${{ parameters.selectiveItems }}
+  ${{ else }}:
+    processedSelectiveItems: ''
+
+# ============================================================================
+# PIPELINE STAGES
+# ============================================================================
+
+stages:
+
+  # --------------------------------------------------------------------------
+  # STAGE 1: Pre-Deployment Validation
+  # --------------------------------------------------------------------------
+  - stage: Validation
+    displayName: 'Pre-Deployment Validation'
+    condition: and(succeeded(), eq('${{ parameters.skipValidation }}', false))
+    jobs:
+      - job: ValidateConfiguration
+        displayName: 'Validate Configuration Files'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - checkout: customer_repo
+
+          - task: UsePythonVersion@0
+            displayName: 'Use Python $(pythonVersion)'
+            inputs:
+              versionSpec: '$(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install pyyaml jsonschema requests colorlog
+            displayName: 'Install Dependencies'
+
+          - script: |
+              echo "===== Sources Directory ====="
+                ls -la $(System.DefaultWorkingDirectory)
+            displayName: 'Debug repo layout'
+
+          - script: |
+              # Check if selective mode requires items
+              if [ "${{ parameters.deploymentMode }}" == "selective" ]; then
+                if [ -z "${{ parameters.selectiveItems }}" ] || [ "${{ parameters.selectiveItems }}" == " " ]; then
+                  echo "ERROR: Selective mode requires items to be specified"
+                  exit 1
+                fi
+              fi
+
+              python $(workingDir)/scripts/deployment/validation.py \
+                --config-path $(configPath) \
+                --mode pre-deployment \
+                --customer ${{ parameters.customerID }} \
+                --environment ${{ join(',', parameters.deployToEnvironments) }}
+            displayName: 'Run Pre-Deployment Validation'
+            env:
+              TENANT_ID: $(TENANT_ID)
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+
+          - publish: $(workingDir)/validation-report.json
+            artifact: validation-report
+            displayName: 'Publish Validation Report'
+            condition: always()
+
+  # --------------------------------------------------------------------------
+  # STAGE 2: Deploy to Development
+  # --------------------------------------------------------------------------
+  - stage: DeployDev
+    displayName: 'Deploy to Development'
+    dependsOn:
+      - ${{ if eq(parameters.skipValidation, false) }}:
+        - Validation
+      - ${{ else }}:
+        - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.deployToEnvironments) }}', 'dev'))
+    jobs:
+      - deployment: DeployToDev
+        displayName: 'Deploy to Dev Workspace'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-Dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - checkout: customer_repo
+
+                - task: UsePythonVersion@0
+                  displayName: 'Use Python $(pythonVersion)'
+                  inputs:
+                    versionSpec: '$(pythonVersion)'
+
+                - script: |
+                    python -m pip install --upgrade pip
+                    pip install fabric-cicd>=0.1.19 pyyaml requests tenacity colorlog
+                  displayName: 'Install Dependencies'
+
+                - script: |
+                    echo "===== Sources Directory ====="
+                      ls -la $(System.DefaultWorkingDirectory)
+                  displayName: 'Debug repo layout'
+
+                - script: |
+                    # Change to uix-deploy directory
+                    cd $(workingDir)
+
+                    # Determine selective items parameter
+                    SELECTIVE_PARAM=""
+                    if [ "${{ parameters.deploymentMode }}" == "selective" ]; then
+                      if [ "${{ parameters.selectiveItems }}" != " " ]; then
+                        SELECTIVE_PARAM="--selective-items \"${{ parameters.selectiveItems }}\""
+                      fi
+                    fi
+
+                    python scripts/deployment/deploy_orchestrator.py \
+                      --customer "${{ parameters.customerID }}" \
+                      --environment "dev" \
+                      --mode "${{ parameters.deploymentMode }}" \
+                      $SELECTIVE_PARAM \
+                      --build-id "$(buildId)" \
+                      --user "$(deploymentUser)"
+                  displayName: 'Deploy to Dev Environment'
+                  env:
+                    TENANT_ID: $(TENANT_ID)
+                    CLIENT_ID: $(CLIENT_ID)
+                    CLIENT_SECRET: $(CLIENT_SECRET)
+
+  # --------------------------------------------------------------------------
+  # STAGE 3: Deploy to Test
+  # --------------------------------------------------------------------------
+  - stage: DeployTest
+    displayName: 'Deploy to Test'
+    dependsOn:
+      - ${{ if contains(join(',', parameters.deployToEnvironments), 'dev') }}:
+        - DeployDev
+      - ${{ else }}:
+        - ${{ if eq(parameters.skipValidation, false) }}:
+          - Validation
+        - ${{ else }}:
+          - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.deployToEnvironments) }}', 'test'))
+    jobs:
+      - deployment: DeployToTest
+        displayName: 'Deploy to Test Workspace'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-Test'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: UsePythonVersion@0
+                  displayName: 'Use Python $(pythonVersion)'
+                  inputs:
+                    versionSpec: '$(pythonVersion)'
+
+                - script: |
+                    python -m pip install --upgrade pip
+                    pip install fabric-cicd>=0.1.19 pyyaml requests tenacity colorlog
+                  displayName: 'Install Dependencies'
+
+                - script: |
+                    # Change to uix-deploy directory
+                    cd $(workingDir)
+
+                    # Determine selective items parameter
+                    SELECTIVE_PARAM=""
+                    if [ "${{ parameters.deploymentMode }}" == "selective" ]; then
+                      if [ "${{ parameters.selectiveItems }}" != " " ]; then
+                        SELECTIVE_PARAM="--selective-items \"${{ parameters.selectiveItems }}\""
+                      fi
+                    fi
+
+                    python scripts/deployment/deploy_orchestrator.py \
+                      --customer "${{ parameters.customerID }}" \
+                      --environment "test" \
+                      --mode "${{ parameters.deploymentMode }}" \
+                      $SELECTIVE_PARAM \
+                      --build-id "$(buildId)" \
+                      --user "$(deploymentUser)"
+                  displayName: 'Deploy to Test Environment'
+                  env:
+                    TENANT_ID: $(TENANT_ID)
+                    CLIENT_ID: $(CLIENT_ID)
+                    CLIENT_SECRET: $(CLIENT_SECRET)
+
+  # --------------------------------------------------------------------------
+  # STAGE 4: Deploy to UAT
+  # --------------------------------------------------------------------------
+  - stage: DeployUAT
+    displayName: 'Deploy to UAT'
+    dependsOn:
+      - ${{ if contains(join(',', parameters.deployToEnvironments), 'test') }}:
+        - DeployTest
+      - ${{ elseif contains(join(',', parameters.deployToEnvironments), 'dev') }}:
+        - DeployDev
+      - ${{ else }}:
+        - ${{ if eq(parameters.skipValidation, false) }}:
+          - Validation
+        - ${{ else }}:
+          - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.deployToEnvironments) }}', 'uat'))
+    jobs:
+      - deployment: DeployToUAT
+        displayName: 'Deploy to UAT Workspace'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-UAT'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: UsePythonVersion@0
+                  displayName: 'Use Python $(pythonVersion)'
+                  inputs:
+                    versionSpec: '$(pythonVersion)'
+
+                - script: |
+                    python -m pip install --upgrade pip
+                    pip install fabric-cicd>=0.1.19 pyyaml requests tenacity colorlog
+                  displayName: 'Install Dependencies'
+
+                - script: |
+                    # Change to uix-deploy directory
+                    cd $(workingDir)
+
+                    # Determine selective items parameter
+                    SELECTIVE_PARAM=""
+                    if [ "${{ parameters.deploymentMode }}" == "selective" ]; then
+                      if [ "${{ parameters.selectiveItems }}" != " " ]; then
+                        SELECTIVE_PARAM="--selective-items \"${{ parameters.selectiveItems }}\""
+                      fi
+                    fi
+
+                    python scripts/deployment/deploy_orchestrator.py \
+                      --customer "${{ parameters.customerID }}" \
+                      --environment "uat" \
+                      --mode "${{ parameters.deploymentMode }}" \
+                      $SELECTIVE_PARAM \
+                      --build-id "$(buildId)" \
+                      --user "$(deploymentUser)"
+                  displayName: 'Deploy to UAT Environment'
+                  env:
+                    TENANT_ID: $(TENANT_ID)
+                    CLIENT_ID: $(CLIENT_ID)
+                    CLIENT_SECRET: $(CLIENT_SECRET)
+
+  # --------------------------------------------------------------------------
+  # STAGE 5: Deploy to Production (with approval gate)
+  # --------------------------------------------------------------------------
+  - stage: DeployProd
+    displayName: 'Deploy to Production'
+    dependsOn:
+      - ${{ if contains(join(',', parameters.deployToEnvironments), 'uat') }}:
+        - DeployUAT
+      - ${{ elseif contains(join(',', parameters.deployToEnvironments), 'test') }}:
+        - DeployTest
+      - ${{ elseif contains(join(',', parameters.deployToEnvironments), 'dev') }}:
+        - DeployDev
+      - ${{ else }}:
+        - ${{ if eq(parameters.skipValidation, false) }}:
+          - Validation
+        - ${{ else }}:
+          - []
+    condition: and(succeeded(), contains('${{ join(',', parameters.deployToEnvironments) }}', 'prod'))
+    jobs:
+      - deployment: DeployToProd
+        displayName: 'Deploy to Production Workspace'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Fabric-Production'  # This environment should have approval gate configured
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: UsePythonVersion@0
+                  displayName: 'Use Python $(pythonVersion)'
+                  inputs:
+                    versionSpec: '$(pythonVersion)'
+
+                - script: |
+                    python -m pip install --upgrade pip
+                    pip install fabric-cicd>=0.1.19 pyyaml requests tenacity colorlog
+                  displayName: 'Install Dependencies'
+
+                - script: |
+                    # Change to uix-deploy directory
+                    cd $(workingDir)
+
+                    # Determine selective items parameter
+                    SELECTIVE_PARAM=""
+                    if [ "${{ parameters.deploymentMode }}" == "selective" ]; then
+                      if [ "${{ parameters.selectiveItems }}" != " " ]; then
+                        SELECTIVE_PARAM="--selective-items \"${{ parameters.selectiveItems }}\""
+                      fi
+                    fi
+
+                    python scripts/deployment/deploy_orchestrator.py \
+                      --customer "${{ parameters.customerID }}" \
+                      --environment "prod" \
+                      --mode "${{ parameters.deploymentMode }}" \
+                      $SELECTIVE_PARAM \
+                      --build-id "$(buildId)" \
+                      --user "$(deploymentUser)"
+                  displayName: 'Deploy to Production Environment'
+                  env:
+                    TENANT_ID: $(TENANT_ID)
+                    CLIENT_ID: $(CLIENT_ID)
+                    CLIENT_SECRET: $(CLIENT_SECRET)
+
+  # --------------------------------------------------------------------------
+  # STAGE 6: Post-Deployment Validation
+  # --------------------------------------------------------------------------
+  - stage: PostDeploymentValidation
+    displayName: 'Post-Deployment Validation'
+    dependsOn:
+      - ${{ if contains(join(',', parameters.deployToEnvironments), 'prod') }}:
+        - DeployProd
+      - ${{ elseif contains(join(',', parameters.deployToEnvironments), 'uat') }}:
+        - DeployUAT
+      - ${{ elseif contains(join(',', parameters.deployToEnvironments), 'test') }}:
+        - DeployTest
+      - ${{ else }}:
+        - DeployDev
+    condition: succeeded()
+    jobs:
+      - job: ValidateDeployment
+        displayName: 'Validate Deployed Items'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+
+          - task: UsePythonVersion@0
+            displayName: 'Use Python $(pythonVersion)'
+            inputs:
+              versionSpec: '$(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install pyyaml jsonschema requests colorlog
+            displayName: 'Install Dependencies'
+
+          - script: |
+              python $(workingDir)/scripts/deployment/validation.py \
+                --config-path $(configPath) \
+                --mode post-deployment \
+                --customer ${{ parameters.customerID }} \
+                --environment ${{ join(',', parameters.deployToEnvironments) }}
+            displayName: 'Run Post-Deployment Validation'
+            env:
+              TENANT_ID: $(TENANT_ID)
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+            continueOnError: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Validation Results'
+            inputs:
+              pathToPublish: '$(workingDir)'
+              artifactName: 'post-deployment-validation'
+            condition: always()

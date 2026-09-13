@@ -1,0 +1,73 @@
+  default: Northstar-Apps
+---
+trigger:
+  branches:
+    include:
+      - feature/northstar-flow/*
+parameters:
+  - name: ImageName
+    type: string
+    default: northstar-flow
+  - name: DockerFileLocation  # In case of multi-repo checkout, this path should be <your_repo_name>/path/to/docker/file
+    type: string
+    default: 'northstar-flow/Dockerfile'
+    # Docker build arguments. To pass the arguments to your dockerfile, use: --build-arg my_arg1 --build-arg my_arg2
+  - name: BuildArguments
+    type: string
+    default: ' '
+  - name: TargetDockerRepository
+    type: string
+    default: Northstar-Apps
+  - name: TargetDockerContainerRegistry
+    type: string
+    default: UnisonInsights-CdnFeeds-SC
+  - name: SourceDockerContainerRegistry
+    type: string
+    default: UnisonInsights-CdnFeeds-SC
+  - name: TargetDockerTags
+    type: string
+    default: $(Build.BuildId),latest
+  - name: PruneImagesAfterBuild
+    type: boolean
+    displayName: Prune Docker Images After build
+    default: true
+
+pool:
+  name: iac_linux
+
+steps:
+  - task: Docker@2
+    inputs:
+      command: login
+      containerRegistry: ${{ parameters.SourceDockerContainerRegistry }}
+  - task: Docker@2
+    inputs:
+      repository: ${{ parameters.TargetDockerRepository}}/library/${{ parameters.ImageName }}
+      containerRegistry: ${{ parameters.TargetDockerContainerRegistry }}
+      tags: ${{ parameters.TargetDockerTags }}
+      command: 'build'
+      Dockerfile: "**/${{ parameters.DockerFileLocation }}"
+      arguments: ${{ parameters.BuildArguments }}
+    displayName: 'Docker Build ${{ parameters.ImageName }}'
+  - task: Docker@2
+    inputs:
+      command: logout
+      containerRegistry: ${{ parameters.SourceDockerContainerRegistry }}
+  - task: Docker@2
+    inputs:
+      command: login
+      containerRegistry: ${{ parameters.TargetDockerContainerRegistry }}
+  - task: Docker@2
+    inputs:
+      repository: ${{ parameters.TargetDockerRepository}}/library/${{ parameters.ImageName }}
+      containerRegistry: ${{ parameters.TargetDockerContainerRegistry }}
+      tags: ${{ parameters.TargetDockerTags }}
+      command: 'push'
+    displayName: 'Docker Push ${{ parameters.ImageName }}'
+    # In case this pipeline is executed as build-validation, then we don't push the image.
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+  - script: 'docker system prune -f -a'
+    displayName: 'Prune dangling and unused docker images'
+    # Unless the docker image has been pushed, we do not prune the images in the agent.
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), ${{ parameters.PruneImagesAfterBuild }})
